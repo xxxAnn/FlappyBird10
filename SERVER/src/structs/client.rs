@@ -1,11 +1,17 @@
+use crate::Sender;
+
 #[derive(Debug, Clone)]
 pub struct Client {
     id: String,
-    pub sender: Option<mpsc::UnboundedSender<std::result::Result<Message, warp::Error>>>,
+    sender: Sender,
 }
 
 impl Client {
     pub fn id(&self) -> &str {
-        return self.id
+        return &self.id
+    }
+    pub fn new(id: String) -> Client {
+        let sender = None;
+        return Client {id, sender}
     }
 }
