@@ -10,7 +10,10 @@ pub async fn get_new_game(ws: warp::ws::Ws, body: Event, lobbies: Lobbies) -> Re
         .to_string(),
         lobby
     );
-
-    
 }
-pub async fn get_game(ws: warp::ws::Ws, body: Event, lobbies: Lobbies) -> Result<impl Reply> {}
+
+pub async fn get_game(ws: warp::ws::Ws, body: Event, lobbies: Lobbies) -> Result<impl Reply> {
+    for lobby in lobbies {
+        
+    }
+}
