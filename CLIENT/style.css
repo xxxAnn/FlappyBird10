@@ -1,9 +1,15 @@
-#canvas
-{
+* {
+  margin: 0;
+}
+
+#canvas {
     background-color:#30c0df;
-    border: 2px solid black;
+    /* border: 2px solid black; */
     display: block;
-    margin: auto;
-    padding: auto;
-    margin-top: 10%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* padding: auto; */
+    /* margin-top: 10%; */
 }
