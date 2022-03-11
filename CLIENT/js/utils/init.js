@@ -1,3 +1,4 @@
+
 let frms = 0
 let dx = 2;
 const RAD = Math.PI/180;
@@ -5,6 +6,8 @@ const RAD = Math.PI/180;
 function init() {
     const scrn = document.getElementById('canvas');
     const sctx = scrn.getContext("2d");
+    scrn.width = innerWidth/3;
+    scrn.height = innerHeight;
     const jumpInputHandler = () => {
         switch (state.curr) {
             case state.getReady :
