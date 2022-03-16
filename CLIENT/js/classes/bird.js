@@ -6,14 +6,14 @@ class Bird {
                 {sprite : new Image()},
                 {sprite : new Image()},
                 {sprite : new Image()},
-            ]    
+            ]
         this.animations[0].sprite.src="img/bird/b0.png";
         this.animations[1].sprite.src="img/bird/b1.png";
         this.animations[2].sprite.src="img/bird/b2.png";
         this.animations[3].sprite.src="img/bird/b0.png";
         this.rotatation = 0
         this.x = 50
-        this.y =100
+        this.y = 100
         this.speed = 0
         this.gravity = .125
         this.thrust = 3.6
@@ -25,7 +25,7 @@ class Bird {
         sctx.save();
         sctx.translate(this.x,this.y);
         sctx.rotate(this.rotatation*RAD);
-        sctx.drawImage(this.animations[this.frame].sprite,-w/2,-h/2);
+        sctx.drawImage(this.animations[this.frame].sprite,-w/2,-h/2, w, h);
         sctx.restore();
     }
     update(state, SFX, UI, pipe, gnd) {
@@ -88,12 +88,25 @@ class Bird {
     collisioned(pipe, UI, SFX) {
         if(!pipe.pipes.length) return;
         let bird = this.animations[0].sprite;
-        let x = pipe.pipes[0].x;
-        let y = pipe.pipes[0].y;
         let r = bird.height/4 +bird.width/4;
-        let roof = y + parseFloat(pipe.top.sprite.height);
+        
+        var x, y
+        pipe.pipes.every((e,i) => {
+          if (e.x <= this.x+r && e.x+pipe.w >= this.x - r) {
+            x = e.x;
+            y = e.y;
+            return false
+          } else if (e.x >= this.x-r) {
+            x = e.x;
+            y = e.y;
+            return false
+          }
+          return true
+        })
+        
+        let roof = y + parseFloat(pipe.h);
         let floor = roof + pipe.gap;
-        let w = parseFloat(pipe.top.sprite.width);
+        let w = parseFloat(pipe.w);
         if(this.x + r>= x)
         {
             if(this.x + r < x + w)
@@ -115,5 +128,16 @@ class Bird {
             
                 
         }
+    }
+    sizeChange(sizeRatio) {
+        this.h = this.animations[this.frame].sprite.height * sizeRatio;
+        this.w = this.animations[this.frame].sprite.width * sizeRatio;
+        this.gravity *= sizeRatio;
+        this.thrust *= sizeRatio;
+        this.animations.map(e => {
+            e.sprite.height *= sizeRatio;
+            e.sprite.width *= sizeRatio;
+            return e
+        });
     }
  };

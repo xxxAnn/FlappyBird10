@@ -1,5 +1,3 @@
-init()
-
-
-
-
+window.addEventListener('load', () => {
+  init();
+});
