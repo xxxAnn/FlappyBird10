@@ -19,7 +19,7 @@ class PipeSet {
     }
     update(state, scrn) {
         if(state.curr!=state.Play) return;
-            if(frms%100==0)
+            if(frms%(200/dx)==0)
         {
             this.pipes.push({x:parseFloat(scrn.width),y:-210*Math.min(Math.random()+1,1.8)});
         }
