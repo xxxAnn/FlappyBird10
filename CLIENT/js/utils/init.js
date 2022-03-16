@@ -17,6 +17,7 @@ function init() {
             case state.getReady :
                 state.curr = state.Play;
                 SFX.start.play();
+                SFX.bgm.play();
                 break;
             case state.Play :
                 bird.flap(SFX);

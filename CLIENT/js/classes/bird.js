@@ -44,6 +44,8 @@ class Bird {
                 if(this.y + r  >= gnd.y||this.collisioned(pipe, UI, SFX))
                 {
                     state.curr = state.gameOver;
+                    SFX.bgm.pause()
+                    SFX.bgm.currentTime = 0
                 }
                 
                 break;
@@ -113,7 +115,9 @@ class Bird {
             {
                 if(this.y - r <= roof || this.y + r>= floor)
                 {
-                    SFX.hit.play();
+                    SFX.bgm.pause()
+                    SFX.bgm.currentTime = 0
+                    SFX.hit.play();  
                     return true;
                 }
 
