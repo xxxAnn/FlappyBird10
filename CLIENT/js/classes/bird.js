@@ -93,19 +93,21 @@ class Bird {
         let r = bird.height/4 +bird.width/4;
         
         var x, y
-        pipe.pipes.every((e,i) => {
-          if (e.x <= this.x+r && e.x+pipe.w >= this.x - r) {
-            x = e.x;
-            y = e.y;
-            return false
-          } else if (e.x >= this.x-r) {
-            x = e.x;
-            y = e.y;
-            return false
-          }
-          return true
-        })
-        
+        // pipe.pipes.every((e,i) => {
+        //   if (e.x <= this.x+r && e.x+pipe.w >= this.x - r) {
+        //     x = e.x;
+        //     y = e.y;
+        //     return false
+        //   } else if (e.x >= this.x-r) {
+        //     x = e.x;
+        //     y = e.y;
+        //     return false
+        //   }
+        //   return true
+        // })
+        x = pipe.pipes[0].x
+        y = pipe.pipes[0].y
+
         let roof = y + parseFloat(pipe.h);
         let floor = roof + pipe.gap;
         let w = parseFloat(pipe.w);

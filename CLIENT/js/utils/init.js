@@ -12,6 +12,7 @@ function init() {
     const sctx = scrn.getContext("2d");
     scrn.width = innerWidth * w_ratio;
     scrn.height = innerHeight * h_ratio;
+    let currentSong = 0;
     const jumpInputHandler = () => {
         switch (state.curr) {
             case state.getReady :
@@ -32,11 +33,7 @@ function init() {
                 break;
         }
     }
-    scrn.tabIndex = 1;
-    scrn.addEventListener("click", jumpInputHandler)
-    scrn.onkeydown = function keyDown(e) {
-        (e.keyCode == 32 || e.keyCode == 87 || e.keyCode == 38) && jumpInputHandler()   // Space Key or W key or arrow up
-    }
+
     const state = new State()
     const SFX = new Sfx()
     const gnd = new GND()
@@ -45,13 +42,25 @@ function init() {
     const bird = new Bird()
     const UI = new Ui()
     const sizeRatio = gnd.getSize(scrn);
+    
+    scrn.tabIndex = 1;
+    scrn.addEventListener("click", jumpInputHandler)
+    scrn.onkeydown = function keyDown(e) {
+        if (e.key == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()   // Space Key or W key or arrow up
+    }
+    document.onkeydown = (e) => {
+        if (e.key == 'b') SFX.updateBGM(-1, scrn, sctx, state);
+        else if (e.key == 'n') SFX.updateBGM(1, scrn, sctx, state);
+    };
+    SFX.
+
     handdleSizeChange(sizeRatio, bird, pipe, gnd, bg);
     gameLoop(bird, state, SFX, UI, pipe, gnd, sctx, scrn, bg);
 }
 
 function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, start) {
     update(bird, state, sfx, ui, pipe, gnd, scrn, bg)
-    draw(scrn, sctx, bg, pipe, bird, gnd, ui, state)
+    draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state)
     frms++
     requestAnimationFrame(() => {
         gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg)
@@ -65,7 +74,7 @@ function update(bird, state, sfx, ui, pipe, gnd, scrn, bg) {
     ui.update(state)
     bg.update(state)
 }
-function draw(scrn, sctx, bg, pipe, bird, gnd, ui, state) {
+function draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state) {
    sctx.fillStyle = "#30c0df"
    sctx.fillRect(0,0,scrn.width,scrn.height)
    bg.draw(scrn, sctx)
@@ -73,6 +82,7 @@ function draw(scrn, sctx, bg, pipe, bird, gnd, ui, state) {
    
    bird.draw(sctx)
    gnd.draw(sctx, scrn)
+   sfx.drawSong(scrn, sctx)
    ui.draw(state, sctx, scrn)
 }
 function handdleSizeChange(sizeRatio, bird, pipe, gnd, bg) {
