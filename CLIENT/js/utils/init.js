@@ -52,7 +52,9 @@ function init() {
         if (e.key == 'b') SFX.updateBGM(-1, scrn, sctx, state);
         else if (e.key == 'n') SFX.updateBGM(1, scrn, sctx, state);
     };
-    SFX.
+    SFX.playOnMainScreen() {
+        
+    }
 
     handdleSizeChange(sizeRatio, bird, pipe, gnd, bg);
     gameLoop(bird, state, SFX, UI, pipe, gnd, sctx, scrn, bg);
