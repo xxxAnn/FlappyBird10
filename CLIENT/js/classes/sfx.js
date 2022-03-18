@@ -13,9 +13,8 @@ class Sfx {
 
         this.bgm = new Audio();
         this.playing = true;
-        this.bgm.loop = true;
         this.sources = [
-            {title:"bgm", demotime: '128.2'},
+            {title:"[ff2] rebel army theme", demotime: '128.2'},
             {title:"wellerman", demotime: '32.1'},
             {title:"badApple", demotime: '55'},
         ];
@@ -38,11 +37,17 @@ class Sfx {
             setTimeout(() => {
                 if (this.playing === true) this.playOnMainScreen();
             }, 500)
+
+        } else if (this.bgm.currentTime == this.bgm.duration) {
+            this.bgm.pause();
+            this.bgm.currentTime = this.sources[this.songIndex].demotime;
+            this.bgm.play();
         }
+        if (scrn || sctx) return
         this.drawSong(scrn, sctx);
     }
     drawSong(scrn, sctx) {
-        const fontSize = 40;
+        const fontSize = 30;
         sctx.fillStyle = '#000';
         sctx.font = `${fontSize}px Roboto`;
         const paused = this.playing==true? '': ' (paused)';

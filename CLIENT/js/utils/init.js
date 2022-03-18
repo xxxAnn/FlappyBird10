@@ -68,7 +68,7 @@ function init() {
 }
 
 function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, start) {
-    update(bird, state, sfx, ui, pipe, gnd, scrn, bg)
+    update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx)
     draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state)
     frms++
     requestAnimationFrame(() => {
@@ -76,12 +76,13 @@ function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, start) {
     })
 }
 
-function update(bird, state, sfx, ui, pipe, gnd, scrn, bg) {
-    bird.update(state, sfx, ui, pipe, gnd) 
-    gnd.update(state)
-    pipe.update(state, scrn)
-    ui.update(state)
-    bg.update(state)
+function update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx) {
+    bird.update(state, sfx, ui, pipe, gnd) ;
+    gnd.update(state);
+    pipe.update(state, scrn);
+    ui.update(state);
+    bg.update(state);
+    sfx.updateBGM(0, scrn, sctx);
 }
 function draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state) {
    sctx.fillStyle = "#30c0df"
