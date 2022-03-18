@@ -18,6 +18,8 @@ function init() {
             case state.getReady :
                 state.curr = state.Play;
                 SFX.start.play();
+                SFX.playing = true;
+                SFX.bgm.currentTime = '0'
                 SFX.bgm.play();
                 break;
             case state.Play :
@@ -29,7 +31,8 @@ function init() {
                 bird.y = 100;
                 pipe.pipes=[];
                 UI.score.curr = 0;
-                SFX.played=false;
+                SFX.played = false;
+                setTimeout(() => SFX.updateBGM(0), 500)
                 break;
         }
     }
@@ -49,12 +52,16 @@ function init() {
         if (e.key == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()   // Space Key or W key or arrow up
     }
     document.onkeydown = (e) => {
-        if (e.key == 'b') SFX.updateBGM(-1, scrn, sctx, state);
+        if (state.curr != state.getReady) return
+        if (e.key == 'p') {
+            SFX.playing === true ? SFX.bgm.pause(): SFX.bgm.play();
+            SFX.playing = !SFX.playing
+        }
+        else if (e.key == 'b') SFX.updateBGM(-1, scrn, sctx, state);
         else if (e.key == 'n') SFX.updateBGM(1, scrn, sctx, state);
-    };
-    SFX.playOnMainScreen() {
         
-    }
+    };
+    SFX.playOnMainScreen()
 
     handdleSizeChange(sizeRatio, bird, pipe, gnd, bg);
     gameLoop(bird, state, SFX, UI, pipe, gnd, sctx, scrn, bg);
