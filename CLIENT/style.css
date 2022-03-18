@@ -1,8 +1,9 @@
 * {
   margin: 0;
+  outline: none;
 }
 
-#canvas {
+canvas {
     background-color:#30c0df;
     /* border: 2px solid black; */
     display: block;
