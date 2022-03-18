@@ -4,7 +4,8 @@ class PipeSet {
         this.bot = {sprite : new Image()}
         this.top.sprite.src="img/toppipe.png";
         this.bot.sprite.src="img/botpipe.png";
-        this.gap = 85
+        this.gap = 120; 
+        // gap changed from 85 to 120 to enjoy the music while playing and not dying at 5 every time
         this.moved = true
         this.pipes = []
         this.w;

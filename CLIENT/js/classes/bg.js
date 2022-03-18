@@ -1,6 +1,6 @@
 class Background {
     constructor(scrn) {
-        this.sprite = new Image(400)
+        this.sprite = new Image()
         this.sprite.src = "img/BG.png"
         this.x = 0
         this.y = 0
@@ -19,8 +19,8 @@ class Background {
       // this.times = 1;
       for (let i = 0; i < this.times; i++) {
           let deviation = this.sprite.width*i;
-          let y = parseFloat(scrn.height-this.sprite.height);
-          sctx.drawImage(this.sprite,this.x+deviation, y, this.sprite.width, this.sprite.height);
+          this.y = parseFloat(scrn.height-this.sprite.height);
+          sctx.drawImage(this.sprite,this.x+deviation, this.y, this.sprite.width, this.sprite.height);
       }
     }
     update(state) {
