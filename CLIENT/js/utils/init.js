@@ -17,6 +17,7 @@ function init() {
     const state = new State()
     const SFX = new Sfx()
     const gnd = new GND()
+    const sett = new Setting(scrn)
     const bg = new Background(scrn)
     const pipe = new PipeSet()
     const bird = new Bird()
@@ -66,15 +67,15 @@ function init() {
     SFX.playOnMainScreen()
 
     handdleSizeChange(sizeRatio, bird, pipe, gnd, bg)
-    gameLoop(bird, state, SFX, UI, pipe, gnd, sctx, scrn, bg)
+    gameLoop(bird, state, SFX, UI, pipe, gnd, sctx, scrn, bg, sett)
 }
 
-function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, start) {
+function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett) {
     update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx)
-    draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state)
+    draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state, sett)
     frms++
     requestAnimationFrame(() => {
-        gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg)
+        gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett)
     })
 }
 
@@ -86,11 +87,12 @@ function update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx) {
     bg.update(state)
     sfx.updateBGM(0, scrn, sctx)
 }
-function draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state) {
+function draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state, sett) {
    sctx.fillStyle = "#30c0df"
    sctx.fillRect(0,0,scrn.width,scrn.height)
    bg.draw(scrn, sctx)
    pipe.draw(sctx)
+   sett.draw(sctx)
    
    bird.draw(sctx)
    gnd.draw(sctx, scrn)
