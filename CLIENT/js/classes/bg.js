@@ -1,7 +1,6 @@
 class Background {
     constructor(scrn) {
-        this.sprite = new Image()
-        this.sprite.src = "img/BG.png"
+        this.sprite = BGSPRITE
         this.x = 0
         this.y = 0
         // this.height = 330,
