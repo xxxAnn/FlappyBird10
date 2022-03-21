@@ -3,7 +3,7 @@ class Bird {
         this.animations = BIRDANIMS
         this.rotatation = 0
         this.x = 50
-        this.y = 100
+        this.y = 200
         this.speed = 0
         this.gravity = .125
         this.thrust = 3.6
