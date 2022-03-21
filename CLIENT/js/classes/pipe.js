@@ -22,7 +22,7 @@ class PipeSet {
         if(state.curr!=state.Play) return
             if(frms%(200/dx)==0)
         {
-            let g = Math.max(this.gap-(frms/3), this.MINGAP)
+            let g = Math.max(this.gap-(frms/35), this.MINGAP)
             this.pipes.push({x:parseFloat(scrn.width),y:-210*Math.min(Math.random()+1,1.8),gap:g})
         }
         this.pipes.forEach(pipe=>{
