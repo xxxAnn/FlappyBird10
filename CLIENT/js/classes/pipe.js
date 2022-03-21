@@ -1,11 +1,12 @@
 class PipeSet {
     constructor() {
-        this.bot = BOT
-        this.top = TOP
-        this.gap = 200
-        this.moved = true
-        this.MINGAP = 85
-        this.pipes = []
+        this.bot = BOT;
+        this.top = TOP;
+        this.gap = 120;
+        // gap changed from 85 to 120 to enjoy the music more
+        this.moved = true;
+        this.MINGAP = 85;
+        this.pipes = [];
         this.w;
         this.h;
     }

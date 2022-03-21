@@ -20,7 +20,7 @@ class Sfx {
             {title:"wellerman", demotime: '32.1'},
             {title:"badApple", demotime: '55'},
         ];
-        this.songIndex = 0;
+        this.songIndex = localStorage.getItem('songIndex')? localStorage.getItem('songIndex'): 0;
         this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav";
     }
     updateBGM(change, scrn, sctx) {
@@ -33,6 +33,7 @@ class Sfx {
             } else {
                 this.songIndex += change
             }
+            localStorage.setItem('songIndex', this.songIndex)
             this.bgm = new Audio();
             this.bgm.volume = this.BGMVOLUME
             this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav"

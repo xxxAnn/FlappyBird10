@@ -50,10 +50,8 @@ function init() {
     
     scrn.tabIndex = 1;
     scrn.addEventListener("click", jumpInputHandler)
-    scrn.onkeydown = function keyDown(e) {
-        if (e.key == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()   // Space Key or W key or arrow up
-    }
     document.onkeydown = (e) => {
+        if (e.key == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()   // Space Key or W key or arrow up
         if (state.curr != state.getReady) return
         if (e.key == 'p') {
             SFX.playing === true ? SFX.bgm.pause(): SFX.bgm.play();
