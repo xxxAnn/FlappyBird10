@@ -22,6 +22,7 @@ class Sfx {
         ];
         this.songIndex = localStorage.getItem('songIndex')? localStorage.getItem('songIndex'): 0;
         this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav";
+        this.pos = 0;
     }
     updateBGM(change, scrn, sctx) {
         if (change !== 0) {
@@ -38,6 +39,7 @@ class Sfx {
             this.bgm.volume = this.BGMVOLUME
             this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav"
             this.bgm.loop = true;
+            this.pos = 0
             setTimeout(() => {
                 if (this.playing === true) this.playOnMainScreen();
             }, 500)
@@ -55,10 +57,21 @@ class Sfx {
         sctx.fillStyle = '#000';
         sctx.font = `${fontSize}px Roboto`;
         const paused = this.playing==true? '': ' (paused)';
-        const text = '🎵' + this.sources[this.songIndex].title + paused;
+        const text = this.sources[this.songIndex].title + paused;
         const margin = 10;
-        sctx.fillText(text, margin, scrn.height - margin);
+        const notelength = sctx.measureText('🎵').width
+        sctx.fillText('🎵', margin/2, scrn.height - margin)
+        
+        if (this.pos < -sctx.measureText(text).width-margin) {
+            this.pos = sctx.measureText(text).width+margin 
+        }
+        this.pos -= 0.75;
+        sctx.save();
+        sctx.rect(margin + notelength, scrn.height - fontSize - margin, scrn.width/2.5, fontSize+ margin)
+        sctx.clip()
+        sctx.fillText(text, this.pos + notelength + margin, scrn.height - margin);
         sctx.fillStyle = "#30c0df";
+        sctx.restore();
     }
     playOnMainScreen() {
         this.bgm.play()
