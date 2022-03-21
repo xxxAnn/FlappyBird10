@@ -19,10 +19,11 @@ class Sfx {
             {title:"[ff2] rebel army theme", demotime: '128.2'},
             {title:"wellerman", demotime: '32.1'},
             {title:"Bad apple", demotime: '55'},
-            {title:"Battle against a true hero", demotime: '96.1'}
-        ]
-        this.songIndex = 3
-        this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav"
+            {title:"Battle against a true hero", demotime: '96.1'},
+            {title:"badApple", demotime: '55'},
+        ];
+        this.songIndex = localStorage.getItem('songIndex')? localStorage.getItem('songIndex'): 0;
+        this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav";
     }
     updateBGM(change, scrn, sctx, frs=false) {
         if (change !== 0) {
@@ -34,7 +35,8 @@ class Sfx {
             } else {
                 this.songIndex += change
             }
-            this.bgm = new Audio()
+            localStorage.setItem('songIndex', this.songIndex)
+            this.bgm = new Audio();
             this.bgm.volume = this.BGMVOLUME
             this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav"
             this.bgm.loop = true
