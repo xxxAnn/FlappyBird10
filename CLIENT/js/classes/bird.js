@@ -82,7 +82,7 @@ class Bird {
         let bird = this.animations[0].sprite;
         let r = bird.height/4 +bird.width/4;
         
-        var x, y
+        var x, y, g
         // pipe.pipes.every((e,i) => {
         //   if (e.x <= this.x+r && e.x+pipe.w >= this.x - r) {
         //     x = e.x;
@@ -97,9 +97,10 @@ class Bird {
         // })
         x = pipe.pipes[0].x
         y = pipe.pipes[0].y
+        g = pipe.pipes[0].gap
 
         let roof = y + parseFloat(pipe.h);
-        let floor = roof + pipe.gap;
+        let floor = roof + g;
         let w = parseFloat(pipe.w);
         if(this.x + r>= x)
         {

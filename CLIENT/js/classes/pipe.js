@@ -2,9 +2,9 @@ class PipeSet {
     constructor() {
         this.bot = BOT
         this.top = TOP
-        this.gap = 120; 
-        // gap changed from 85 to 120 to enjoy the music while playing and not dying at 5 every time
+        this.gap = 200
         this.moved = true
+        this.MINGAP = 85
         this.pipes = []
         this.w;
         this.h;
@@ -13,14 +13,15 @@ class PipeSet {
        for(let i = 0;i<this.pipes.length;i++) {
            let p = this.pipes[i];
            sctx.drawImage(this.top.sprite,p.x,p.y, this.w, this.h)
-           sctx.drawImage(this.bot.sprite,p.x,p.y+parseFloat(this.h)+this.gap, this.w, this.h)
+           sctx.drawImage(this.bot.sprite,p.x,p.y+parseFloat(this.h)+p.gap, this.w, this.h)
        }
     }
     update(state, scrn) {
         if(state.curr!=state.Play) return;
             if(frms%(200/dx)==0)
         {
-            this.pipes.push({x:parseFloat(scrn.width),y:-210*Math.min(Math.random()+1,1.8)});
+            let g = Math.max(this.gap-(frms/50), this.MINGAP)
+            this.pipes.push({x:parseFloat(scrn.width),y:-210*Math.min(Math.random()+1,1.8),gap:g});
         }
         this.pipes.forEach(pipe=>{
             pipe.x -= dx;

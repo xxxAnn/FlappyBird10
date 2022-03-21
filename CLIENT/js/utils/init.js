@@ -28,6 +28,7 @@ function init() {
                 state.curr = state.Play;
                 SFX.start.play();
                 SFX.playing = true;
+                frms = 0;
                 SFX.bgm.currentTime = '0'
                 SFX.bgm.play();
                 break;
