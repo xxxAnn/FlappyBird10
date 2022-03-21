@@ -5,6 +5,7 @@ class Sfx {
         this.score = new Audio();
         this.hit = new Audio();
         this.die = new Audio();
+        this.BGMVOLUME = 0.2
         this.start.src = "sfx/start.wav";
         this.flap.src = "sfx/flap.wav";
         this.score.src = "sfx/score.wav";
@@ -12,6 +13,7 @@ class Sfx {
         this.die.src = "sfx/die.wav";
 
         this.bgm = new Audio();
+        this.bgm.volume = this.BGMVOLUME
         this.playing = true;
         this.sources = [
             {title:"[ff2] rebel army theme", demotime: '128.2'},
@@ -32,6 +34,7 @@ class Sfx {
                 this.songIndex += change
             }
             this.bgm = new Audio();
+            this.bgm.volume = this.BGMVOLUME
             this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav"
             this.bgm.loop = true;
             setTimeout(() => {
