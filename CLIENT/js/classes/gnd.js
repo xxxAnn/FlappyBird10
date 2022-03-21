@@ -1,7 +1,6 @@
 class GND {
   constructor() {
-    this.sprite = new Image()
-    this.sprite.src = "img/ground.png"
+    this.sprite = GNDSPRITE
     this.x = 0
     this.y = 0
   }
