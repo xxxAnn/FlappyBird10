@@ -1,16 +1,6 @@
 class Bird {
     constructor() {
-        this.animations =
-            [
-                {sprite : new Image()},
-                {sprite : new Image()},
-                {sprite : new Image()},
-                {sprite : new Image()},
-            ]
-        this.animations[0].sprite.src="img/bird/b0.png";
-        this.animations[1].sprite.src="img/bird/b1.png";
-        this.animations[2].sprite.src="img/bird/b2.png";
-        this.animations[3].sprite.src="img/bird/b0.png";
+        this.animations = BIRDANIMS
         this.rotatation = 0
         this.x = 50
         this.y = 100
