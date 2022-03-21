@@ -4,6 +4,8 @@ let GNDSPRITE = new Image()
 GNDSPRITE.src = "img/ground.png"
 let COGSPRITE = new Image()
 COGSPRITE.src = "img/cog.png"
+let SOUNDSPRITE = new Image()
+SOUNDSPRITE.src = "img/speaker.png"
 let BIRDANIMS =
             [
                 {sprite : new Image()},

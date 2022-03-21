@@ -21,10 +21,10 @@ class Sfx {
             {title:"Bad apple", demotime: '55'},
             {title:"Battle against a true hero", demotime: '96.1'}
         ]
-        this.songIndex = 0
+        this.songIndex = 3
         this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav"
     }
-    updateBGM(change, scrn, sctx) {
+    updateBGM(change, scrn, sctx, frs=false) {
         if (change !== 0) {
             this.bgm.pause()
             if (change+this.songIndex > this.sources.length-1) {
@@ -42,11 +42,11 @@ class Sfx {
                 if (this.playing === true) this.playOnMainScreen()
             }, 500)
 
-        } else if (this.bgm.currentTime == this.bgm.duration) {
+        } else if ((this.bgm.currentTime == this.bgm.duration) || frs) {
             this.bgm.pause()
             this.bgm.currentTime = this.sources[this.songIndex].demotime
             this.bgm.play()
-        }
+        } 
         if (scrn || sctx) return
         this.drawSong(scrn, sctx)
     }

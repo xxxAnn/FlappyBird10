@@ -17,7 +17,7 @@ function init() {
     const state = new State()
     const SFX = new Sfx()
     const gnd = new GND()   
-    const sett = new Setting(scrn)
+    
     const bg = new Background(scrn)
     const pipe = new PipeSet()
     const bird = new Bird()
@@ -26,6 +26,7 @@ function init() {
     const jumpInputHandler = () => {
         switch (state.curr) {
             case state.getReady :
+                sett.PAGEON = false
                 state.curr = state.Play
                 SFX.start.play()
                 SFX.playing = true
@@ -43,14 +44,18 @@ function init() {
                 pipe.pipes=[]
                 UI.score.curr = 0
                 SFX.played = false
-                setTimeout(() => SFX.updateBGM(0, scrn, sctx), 500)
+                setTimeout(() => {
+                    if (state.curr == state.getReady) {
+                        SFX.updateBGM(0, scrn, sctx, true)
+                    }
+                }, 1500)
                 break
         }
     }
+    const sett = new Setting(scrn, state, jumpInputHandler)
 
     
     scrn.tabIndex = 1
-    scrn.addEventListener("click", jumpInputHandler)
     scrn.onkeydown = function keyDown(e) {
         if (e.key == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()   // Space Key or W key or arrow up
     }
@@ -92,12 +97,20 @@ function draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state, sett) {
    sctx.fillRect(0,0,scrn.width,scrn.height)
    bg.draw(scrn, sctx)
    pipe.draw(sctx)
-   sett.draw(sctx)
+   sett.draw(sctx, state)
    
    bird.draw(sctx)
    gnd.draw(sctx, scrn)
    sfx.drawSong(scrn, sctx)
    ui.draw(state, sctx, scrn)
+   if (sett.PAGEON) {
+    sctx.beginPath()
+    let w = 400
+    let h = 400
+    sctx.roundRect(scrn.width/6,scrn.height/3,w,h,[10])
+    sctx.fillStyle = "grey"
+    sctx.fill()
+   }
 }
 function handdleSizeChange(sizeRatio, bird, pipe, gnd, bg) {
   bird.sizeChange(sizeRatio)
