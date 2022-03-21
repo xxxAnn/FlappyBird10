@@ -13,6 +13,15 @@ function init() {
     scrn.width = innerWidth * w_ratio;
     scrn.height = innerHeight * h_ratio;
     let currentSong = 0;
+    
+    const state = new State()
+    const SFX = new Sfx()
+    const gnd = new GND()
+    const bg = new Background(scrn)
+    const pipe = new PipeSet()
+    const bird = new Bird()
+    const UI = new Ui()
+    const sizeRatio = gnd.getSize(scrn);
     const jumpInputHandler = () => {
         switch (state.curr) {
             case state.getReady :
@@ -32,19 +41,11 @@ function init() {
                 pipe.pipes=[];
                 UI.score.curr = 0;
                 SFX.played = false;
-                setTimeout(() => SFX.updateBGM(0), 500)
+                setTimeout(() => SFX.updateBGM(0, scrn, sctx), 500)
                 break;
         }
     }
 
-    const state = new State()
-    const SFX = new Sfx()
-    const gnd = new GND()
-    const bg = new Background(scrn)
-    const pipe = new PipeSet()
-    const bird = new Bird()
-    const UI = new Ui()
-    const sizeRatio = gnd.getSize(scrn);
     
     scrn.tabIndex = 1;
     scrn.addEventListener("click", jumpInputHandler)
