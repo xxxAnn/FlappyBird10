@@ -5,7 +5,7 @@ class Sfx {
         this.score = new Audio()
         this.hit = new Audio()
         this.die = new Audio()
-        this.BGMVOLUME = 0.2
+        this.BGMVOLUME = 1
         this.start.src = "sfx/start.wav"
         this.flap.src = "sfx/flap.wav"
         this.score.src = "sfx/score.wav"
@@ -18,7 +18,8 @@ class Sfx {
         this.sources = [
             {title:"[ff2] rebel army theme", demotime: '128.2'},
             {title:"wellerman", demotime: '32.1'},
-            {title:"badApple", demotime: '55'},
+            {title:"Bad apple", demotime: '55'},
+            {title:"Battle against a true hero", demotime: '96.1'}
         ]
         this.songIndex = 0
         this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav"

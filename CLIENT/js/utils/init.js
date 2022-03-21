@@ -16,7 +16,7 @@ function init() {
     
     const state = new State()
     const SFX = new Sfx()
-    const gnd = new GND()
+    const gnd = new GND()   
     const sett = new Setting(scrn)
     const bg = new Background(scrn)
     const pipe = new PipeSet()
