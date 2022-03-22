@@ -1,6 +1,6 @@
 
 let frms = 0
-let dx = 2
+let dx = PIPE_DEFAULT_MOVESPEED
 let w_ratio = 1/3
 let h_ratio = 1
 const RAD = Math.PI/180
@@ -31,6 +31,7 @@ function init() {
                 if (sett.hovered === true) {
                     sett.PAGEON = !sett.PAGEON
                 } else {
+                    dx = PIPE_DEFAULT_MOVESPEED
                     sett.PAGEON = false
                     state.curr = state.Play
                     SFX.start.play()
@@ -45,8 +46,8 @@ function init() {
                 break
             case state.gameOver :
                 state.curr = state.getReady
-                bird.speed = 0
-                bird.y = 100
+                bird.speed = BIRD_DEFAULTS.speed
+                bird.y = BIRD_DEFAULTS.y
                 pipe.pipes=[]
                 UI.score.curr = 0
                 SFX.played = false
@@ -54,7 +55,7 @@ function init() {
                     if (state.curr == state.getReady) {
                         SFX.updateBGM(0, scrn, sctx, true)
                     }
-                }, 1500)
+                }, BGM_TIMEOUT)
                 break
         }
     }
@@ -77,8 +78,10 @@ function init() {
             SFX.playing === true ? SFX.bgm.pause(): SFX.bgm.play()
             SFX.playing = !SFX.playing
         }
-        else if (e.key == 'b') SFX.updateBGM(-1, scrn, sctx, state)
-        else if (e.key == 'n') SFX.updateBGM(1, scrn, sctx, state)
+        else if (e.key.toLowerCase() == 'b') SFX.updateBGM(-1, scrn, sctx, state)
+        else if (e.key.toLowerCase() == 'n') SFX.updateBGM(1, scrn, sctx, state)
+        console.log(e.key)
+
     }
     SFX.playOnMainScreen()
 
