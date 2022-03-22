@@ -29,7 +29,7 @@ function init() {
         switch (state.curr) {
             case state.getReady :
                 if (sett.hovered === true) {
-                    sett.openSettings()
+                    sett.PAGEON = !sett.PAGEON
                 } else {
                     sett.PAGEON = false
                     state.curr = state.Play

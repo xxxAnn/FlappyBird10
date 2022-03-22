@@ -13,7 +13,8 @@ class Setting {
         this.h = 80
         this.y = 20
         this.x = scrn.width-(this.w+10)
-        // this.PAGEON = false
+        this.turning = false
+        this.PAGEON = false
         // let TELEPORT = {
         //     x: this.x,
         //     y: this.y,
@@ -41,17 +42,29 @@ class Setting {
     draw(sctx, state) {
         if (state.curr !== state.getReady) return
         sctx.save()
-        if (this.hovered === true) {
-            sctx.translate(this.sprite.width * 0.5, this.sprite.height * 0.5) 
-            sctx.rotate(2*Math.PI/animationLength)
-            sctx.translate(-this.sprite.width * 0.5, -this.sprite.height * 0.5)   
+        if (this.hovered === true && !this.turning) {
+            this.turning = true
+            let f = 0.9
+            this.h = this.h*f
+            this.w = this.w*f
+            let org_x = this.x
+            let org_y = this.y
+            this.y += (this.h/f-this.h)/2
+            this.x += (this.w/f-this.w)/2
+            setTimeout(() => {
+                this.turning = false
+                this.h = this.h/f
+                this.w = this.w/f
+                this.x = org_x
+                this.y = org_y
+            }, 250);
         }
         sctx.drawImage(this.sprite, this.x, this.y, this.w, this.h)
         sctx.restore()
     }
     update(sctx, state) {
         if (state.curr !== state.getReady) return
-        const animationLength = 60;
+        
         
     }
     handleMouseMove(pos) {
