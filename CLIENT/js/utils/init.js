@@ -3,6 +3,7 @@ let frms = 0
 let dx = PIPE_DEFAULT_MOVESPEED
 let w_ratio = 1/3
 let h_ratio = 1
+let PAUSED = false
 const RAD = Math.PI/180
 
 function init() {
@@ -26,6 +27,10 @@ function init() {
     const sett = new Setting(scrn, state)
 
     const jumpInputHandler = () => {
+        if (PAUSED && sett.hovered == false) {
+            SFX.bgm.play()
+            PAUSED = false
+        }
         switch (state.curr) {
             case state.getReady :
                 if (sett.hovered === true) {
@@ -42,6 +47,13 @@ function init() {
                 }
                 break
             case state.Play :
+                if (sett.hovered === true) {
+                    PAUSED = !PAUSED
+                    console.log(PAUSED)
+                    SFX.playing === true ? SFX.bgm.pause(): SFX.bgm.play()
+                    SFX.playing = !SFX.playing
+                    return
+                }
                 bird.flap(SFX)
                 break
             case state.gameOver :
@@ -50,6 +62,8 @@ function init() {
                 bird.y = BIRD_DEFAULTS.y
                 pipe.FRMTHRESH.app = 0
                 pipe.FRMTHRESH.accel = 0
+                pipe.mode = 0
+                pipe.canToggleEvent = PIPE_DEFAULT_CAN_TOGGLE_EVENT
                 pipe.pipes=[]
                 UI.score.curr = 0
                 SFX.played = false
@@ -74,12 +88,15 @@ function init() {
     scrn.tabIndex = 1;
     scrn.addEventListener("click", jumpInputHandler)
     document.onkeydown = (e) => {
-        if (e.key == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
-        if (state.curr != state.getReady) return
-        if (e.key == 'p') {
+        if (e.key.toLowerCase() == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
+        if (e.key.toLocaleLowerCase() == 'p') {                
+            if (state.curr == state.Play) {
+                PAUSED = !PAUSED
+            }
             SFX.playing === true ? SFX.bgm.pause(): SFX.bgm.play()
             SFX.playing = !SFX.playing
         }
+        if (state.curr != state.getReady) return
         else if (e.key.toLowerCase() == 'b') SFX.updateBGM(-1, scrn, sctx, state)
         else if (e.key.toLowerCase() == 'n') SFX.updateBGM(1, scrn, sctx, state)
         console.log(e.key)
@@ -94,20 +111,29 @@ function init() {
 function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett) {
     update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx, sett)
     draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state, sett)
-    frms++
+    if (!PAUSED) {
+        frms++
+    }
+    if (PAUSED) {
+        if (ui.message_list.length == 0) {
+            ui.pushMessage("PAUSED", 10, 70, 0, 60, "grey", false)
+        }
+    }
     requestAnimationFrame(() => {
         gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett)
     })
 }
 
 function update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx, sett) {
-    bird.update(state, sfx, ui, pipe, gnd) 
-    gnd.update(state)
-    pipe.update(state, scrn, ui)
+    if (!PAUSED) {
+        bird.update(state, sfx, ui, pipe, gnd) 
+        pipe.update(state, scrn, ui)
+        gnd.update(state)
+        bg.update(state)
+    }
     
 
     ui.update(state)
-    bg.update(state)
     sfx.updateBGM(0, scrn, sctx)
 }
 function draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state, sett) {

@@ -42,7 +42,7 @@ class Ui  {
         }
         this.drawScore(state, sctx, scrn)
     }
-    pushMessage(txt, tick, xoffset, yoffset, size=60, color="red") {
+    pushMessage(txt, tick, xoffset=0, yoffset=0, size=60, color="red", fall=true) {
         this.message_list.push({
             txt: txt,
             tick: tick,
@@ -50,7 +50,8 @@ class Ui  {
             yoffset: yoffset,
             size: size,
             length: tick,
-            color: color
+            color: color,
+            fall: fall
         })
     }
     drawScore(state, sctx, scrn) {
@@ -95,11 +96,13 @@ class Ui  {
         sctx.fillText(msg.txt,scrn.width/2-msg.xoffset, scrn.height/2+msg.yoffset)
         sctx.strokeText(msg.txt,scrn.width/2-msg.xoffset, scrn.height/2+msg.yoffset)
         this.message_list[0].tick -= 1
-        let k = 2
-        let sublen = msg.length/k
-        let sublentick = (msg.length-msg.tick)
-        if (sublentick-(msg.length*((k-1)/k))>0) {
-            this.message_list[0].yoffset+=((screen.height/2-50)/sublen) * -(sublen-sublentick)
+        if (msg.fall) {
+            let k = 2
+            let sublen = msg.length/k
+            let sublentick = (msg.length-msg.tick)
+            if (sublentick-(msg.length*((k-1)/k))>0) {
+                this.message_list[0].yoffset+=((screen.height/2-50)/sublen) * -(sublen-sublentick)
+            }
         }
         if (this.message_list[0].tick == 0) {
             this.message_list.shift()

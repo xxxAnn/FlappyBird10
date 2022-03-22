@@ -19,6 +19,7 @@ let GNDSPRITE = imageWithSource("ground")
 let COGSPRITE = imageWithSource("cog")
 let SOUNDSPRITE = imageWithSource("speaker")
 let FIREBALLSPRITE = imageWithSource("fireball")
+let PAUSESPRITE = imageWithSource("pause")
 let BIRDANIMS = [
   {sprite : imageWithSource("bird/b0")},
   {sprite : imageWithSource("bird/b1")},
@@ -54,3 +55,6 @@ const PIPE_DEFAULT_THRESH = {
 }
 
 const BGM_TIMEOUT = 1500 // ms
+
+const FIRSTEVENTTHRESHOLD = 10
+const PIPE_DEFAULT_CAN_TOGGLE_EVENT = [1]

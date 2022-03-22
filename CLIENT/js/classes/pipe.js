@@ -7,6 +7,8 @@ class PipeSet {
         this.gap = PIPE_DEFAULT_GAP
         this.MINGAP = PIPE_MINIMUM_GAP
         this.FRMTHRESH = PIPE_DEFAULT_THRESH
+        this.canToggleEvent = PIPE_DEFAULT_CAN_TOGGLE_EVENT
+        this.mode = 0
         // --
         this.pipes = []
         this.w
@@ -21,27 +23,39 @@ class PipeSet {
     }
     update(state, scrn, ui) {
         if(state.curr!=state.Play) return
-            if(frms>this.FRMTHRESH.app)
-        {
-            let g = Math.max(this.gap-(frms/35), this.MINGAP)
-            this.pipes.push({x:parseFloat(scrn.width),y:-210*Math.min(Math.random()+1,1.8),gap:g})
-            this.FRMTHRESH.app+=(1/(dx*BIRD_ANIMATION_SPEED))
-        }
-        this.pipes.forEach(pipe=>{
-            pipe.x -= dx
-        })
+            if (this.mode == 0) {
+                if(frms>this.FRMTHRESH.app) {
+                let g = Math.max(this.gap-(frms/35), this.MINGAP)
+                this.pipes.push({x:parseFloat(scrn.width),y:-210*Math.min(Math.random()+1,1.8),gap:g})
+                this.FRMTHRESH.app+=(1/(dx*BIRD_ANIMATION_SPEED))
+                }
+            }
+            this.pipes.forEach(pipe=>{
+                pipe.x -= dx
+            })
 
-        if(this.pipes.length&&this.pipes[0].x < -this.top.sprite.width)
-        {
-           this.pipes.shift()
-           this.moved = true
-        }
+            if(this.pipes.length&&this.pipes[0].x < -this.top.sprite.width) {
+            this.pipes.shift()
+            this.moved = true
+            }
+            if (this.mode == 1 && this.pipes.length == 0) {
+                this.mode = 2
+                dx = PIPE_DEFAULT_MOVESPEED
+                this.FRMTHRESH.dx = PIPE_DEFAULT_MOVESPEED+5
+                ui.pushMessage("!!", 50, 0, 0, 80, "red", false)
+                ui.pushMessage("EVENT PLACEHOLDER", 150, 200)
+            }
+        
         if (frms>this.FRMTHRESH.accel) {
             dx+=0.1
             this.FRMTHRESH.accel+=1/PIPE_ACCELERATION_RATE
-            if (dx>this.FRMTHRESH.dx && dx>PIPE_DEFAULT_MOVESPEED) {
-                ui.pushMessage("Speed up ↑", 50, 80, 0)
+            if (dx>this.FRMTHRESH.dx && dx>PIPE_DEFAULT_MOVESPEED && this.mode == 0) {
+                ui.pushMessage("Speed up ↑", 50, 80)
                 this.FRMTHRESH.dx+=5
+            }
+            if (dx>FIRSTEVENTTHRESHOLD && this.canToggleEvent.includes(1)) {
+                this.mode = 1
+                this.canToggleEvent = this.canToggleEvent.filter((x) => x!=1)
             }
         }
 

@@ -8,7 +8,8 @@ function getMousePos(canvas, evt) {
 
 class Setting {
     constructor(scrn, state) {
-        this.sprite = COGSPRITE 
+        this.cog = COGSPRITE 
+        this.pause = PAUSESPRITE
         this.w = 80
         this.h = 80
         this.y = 20
@@ -40,7 +41,7 @@ class Setting {
         this.hovered = false;
     }
     draw(sctx, state) {
-        if (state.curr !== state.getReady) return
+        if (state.curr == state.gameOver) return
         sctx.save()
         if (this.hovered === true && !this.turning) {
             this.turning = true
@@ -59,13 +60,16 @@ class Setting {
                 this.y = org_y
             }, 250);
         }
-        sctx.drawImage(this.sprite, this.x, this.y, this.w, this.h)
+        if (state.curr == state.getReady) {
+            sctx.drawImage(this.cog, this.x, this.y, this.w, this.h)
+        } else if (state.curr == state.Play) {
+            sctx.drawImage(this.pause, this.x, this.y, this.w, this.h)
+        }
+        
         sctx.restore()
     }
     update(sctx, state) {
         if (state.curr !== state.getReady) return
-        
-        
     }
     handleMouseMove(pos) {
         this.mousePos = pos
