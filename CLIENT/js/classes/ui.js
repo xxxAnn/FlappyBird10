@@ -10,6 +10,7 @@ class Ui  {
             curr : 0,
             best : 0,
         }
+        this.message_list = []
         this.x = 0
         this.y = 0
         this.tx = 0
@@ -41,9 +42,20 @@ class Ui  {
         }
         this.drawScore(state, sctx, scrn)
     }
+    pushMessage(txt, tick, xoffset, yoffset, size=60, color="red") {
+        this.message_list.push({
+            txt: txt,
+            tick: tick,
+            xoffset: xoffset,
+            yoffset: yoffset,
+            size: size,
+            length: tick,
+            color: color
+        })
+    }
     drawScore(state, sctx, scrn) {
-            sctx.fillStyle = "#FFFFFF"
-            sctx.strokeStyle = "#000000"
+        sctx.fillStyle = "#FFFFFF"
+        sctx.strokeStyle = "#000000"
         switch (state.curr) {
             case state.Play :
                 sctx.lineWidth = "2"
@@ -70,6 +82,27 @@ class Ui  {
                     }
                     
                 break
+        }
+        if (this.message_list.length > 0) {
+            this.drawMessage(sctx, scrn)
+        }
+    }
+    drawMessage(sctx, scrn) {
+        let msg = this.message_list[0]
+        sctx.fillStyle = msg.color
+        sctx.font = `${msg.size}px Squada One`
+        sctx.lineWidth = "1"
+        sctx.fillText(msg.txt,scrn.width/2-msg.xoffset, scrn.height/2+msg.yoffset)
+        sctx.strokeText(msg.txt,scrn.width/2-msg.xoffset, scrn.height/2+msg.yoffset)
+        this.message_list[0].tick -= 1
+        let k = 2
+        let sublen = msg.length/k
+        let sublentick = (msg.length-msg.tick)
+        if (sublentick-(msg.length*((k-1)/k))>0) {
+            this.message_list[0].yoffset+=((screen.height/2-50)/sublen) * -(sublen-sublentick)
+        }
+        if (this.message_list[0].tick == 0) {
+            this.message_list.shift()
         }
     }
     update(state) {
