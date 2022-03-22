@@ -4,8 +4,8 @@ class PipeSet {
         this.top = TOP
         this.moved = true
         // should be relative to screen size --
-        this.gap = 200
-        this.MINGAP = 20 
+        this.gap = PIPE_DEFAULT_GAP
+        this.MINGAP = PIPE_MINIMUM_GAP
         // --
         this.pipes = []
         this.w
@@ -20,7 +20,7 @@ class PipeSet {
     }
     update(state, scrn) {
         if(state.curr!=state.Play) return
-            if(frms%(200/dx)==0)
+            if(frms%(1/PIPE_APPEARANCE_SPEED)==0)
         {
             let g = Math.max(this.gap-(frms/35), this.MINGAP)
             this.pipes.push({x:parseFloat(scrn.width),y:-210*Math.min(Math.random()+1,1.8),gap:g})
@@ -33,6 +33,9 @@ class PipeSet {
         {
            this.pipes.shift()
            this.moved = true
+        }
+        if (frms%500==0) {
+            dx+=1
         }
 
     }

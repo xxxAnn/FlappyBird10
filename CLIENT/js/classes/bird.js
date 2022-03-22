@@ -1,13 +1,13 @@
 class Bird {
     constructor() {
         this.animations = BIRDANIMS
-        this.rotatation = 0
-        this.x = 50
-        this.y = 200
-        this.speed = 0
-        this.gravity = .125
-        this.thrust = 3.6
-        this.frame = 0
+        this.rotatation = BIRD_DEFAULTS.rotatation
+        this.x = BIRD_DEFAULTS.x
+        this.y = BIRD_DEFAULTS.y
+        this.speed = BIRD_DEFAULTS.speed
+        this.gravity = BIRD_DEFAULTS.gravity
+        this.thrust = BIRD_DEFAULTS.thrust
+        this.frame = BIRD_DEFAULTS.frame
     }
     draw(sctx) {
         let h = this.animations[this.frame].sprite.height
@@ -27,7 +27,7 @@ class Bird {
                 this.frame += (frms%10==0) ? 1 : 0
                 break
             case state.Play :
-                this.frame += (frms%5==0) ? 1 : 0
+                this.frame += (frms%(1/BIRD_ANIMATION_SPEED)==0) ? 1 : 0
                 this.y += this.speed
                 this.setRotation()
                 this.speed += this.gravity
@@ -71,10 +71,10 @@ class Bird {
         if(this.speed <= 0)
         {
             
-            this.rotatation = Math.max(-25, -25 * this.speed/(-1*this.thrust))
+            this.rotatation = Math.max(BIRD_DOWN_ROTATION, BIRD_DOWN_ROTATION * this.speed/(-1*this.thrust))
         }
         else if(this.speed > 0 ) {
-            this.rotatation = Math.min(90, 90 * this.speed/(this.thrust*2))
+            this.rotatation = Math.min(BIRD_UP_ROTATION, BIRD_UP_ROTATION * this.speed/(this.thrust*2))
         }
     }
     collisioned(pipe, UI, SFX) {

@@ -20,7 +20,6 @@ class Sfx {
             {title:"wellerman", demotime: '32.1'},
             {title:"Bad apple", demotime: '55'},
             {title:"Battle against a true hero", demotime: '96.1'},
-            {title:"badApple", demotime: '55'},
         ];
         this.songIndex = 0;
         this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav";
