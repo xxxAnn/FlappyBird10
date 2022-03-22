@@ -4,7 +4,8 @@ class PipeSet {
         this.top = TOP
         this.moved = true
         // should be relative to screen size --
-        this.gap = 200
+        this.gap = 120
+            // the gap shall remain as 120 for start
         this.MINGAP = 85 
         // --
         this.pipes = []

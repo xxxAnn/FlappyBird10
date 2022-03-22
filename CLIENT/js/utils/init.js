@@ -23,16 +23,22 @@ function init() {
     const bird = new Bird()
     const UI = new Ui()
     const sizeRatio = gnd.getSize(scrn)
+    const sett = new Setting(scrn, state)
+
     const jumpInputHandler = () => {
         switch (state.curr) {
             case state.getReady :
-                sett.PAGEON = false
-                state.curr = state.Play
-                SFX.start.play()
-                SFX.playing = true
-                frms = 0
-                SFX.bgm.currentTime = '0'
-                SFX.bgm.play()
+                if (sett.hovered === true) {
+                    sett.openSettings()
+                } else {
+                    sett.PAGEON = false
+                    state.curr = state.Play
+                    SFX.start.play()
+                    SFX.playing = true
+                    frms = 0
+                    SFX.bgm.currentTime = '0'
+                    SFX.bgm.play()
+                }
                 break
             case state.Play :
                 bird.flap(SFX)
@@ -52,14 +58,20 @@ function init() {
                 break
         }
     }
-    const sett = new Setting(scrn, state, jumpInputHandler)
-
     
-    scrn.tabIndex = 1
-    scrn.onkeydown = function keyDown(e) {
-        if (e.key == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()   // Space Key or W key or arrow up
+
+    scrn.onmousemove = (e) => {
+        const rect = scrn.getBoundingClientRect()
+        sett.hovered = sett.handleMouseMove({
+            x:e.x-rect.x,
+            y:e.y-rect.y,
+        }) == true ? true: false;
     }
+
+    scrn.tabIndex = 1;
+    scrn.addEventListener("click", jumpInputHandler)
     document.onkeydown = (e) => {
+        if (e.key == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
         if (state.curr != state.getReady) return
         if (e.key == 'p') {
             SFX.playing === true ? SFX.bgm.pause(): SFX.bgm.play()
@@ -67,7 +79,6 @@ function init() {
         }
         else if (e.key == 'b') SFX.updateBGM(-1, scrn, sctx, state)
         else if (e.key == 'n') SFX.updateBGM(1, scrn, sctx, state)
-        
     }
     SFX.playOnMainScreen()
 
@@ -76,7 +87,7 @@ function init() {
 }
 
 function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett) {
-    update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx)
+    update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx, sett)
     draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state, sett)
     frms++
     requestAnimationFrame(() => {
@@ -84,10 +95,12 @@ function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett) {
     })
 }
 
-function update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx) {
+function update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx, sett) {
     bird.update(state, sfx, ui, pipe, gnd) 
     gnd.update(state)
     pipe.update(state, scrn)
+    
+
     ui.update(state)
     bg.update(state)
     sfx.updateBGM(0, scrn, sctx)
@@ -98,6 +111,7 @@ function draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state, sett) {
    bg.draw(scrn, sctx)
    pipe.draw(sctx)
    sett.draw(sctx, state)
+   sett.update(sctx, state)
    
    bird.draw(sctx)
    gnd.draw(sctx, scrn)
