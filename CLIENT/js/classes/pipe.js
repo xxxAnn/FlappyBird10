@@ -6,6 +6,7 @@ class PipeSet {
         // should be relative to screen size --
         this.gap = PIPE_DEFAULT_GAP
         this.MINGAP = PIPE_MINIMUM_GAP
+        this.FRMTHRESH = PIPE_DEFAULT_THRESH
         // --
         this.pipes = []
         this.w
@@ -18,12 +19,13 @@ class PipeSet {
            sctx.drawImage(this.bot.sprite,p.x,p.y+parseFloat(this.h)+p.gap, this.w, this.h)
        }
     }
-    update(state, scrn) {
+    update(state, scrn, ui) {
         if(state.curr!=state.Play) return
-            if(frms%(1/PIPE_APPEARANCE_SPEED)==0)
+            if(frms>this.FRMTHRESH.app)
         {
             let g = Math.max(this.gap-(frms/35), this.MINGAP)
             this.pipes.push({x:parseFloat(scrn.width),y:-210*Math.min(Math.random()+1,1.8),gap:g})
+            this.FRMTHRESH.app+=(1/(dx*BIRD_ANIMATION_SPEED))
         }
         this.pipes.forEach(pipe=>{
             pipe.x -= dx
@@ -34,8 +36,13 @@ class PipeSet {
            this.pipes.shift()
            this.moved = true
         }
-        if (frms%500==0) {
-            dx+=1
+        if (frms>this.FRMTHRESH.accel) {
+            dx+=0.1
+            this.FRMTHRESH.accel+=1/PIPE_ACCELERATION_RATE
+            if (dx>this.FRMTHRESH.dx && dx>PIPE_DEFAULT_MOVESPEED) {
+                ui.pushMessage("Speed up ↑", 50, 80, 0)
+                this.FRMTHRESH.dx+=5
+            }
         }
 
     }

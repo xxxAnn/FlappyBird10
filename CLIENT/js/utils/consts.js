@@ -28,7 +28,7 @@ let BIRDANIMS = [
 let TOP = {sprite : imageWithSource("toppipe")}
 let BOT = {sprite : imageWithSource("botpipe")}
 
-const BIRD_ANIMATION_SPEED = 1/5 // (0 - 1)
+const BIRD_ANIMATION_SPEED = 0.0025 // (0 - 1)
 const BIRD_DOWN_ROTATION = -25  // (deg)
 const BIRD_UP_ROTATION = 90 // (deg)
 
@@ -42,9 +42,15 @@ const BIRD_DEFAULTS = {
     frame: 0
 }
 
-const PIPE_APPEARANCE_SPEED = 0.005 // (0-1), preferably <0.05, game starts breaking at ~0.03
+const PIPE_APPEARANCE_SPEED = 1/150 // (0-1), preferably <0.05, game starts breaking at ~0.03
 const PIPE_DEFAULT_MOVESPEED = 2
 const PIPE_DEFAULT_GAP = 200
 const PIPE_MINIMUM_GAP = 20
+const PIPE_ACCELERATION_RATE = 0.1 // <0.01, really small or 0, 0 == no acceleration
+const PIPE_DEFAULT_THRESH = {
+    app:0,
+    accel:0,
+    dx:PIPE_DEFAULT_MOVESPEED+5
+}
 
 const BGM_TIMEOUT = 1500 // ms
