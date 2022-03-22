@@ -21,7 +21,10 @@ class Sfx {
             {title:"Bad apple", demotime: '55'},
             {title:"Battle against a true hero", demotime: '96.1'},
         ];
-        this.songIndex = 0;
+        this.songIndex = localStorage.getItem("FB10SONGINDEX")
+        if (this.songIndex == null) {
+            this.songIndex = 0
+        }
         this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav";
         this.pos = 0;
     }
@@ -35,6 +38,7 @@ class Sfx {
             } else {
                 this.songIndex += change
             }
+            localStorage.setItem("FB10SONGINDEX", this.songIndex)
             this.bgm = new Audio();
             this.bgm.volume = this.BGMVOLUME
             this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav"
@@ -42,7 +46,7 @@ class Sfx {
             this.pos = 0
             setTimeout(() => {
                 if (this.playing === true) this.playOnMainScreen()
-            }, 500)
+            }, 100)
 
         } else if ((this.bgm.currentTime == this.bgm.duration) || frs) {
             this.bgm.pause()
