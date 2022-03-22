@@ -1,16 +1,15 @@
 * {
-  margin: 0;
-  outline: none;
+    margin: 0;
+    outline: none;
 }
 
 canvas {
     background-color:#30c0df;
-    /* border: 2px solid black; */
+
     display: block;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    /* padding: auto; */
-    /* margin-top: 10%; */
+
 }
