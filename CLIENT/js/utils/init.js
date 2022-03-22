@@ -48,6 +48,8 @@ function init() {
                 state.curr = state.getReady
                 bird.speed = BIRD_DEFAULTS.speed
                 bird.y = BIRD_DEFAULTS.y
+                pipe.FRMTHRESH.app = 0
+                pipe.FRMTHRESH.accel = 0
                 pipe.pipes=[]
                 UI.score.curr = 0
                 SFX.played = false
@@ -101,7 +103,7 @@ function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett) {
 function update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx, sett) {
     bird.update(state, sfx, ui, pipe, gnd) 
     gnd.update(state)
-    pipe.update(state, scrn)
+    pipe.update(state, scrn, ui)
     
 
     ui.update(state)
@@ -124,7 +126,7 @@ function draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state, sett) {
     sctx.beginPath()
     let w = 400
     let h = 400
-    sctx.roundRect(scrn.width/6,scrn.height/3,w,h,[10])
+    sctx.roundRect((scrn.width-w)/2,scrn.height/3,w,h,[10])
     sctx.fillStyle = "grey"
     sctx.fill()
    }
