@@ -40,20 +40,19 @@ class Setting {
     }
     draw(sctx, state) {
         if (state.curr !== state.getReady) return
+        sctx.save()
+        if (this.hovered === true) {
+            sctx.translate(this.sprite.width * 0.5, this.sprite.height * 0.5) 
+            sctx.rotate(2*Math.PI/animationLength)
+            sctx.translate(-this.sprite.width * 0.5, -this.sprite.height * 0.5)   
+        }
         sctx.drawImage(this.sprite, this.x, this.y, this.w, this.h)
+        sctx.restore()
     }
     update(sctx, state) {
         if (state.curr !== state.getReady) return
         const animationLength = 60;
-        if (this.hovered === true) {
-            console.log('>>')
-            sctx.save()
-            sctx.translate(this.sprite.width * 0.5, this.sprite.height * 0.5) 
-            sctx.rotate(2*Math.PI/animationLength)
-            sctx.translate(-this.sprite.width * 0.5, -this.sprite.height * 0.5)
-            this.draw(sctx)
-            sctx.restore()
-        }
+        
     }
     handleMouseMove(pos) {
         this.mousePos = pos
