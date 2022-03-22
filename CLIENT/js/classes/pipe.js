@@ -5,7 +5,7 @@ class PipeSet {
         this.moved = true
         // should be relative to screen size --
         this.gap = 200
-        this.MINGAP = 85 
+        this.MINGAP = 20 
         // --
         this.pipes = []
         this.w
