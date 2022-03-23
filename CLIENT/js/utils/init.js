@@ -17,7 +17,7 @@ function init() {
     
     const state = new State()
     const SFX = new Sfx()
-    const gnd = new GND()   
+    const gnd = new GND()
     
     const bg = new Background(scrn)
     const pipe = new PipeSet(scrn)
@@ -33,11 +33,14 @@ function init() {
         }
         switch (state.curr) {
             case state.getReady :
-                if (sett.hovered === true) {
+                if (sett.hovering === true || sett.wait === true) {
+                    // sett.PAGEON = !sett.PAGEON
                     sett.PAGEON = !sett.PAGEON
+                    sett.wait = !sett.wait
                 } else {
                     dx = PIPE_DEFAULT_MOVESPEED
                     sett.PAGEON = false
+                    sett.wait = false
                     state.curr = state.Play
                     SFX.start.play()
                     SFX.playing = true
@@ -47,7 +50,7 @@ function init() {
                 }
                 break
             case state.Play :
-                if (sett.hovered === true) {
+                if (sett.hovering === true) {
                     PAUSED = !PAUSED
                     console.log(PAUSED)
                     SFX.playing === true ? SFX.bgm.pause(): SFX.bgm.play()
@@ -82,10 +85,10 @@ function init() {
 
     document.onmousemove = (e) => {
         const rect = scrn.getBoundingClientRect()
-        sett.hovered = sett.handleMouseMove({
+        sett.hovering = sett.handleMouseMove({
             x:e.x-rect.x,
             y:e.y-rect.y,
-        })
+        }, scrn)
     }
 
     scrn.tabIndex = 1;
@@ -139,25 +142,21 @@ function update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx, sett) {
     ui.update(state)
     sfx.updateBGM(0, scrn, sctx)
 }
+
 function draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state, sett) {
    sctx.fillStyle = "#30c0df"
    sctx.fillRect(0,0,scrn.width,scrn.height)
    bg.draw(scrn, sctx)
    pipe.draw(sctx)
    sett.draw(sctx, state)
-   sett.update(sctx, state)
+//    sett.update(sctx, state)
    
    bird.draw(sctx)
    gnd.draw(sctx, scrn)
    sfx.drawSong(scrn, sctx)
    ui.draw(state, sctx, scrn)
-   if (sett.PAGEON) {
-    sctx.beginPath()
-    let w = 400
-    let h = 400
-    sctx.roundRect((scrn.width-w)/2,scrn.height/3,w,h,[10])
-    sctx.fillStyle = "grey"
-    sctx.fill()
+   if (sett.PAGEON===true) {
+       sett.openSettings(sctx, scrn)
    }
 }
 function handdleSizeChange(sizeRatio, bird, pipe, gnd, bg) {
