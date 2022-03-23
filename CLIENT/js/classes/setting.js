@@ -73,10 +73,10 @@ class Setting {
     }
     handleMouseMove(pos) {
         this.mousePos = pos
-        if (this.mousePos.x < this.x) return
-        if (this.mousePos.x > this.x + this.w) return
-        if (this.mousePos.y < this.y) return
-        if (this.mousePos.y > this.y + this.h) return
+        if (this.mousePos.x < this.x) return false
+        if (this.mousePos.x > this.x + this.w) return false
+        if (this.mousePos.y < this.y) return false 
+        if (this.mousePos.y > this.y + this.h) return false
         
         return true
     }

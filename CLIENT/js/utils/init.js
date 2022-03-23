@@ -80,12 +80,12 @@ function init() {
     }
     
 
-    scrn.onmousemove = (e) => {
+    document.onmousemove = (e) => {
         const rect = scrn.getBoundingClientRect()
         sett.hovered = sett.handleMouseMove({
             x:e.x-rect.x,
             y:e.y-rect.y,
-        }) == true ? true: false;
+        })
     }
 
     scrn.tabIndex = 1;
