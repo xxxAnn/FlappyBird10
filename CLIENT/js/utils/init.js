@@ -20,7 +20,7 @@ function init() {
     const gnd = new GND()   
     
     const bg = new Background(scrn)
-    const pipe = new PipeSet()
+    const pipe = new PipeSet(scrn)
     const bird = new Bird()
     const UI = new Ui()
     const sizeRatio = gnd.getSize(scrn)
@@ -60,11 +60,14 @@ function init() {
                 state.curr = state.getReady
                 bird.speed = BIRD_DEFAULTS.speed
                 bird.y = BIRD_DEFAULTS.y
+                bird.x = BIRD_DEFAULTS.x
+                bird.movingToCenter.t = false
                 pipe.FRMTHRESH.app = 0
                 pipe.FRMTHRESH.accel = 0
                 pipe.mode = 0
                 pipe.canToggleEvent = PIPE_DEFAULT_CAN_TOGGLE_EVENT
                 pipe.pipes=[]
+                pipe.fireballs = []
                 UI.score.curr = 0
                 SFX.played = false
                 setTimeout(() => {
@@ -126,8 +129,8 @@ function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett) {
 
 function update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx, sett) {
     if (!PAUSED) {
-        bird.update(state, sfx, ui, pipe, gnd) 
-        pipe.update(state, scrn, ui)
+        bird.update(state, sfx, ui, pipe, gnd, scrn) 
+        pipe.update(state, scrn, ui, bird)
         gnd.update(state)
         bg.update(state)
     }

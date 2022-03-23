@@ -1,7 +1,10 @@
+let TEST = 50
 class PipeSet {
-    constructor() {
+    constructor(scrn) {
         this.bot = BOT
         this.top = TOP
+        this.fireball = FIREBALLSPRITE
+        this.fireballs = []
         this.moved = true
         // should be relative to screen size --
         this.gap = PIPE_DEFAULT_GAP
@@ -20,8 +23,12 @@ class PipeSet {
            sctx.drawImage(this.top.sprite,p.x,p.y, this.w, this.h)
            sctx.drawImage(this.bot.sprite,p.x,p.y+parseFloat(this.h)+p.gap, this.w, this.h)
        }
+       for (let i = 0; i<this.fireballs.length; i++) {
+           let f = this.fireballs[i]
+           sctx.drawImage(this.fireball, f.x, f.y, f.w, f.h)
+       }
     }
-    update(state, scrn, ui) {
+    update(state, scrn, ui, bird) {
         if(state.curr!=state.Play) return
             if (this.mode == 0) {
                 if(frms>this.FRMTHRESH.app) {
@@ -42,9 +49,27 @@ class PipeSet {
                 this.mode = 2
                 dx = PIPE_DEFAULT_MOVESPEED
                 this.FRMTHRESH.dx = PIPE_DEFAULT_MOVESPEED+5
+                bird.goToCenter(250) 
                 ui.pushMessage("!!", 50, 0, 0, 80, "red", false)
-                ui.pushMessage("EVENT PLACEHOLDER", 150, 200)
+                ui.pushMessage("WATCH OUT", 150, 120)
+                this.FRMTHRESH.fb = frms+(1/FIREBALL_SPAWNRATE)
             }
+            if (this.mode == 2) {
+                if (frms>this.FRMTHRESH.fb) {
+                    this.newFireball(Math.floor(Math.random() * (scrn.width/3))+scrn.width/3, 10, TEST*RAD, FIREBALL_SIZE)
+                    this.FRMTHRESH.fb = frms+(1/FIREBALL_SPAWNRATE)
+                }
+
+                this.fireballs.forEach(fb => {
+                    fb.y+=dx*FIREBALL_MOVEMENTSPEED
+                    fb.x-=dx*fb.rg
+                    if (fb.y>=scrn.height) {
+                        fb.die = true
+                        ui.curr+=1
+                    }
+                })
+            }
+            this.fireballs = this.fireballs.filter((x) => !x.die)
         
         if (frms>this.FRMTHRESH.accel) {
             dx+=0.1
@@ -59,6 +84,17 @@ class PipeSet {
             }
         }
 
+    }
+    newFireball(x, y, rot, size=50) {
+        this.fireballs.push({
+            x: x,
+            y: y,
+            h: size,
+            w: size,
+            rot: rot,
+            die: false,
+            rg: Math.floor(Math.random()*3-1.5)
+        })
     }
     sizeChange(sizeRatio) {
         const ratio = 1
