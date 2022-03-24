@@ -113,7 +113,7 @@ class Bird {
         //   return true
         // })
         var x, y, g
-        if (state.gameStage !== games.fireball.id) {
+        if (state.gameStage == games.fireball.id) {
             var HIT = false
             games.fireball.fireballs.forEach(fb => {
                 var x, y, h, w 
