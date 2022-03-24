@@ -8,6 +8,8 @@ class FireballSet {
         this.started = false
         this.id = 1
         this.FRMTHRESH = PIPE_DEFAULT_THRESH
+        this.FRMTHRESH.fb = 0
+        this.FRMTHRESH.dx = 0
     }
     draw(sctx) {
         for (let i = 0; i<this.fireballs.length; i++) {

@@ -11,6 +11,9 @@ class PipeSet {
         this.gap = PIPE_DEFAULT_GAP
         this.MINGAP = PIPE_MINIMUM_GAP
         this.FRMTHRESH = PIPE_DEFAULT_THRESH
+        this.FRMTHRESH.app = 0
+        this.FRMTHRESH.accel = 0
+        this.FRMTHRESH.dx = 0
         this.canToggleEvent = PIPE_DEFAULT_CAN_TOGGLE_EVENT
         this.id = 0
         // --
