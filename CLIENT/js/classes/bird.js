@@ -47,11 +47,11 @@ class Bird {
                 this.speed += this.gravity
                 if(this.y + r  >= gnd.y||this.collisioned(games, UI, SFX, state)) {
                     state.curr = state.gameOver
+                    this.movingToCenter.t = false
                     SFX.bgm.pause()
                     SFX.bgm.currentTime = 0
                 }
                 break
-                this.movingToCenter.t = false60ad455
                 this.frame = 1
                 if(this.y + r  < gnd.y) {
                     this.y += this.speed

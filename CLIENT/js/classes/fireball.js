@@ -1,7 +1,11 @@
 class FireballSet {
     constructor() {
+        this.reset()
+    }
+    reset() {
         this.fireball = FIREBALLSPRITE
         this.fireballs = []
+        this.started = false
         this.id = 1
         this.FRMTHRESH = PIPE_DEFAULT_THRESH
     }
@@ -23,15 +27,15 @@ class FireballSet {
         })
     }
     update(scrn, ui, bird, games) {
-        if (games.pipe.pipes.length == 0) {
+        if (games.pipe.pipes.length == 0 && !this.started) {
             dx = PIPE_DEFAULT_MOVESPEED
             this.FRMTHRESH.dx = PIPE_DEFAULT_MOVESPEED+5
             bird.goToCenter(250)
             ui.pushMessage("!!", 50, 0, 0, 80, "red", false)
             ui.pushMessage("WATCH OUT", 150, 120)
             this.FRMTHRESH.fb = frms+(1/FIREBALL_SPAWNRATE)
+            this.started = true
         }
-        
 
         if (frms>this.FRMTHRESH.fb) {
                 this.newFireball(Math.floor(Math.random() * (scrn.width/3))+scrn.width/3, 10, TEST*RAD, FIREBALL_SIZE)
