@@ -89,7 +89,7 @@ class Bird {
         this.movingToCenter.ln = ln
         this.movingToCenter.fr = ln
     }
-    collisioned(games, UI, SFX, status) {
+    collisioned(games, UI, SFX, state) {
         let bird = this.animations[0].sprite
         let r = bird.height/4 +bird.width/4
         
@@ -106,7 +106,7 @@ class Bird {
         //   return true
         // })
         var x, y, g
-        if (status.gameStage !== 2) {
+        if (state.gameStage !== 2) {
             var HIT = false
             games.fireball.fireballs.forEach(fb => {
                 var x, y, h, w 
@@ -161,8 +161,7 @@ class Bird {
                 }
 
             }
-            else if(pipe.moved)
-            {
+            else if(pipe.moved) {
                 UI.score.curr++
                 SFX.score.play()
                 pipe.moved = false
