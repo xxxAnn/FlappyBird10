@@ -35,15 +35,15 @@ class PipeSet {
         })
 
         if(this.pipes.length&&this.pipes[0].x < -this.top.sprite.width) {
-        this.pipes.shift()
-        this.moved = true
+            this.pipes.shift()
+            this.moved = true
         }
         
         
         if (frms>this.FRMTHRESH.accel) {
             dx+=0.1
             this.FRMTHRESH.accel+=1/PIPE_ACCELERATION_RATE
-            if (dx>this.FRMTHRESH.dx && dx>PIPE_DEFAULT_MOVESPEED && this.mode == 0) {
+            if (dx>this.FRMTHRESH.dx && dx>PIPE_DEFAULT_MOVESPEED && state.gameStage === this.id) {
                 ui.pushMessage("Speed up ↑", 50, 80)
                 this.FRMTHRESH.dx+=5
             }
