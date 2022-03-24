@@ -1,5 +1,8 @@
 class Bird {
     constructor() {
+        this.reset()
+    }
+    reset() {
         this.animations = BIRDANIMS
         this.rotatation = BIRD_DEFAULTS.rotatation
         this.x = BIRD_DEFAULTS.x
@@ -45,28 +48,31 @@ class Bird {
                 this.y += this.speed
                 this.setRotation()
                 this.speed += this.gravity
-                if(this.y + r  >= gnd.y||this.collisioned(games, UI, SFX, state)) {
+                if(this.y + r  >= gnd.y||this.collisioned(games, UI, SFX, state))
+                {
                     state.curr = state.gameOver
-                    this.movingToCenter.t = false
                     SFX.bgm.pause()
                     SFX.bgm.currentTime = 0
                 }
+
                 break
-            case state.gameOver :
+            case state.gameOver : 
                 this.frame = 1
                 if(this.y + r  < gnd.y) {
                     this.y += this.speed
                     this.setRotation()
                     this.speed += this.gravity*2
-                } else {
-                    this.speed = 0
-                    this.y=gnd.y-r
-                    this.rotatation=90
-                    if(!SFX.played) {
-                        SFX.die.play()
-                        SFX.played = true
-                    }
                 }
+                else {
+                this.speed = 0
+                this.y=gnd.y-r
+                this.rotatation=90
+                if(!SFX.played) {
+                    SFX.die.play()
+                    SFX.played = true
+                }
+                }
+
                 break
         }
         this.frame = this.frame%this.animations.length       
