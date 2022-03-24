@@ -11,16 +11,18 @@ function init() {
     const scrn = document.createElement('canvas')
     body.prepend(scrn)
     const sctx = scrn.getContext("2d")
-    scrn.width = innerWidth * w_ratio
+    scrn.width = Math.max(innerWidth * w_ratio, 500)
     scrn.height = innerHeight * h_ratio
-    let currentSong = 0
     
     const state = new State()
     const SFX = new Sfx()
-    const gnd = new GND()   
+    const gnd = new GND()
     
     const bg = new Background(scrn)
-    const pipe = new PipeSet(scrn)
+    const games = {
+        pipe: new PipeSet(scrn),
+        fireball: new FireballSet()
+    }
     const bird = new Bird()
     const UI = new Ui()
     const sizeRatio = gnd.getSize(scrn)
@@ -33,11 +35,14 @@ function init() {
         }
         switch (state.curr) {
             case state.getReady :
-                if (sett.hovered === true) {
+                if (sett.hovering === true || sett.wait === true) {
+                    // sett.PAGEON = !sett.PAGEON
                     sett.PAGEON = !sett.PAGEON
+                    sett.wait = !sett.wait
                 } else {
                     dx = PIPE_DEFAULT_MOVESPEED
                     sett.PAGEON = false
+                    sett.wait = false
                     state.curr = state.Play
                     SFX.start.play()
                     SFX.playing = true
@@ -47,7 +52,7 @@ function init() {
                 }
                 break
             case state.Play :
-                if (sett.hovered === true) {
+                if (sett.hovering === true) {
                     PAUSED = !PAUSED
                     console.log(PAUSED)
                     SFX.playing === true ? SFX.bgm.pause(): SFX.bgm.play()
@@ -61,13 +66,13 @@ function init() {
                 bird.speed = BIRD_DEFAULTS.speed
                 bird.y = BIRD_DEFAULTS.y
                 bird.x = BIRD_DEFAULTS.x
+                bird.rotatation = 0
                 bird.movingToCenter.t = false
-                pipe.FRMTHRESH.app = 0
-                pipe.FRMTHRESH.accel = 0
-                pipe.mode = 0
-                pipe.canToggleEvent = PIPE_DEFAULT_CAN_TOGGLE_EVENT
-                pipe.pipes=[]
-                pipe.fireballs = []
+                games.pipe.FRMTHRESH.app = 0
+                games.pipe.FRMTHRESH.accel = 0
+                games.pipe.canToggleEvent = PIPE_DEFAULT_CAN_TOGGLE_EVENT
+                games.pipe.pipes=[]
+                games.fireball.fireballs = []
                 UI.score.curr = 0
                 SFX.played = false
                 setTimeout(() => {
@@ -80,12 +85,12 @@ function init() {
     }
     
 
-    scrn.onmousemove = (e) => {
+    document.onmousemove = (e) => {
         const rect = scrn.getBoundingClientRect()
-        sett.hovered = sett.handleMouseMove({
+        sett.hovering = sett.handleMouseMove({
             x:e.x-rect.x,
             y:e.y-rect.y,
-        }) == true ? true: false;
+        }, scrn)
     }
 
     scrn.tabIndex = 1;
@@ -102,18 +107,16 @@ function init() {
         if (state.curr != state.getReady) return
         else if (e.key.toLowerCase() == 'b') SFX.updateBGM(-1, scrn, sctx, state)
         else if (e.key.toLowerCase() == 'n') SFX.updateBGM(1, scrn, sctx, state)
-        console.log(e.key)
-
     }
     SFX.playOnMainScreen()
 
-    handdleSizeChange(sizeRatio, bird, pipe, gnd, bg)
-    gameLoop(bird, state, SFX, UI, pipe, gnd, sctx, scrn, bg, sett)
+    handdleSizeChange(sizeRatio, bird, games, gnd, bg)
+    gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett)
 }
 
-function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett) {
-    update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx, sett)
-    draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state, sett)
+function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett) {
+    update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett)
+    draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett)
     if (!PAUSED) {
         frms++
     }
@@ -123,14 +126,22 @@ function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett) {
         }
     }
     requestAnimationFrame(() => {
-        gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett)
+        gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett)
     })
 }
 
-function update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx, sett) {
-    if (!PAUSED) {
-        bird.update(state, sfx, ui, pipe, gnd, scrn) 
-        pipe.update(state, scrn, ui, bird)
+function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett) {
+    if (!PAUSED && state.curr !== state.getReady) {
+        switch (state.gameStage) {
+            case games.pipe.id :
+                bird.update(state, sfx, ui, games, gnd, scrn)
+                games.pipe.update(state, scrn, ui, bird)
+                break
+            case games.fireball.id :
+                bird.update(state, sfx, ui, games, gnd, scrn)
+                games.fireball.update(scrn, ui, bird, games, state)
+                break
+        }
         gnd.update(state)
         bg.update(state)
     }
@@ -139,30 +150,32 @@ function update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx, sett) {
     ui.update(state)
     sfx.updateBGM(0, scrn, sctx)
 }
-function draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state, sett) {
-   sctx.fillStyle = "#30c0df"
-   sctx.fillRect(0,0,scrn.width,scrn.height)
-   bg.draw(scrn, sctx)
-   pipe.draw(sctx)
-   sett.draw(sctx, state)
-   sett.update(sctx, state)
+
+function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
+    sctx.fillStyle = "#30c0df"
+    sctx.fillRect(0,0,scrn.width,scrn.height)
+    bg.draw(scrn, sctx)
+    switch (state.gameStage) {
+        case games.pipe.id :
+             games.pipe.draw(sctx)
+             break
+        case games.fireball.id :
+             games.fireball.draw(sctx, bird)
+             break
+    }
+    sett.draw(sctx, state)
    
-   bird.draw(sctx)
-   gnd.draw(sctx, scrn)
-   sfx.drawSong(scrn, sctx)
-   ui.draw(state, sctx, scrn)
-   if (sett.PAGEON) {
-    sctx.beginPath()
-    let w = 400
-    let h = 400
-    sctx.roundRect((scrn.width-w)/2,scrn.height/3,w,h,[10])
-    sctx.fillStyle = "grey"
-    sctx.fill()
-   }
+    bird.draw(sctx)
+    gnd.draw(sctx, scrn)
+    sfx.drawSong(scrn, sctx)
+    ui.draw(state, sctx, scrn)
+    if (sett.PAGEON===true) {
+        sett.openSettings(sctx, scrn)
+    }
 }
-function handdleSizeChange(sizeRatio, bird, pipe, gnd, bg) {
-  bird.sizeChange(sizeRatio)
-  pipe.sizeChange(sizeRatio)
-  gnd.sizeChange(sizeRatio)
-  bg.sizeChange(sizeRatio)
+function handdleSizeChange(sizeRatio, bird, games, gnd, bg) {
+    bird.sizeChange(sizeRatio)
+    games.pipe.sizeChange(sizeRatio)
+    gnd.sizeChange(sizeRatio)
+    bg.sizeChange(sizeRatio)
 }

@@ -23,7 +23,7 @@ class Bird {
         sctx.drawImage(this.animations[this.frame].sprite,-w/2,-h/2, w, h)
         sctx.restore()
     }
-    update(state, SFX, UI, pipe, gnd, scrn) {
+    update(state, SFX, UI, games, gnd, scrn) {
         if (this.movingToCenter.t) {
             let tdd = scrn.width/2 - this.x
             let tmv = tdd/this.movingToCenter.ln
@@ -33,7 +33,7 @@ class Bird {
                 this.movingToCenter.t = false
             }
         }
-        let r = parseFloat( this.animations[0].sprite.width)/2
+        let r = parseFloat(this.animations[0].sprite.width)/2
         switch (state.curr) {
             case state.getReady :
                 this.rotatation = 0
@@ -45,30 +45,26 @@ class Bird {
                 this.y += this.speed
                 this.setRotation()
                 this.speed += this.gravity
-                if(this.y + r  >= gnd.y||this.collisioned(pipe, UI, SFX))
-                {
+                if(this.y + r  >= gnd.y||this.collisioned(games, UI, SFX, state)) {
                     state.curr = state.gameOver
                     SFX.bgm.pause()
                     SFX.bgm.currentTime = 0
                 }
-                
                 break
-            case state.gameOver : 
-                this.movingToCenter.t = false
+                this.movingToCenter.t = false60ad455
                 this.frame = 1
                 if(this.y + r  < gnd.y) {
                     this.y += this.speed
                     this.setRotation()
                     this.speed += this.gravity*2
-                }
-                else {
-                this.speed = 0
-                this.y=gnd.y-r
-                this.rotatation=90
-                if(!SFX.played) {
-                    SFX.die.play()
-                    SFX.played = true
-                }
+                } else {
+                    this.speed = 0
+                    this.y=gnd.y-r
+                    this.rotatation=90
+                    if(!SFX.played) {
+                        SFX.die.play()
+                        SFX.played = true
+                    }
                 }
                 
                 break
@@ -76,19 +72,15 @@ class Bird {
         this.frame = this.frame%this.animations.length       
     }
     flap(SFX) {
-        if(this.y > 0)
-        {
+        if(this.y > 0) {
             SFX.flap.play()
             this.speed = -this.thrust
         }
     }
     setRotation() {
-        if(this.speed <= 0)
-        {
-            
+        if(this.speed <= 0) {
             this.rotatation = Math.max(BIRD_DOWN_ROTATION, BIRD_DOWN_ROTATION * this.speed/(-1*this.thrust))
-        }
-        else if(this.speed > 0 ) {
+        } else if(this.speed > 0 ) {
             this.rotatation = Math.min(BIRD_UP_ROTATION, BIRD_UP_ROTATION * this.speed/(this.thrust*2))
         }
     }
@@ -97,7 +89,7 @@ class Bird {
         this.movingToCenter.ln = ln
         this.movingToCenter.fr = ln
     }
-    collisioned(pipe, UI, SFX) {
+    collisioned(games, UI, SFX, status) {
         let bird = this.animations[0].sprite
         let r = bird.height/4 +bird.width/4
         
@@ -114,9 +106,9 @@ class Bird {
         //   return true
         // })
         var x, y, g
-        if (pipe.mode != 0) {
+        if (status.gameStage !== 2) {
             var HIT = false
-            pipe.fireballs.forEach(fb => {
+            games.fireball.fireballs.forEach(fb => {
                 var x, y, h, w 
 
                 x = fb.x
@@ -148,8 +140,10 @@ class Bird {
                 return true
             }
         }
-        if(!pipe.pipes.length) return
 
+        if(!games.pipe.pipes.length) return
+
+        const pipe = games.pipe
         x = pipe.pipes[0].x
         y = pipe.pipes[0].y
         g = pipe.pipes[0].gap
