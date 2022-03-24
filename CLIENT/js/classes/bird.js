@@ -57,6 +57,7 @@ class Bird {
 
                 break
             case state.gameOver : 
+                this.movingToCenter.t = false
                 this.frame = 1
                 if(this.y + r  < gnd.y) {
                     this.y += this.speed
@@ -112,7 +113,7 @@ class Bird {
         //   return true
         // })
         var x, y, g
-        if (state.gameStage !== games.fireball.id) {
+        if (state.gameStage == games.fireball.id) {
             var HIT = false
             games.fireball.fireballs.forEach(fb => {
                 var x, y, h, w 
