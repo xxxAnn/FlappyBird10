@@ -83,6 +83,7 @@ function init() {
                         SFX.updateBGM(0, scrn, sctx, true)
                     }
                 }, BGM_TIMEOUT)
+                bird.reset()
                 break
         }
     }
