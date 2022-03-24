@@ -68,11 +68,6 @@ function init() {
                 bird.x = BIRD_DEFAULTS.x
                 bird.rotatation = 0
                 bird.movingToCenter.t = false
-                games.pipe.FRMTHRESH.app = 0
-                games.pipe.FRMTHRESH.accel = 0
-                games.pipe.canToggleEvent = PIPE_DEFAULT_CAN_TOGGLE_EVENT
-                games.pipe.pipes=[]
-                games.fireball.fireballs = []
                 state.gameStage = 0
                 games.pipe.reset()
                 games.fireball.reset()
@@ -83,6 +78,7 @@ function init() {
                         SFX.updateBGM(0, scrn, sctx, true)
                     }
                 }, BGM_TIMEOUT)
+                bird.reset()
                 break
         }
     }

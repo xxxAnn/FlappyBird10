@@ -8,6 +8,8 @@ class FireballSet {
         this.started = false
         this.id = 1
         this.FRMTHRESH = PIPE_DEFAULT_THRESH
+        this.FRMTHRESH.fb = 0
+        this.FRMTHRESH.dx = 0
     }
     draw(sctx) {
         for (let i = 0; i<this.fireballs.length; i++) {
@@ -27,7 +29,11 @@ class FireballSet {
         })
     }
     update(scrn, ui, bird, games, state) {
+<<<<<<< HEAD
         if (state.curr !== state.Play) return
+=======
+        if (state.curr != state.Play) return
+>>>>>>> 8e1c4ed2acd871e8be6cecc38f38fa85e0131248
         if (games.pipe.pipes.length == 0 && !this.started) {
             dx = PIPE_DEFAULT_MOVESPEED
             this.FRMTHRESH.dx = PIPE_DEFAULT_MOVESPEED+5
