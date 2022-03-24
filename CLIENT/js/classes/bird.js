@@ -52,6 +52,7 @@ class Bird {
                     SFX.bgm.currentTime = 0
                 }
                 break
+            case state.gameOver :
                 this.frame = 1
                 if(this.y + r  < gnd.y) {
                     this.y += this.speed
@@ -66,7 +67,6 @@ class Bird {
                         SFX.played = true
                     }
                 }
-                
                 break
         }
         this.frame = this.frame%this.animations.length       
@@ -106,7 +106,7 @@ class Bird {
         //   return true
         // })
         var x, y, g
-        if (state.gameStage !== 2) {
+        if (state.gameStage !== games.fireball.id) {
             var HIT = false
             games.fireball.fireballs.forEach(fb => {
                 var x, y, h, w 
