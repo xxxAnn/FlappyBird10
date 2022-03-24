@@ -134,17 +134,16 @@ function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett) {
 }
 
 function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett) {
-    if (!PAUSED && state.curr !== state.getReady) {
+    if (!PAUSED) {
         switch (state.gameStage) {
             case games.pipe.id :
-                bird.update(state, sfx, ui, games, gnd, scrn)
                 games.pipe.update(state, scrn, ui, bird)
                 break
             case games.fireball.id :
-                bird.update(state, sfx, ui, games, gnd, scrn)
                 games.fireball.update(scrn, ui, bird, games, state)
                 break
         }
+        bird.update(state, sfx, ui, games, gnd, scrn)
         gnd.update(state)
         bg.update(state)
     }

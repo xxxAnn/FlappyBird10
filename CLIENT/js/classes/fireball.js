@@ -26,7 +26,8 @@ class FireballSet {
             rg: Math.floor(Math.random()*3-1.5)
         })
     }
-    update(scrn, ui, bird, games) {
+    update(scrn, ui, bird, games, state) {
+        if (state.curr !== state.Play) return
         if (games.pipe.pipes.length == 0 && !this.started) {
             dx = PIPE_DEFAULT_MOVESPEED
             this.FRMTHRESH.dx = PIPE_DEFAULT_MOVESPEED+5

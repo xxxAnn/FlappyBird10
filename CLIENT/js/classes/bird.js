@@ -41,7 +41,7 @@ class Bird {
                 this.frame += (frms%10==0) ? 1 : 0
                 break
             case state.Play :
-                this.frame += (frms%(1/BIRD_ANIMATION_SPEED)==0) ? 1 : 0
+                this.frame += (frms%10==0) ? 1 : 0
                 this.y += this.speed
                 this.setRotation()
                 this.speed += this.gravity
@@ -106,7 +106,7 @@ class Bird {
         //   return true
         // })
         var x, y, g
-        if (state.gameStage !== games.fireball.id) {
+        if (state.gameStage == games.fireball.id) {
             var HIT = false
             games.fireball.fireballs.forEach(fb => {
                 var x, y, h, w 
