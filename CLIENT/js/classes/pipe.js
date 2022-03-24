@@ -48,7 +48,6 @@ class PipeSet {
                 this.FRMTHRESH.dx+=5
             }
             if (dx>FIRSTEVENTTHRESHOLD && this.canToggleEvent.includes(1)) {
-                this.mode = 1
                 this.canToggleEvent = this.canToggleEvent.filter((x) => x!=1)
             }
         }

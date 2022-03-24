@@ -33,7 +33,7 @@ class Bird {
                 this.movingToCenter.t = false
             }
         }
-        let r = parseFloat( this.animations[0].sprite.width)/2
+        let r = parseFloat(this.animations[0].sprite.width)/2
         switch (state.curr) {
             case state.getReady :
                 this.rotatation = 0
@@ -51,7 +51,7 @@ class Bird {
                     SFX.bgm.currentTime = 0
                 }
                 break
-            case state.gameOver : 
+            case state.gameOver :
                 this.frame = 1
                 if(this.y + r  < gnd.y) {
                     this.y += this.speed

@@ -11,7 +11,7 @@ function init() {
     const scrn = document.createElement('canvas')
     body.prepend(scrn)
     const sctx = scrn.getContext("2d")
-    scrn.width = innerWidth * w_ratio
+    scrn.width = Math.max(innerWidth * w_ratio, 500)
     scrn.height = innerHeight * h_ratio
     
     const state = new State()
@@ -66,6 +66,7 @@ function init() {
                 bird.speed = BIRD_DEFAULTS.speed
                 bird.y = BIRD_DEFAULTS.y
                 bird.x = BIRD_DEFAULTS.x
+                bird.rotatation = 0
                 bird.movingToCenter.t = false
                 games.pipe.FRMTHRESH.app = 0
                 games.pipe.FRMTHRESH.accel = 0
@@ -130,7 +131,7 @@ function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett) {
 }
 
 function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett) {
-    if (!PAUSED) {
+    if (!PAUSED && state.curr !== state.getReady) {
         switch (state.gameStage) {
             case games.pipe.id :
                 bird.update(state, sfx, ui, games, gnd, scrn)
@@ -138,7 +139,7 @@ function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett) {
                 break
             case games.fireball.id :
                 bird.update(state, sfx, ui, games, gnd, scrn)
-                games.fireball.update(state, scen, ui, bird)
+                games.fireball.update(scrn, ui, bird, games, state)
                 break
         }
         gnd.update(state)
@@ -159,7 +160,7 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
              games.pipe.draw(sctx)
              break
         case games.fireball.id :
-             games.fireball.draw(state, scrn, ui, bird)
+             games.fireball.draw(sctx, bird)
              break
     }
     sett.draw(sctx, state)
