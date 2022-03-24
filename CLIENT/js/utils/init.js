@@ -73,6 +73,9 @@ function init() {
                 games.pipe.canToggleEvent = PIPE_DEFAULT_CAN_TOGGLE_EVENT
                 games.pipe.pipes=[]
                 games.fireball.fireballs = []
+                state.gameStage = 0
+                games.pipe.reset()
+                games.fireball.reset()
                 UI.score.curr = 0
                 SFX.played = false
                 setTimeout(() => {

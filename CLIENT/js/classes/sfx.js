@@ -20,6 +20,7 @@ class Sfx {
             {title:"wellerman", demotime: '32.1'},
             {title:"Bad apple", demotime: '55'},
             {title:"Battle against a true hero", demotime: '96.1'},
+            {title: "Bonetrousle", demotime: '109.6'}
         ];
         this.songIndex = localStorage.getItem("FB10SONGINDEX")
         if (this.songIndex == null) {

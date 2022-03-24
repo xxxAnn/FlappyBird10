@@ -47,11 +47,11 @@ class Bird {
                 this.speed += this.gravity
                 if(this.y + r  >= gnd.y||this.collisioned(games, UI, SFX, state)) {
                     state.curr = state.gameOver
+                    this.movingToCenter.t = false
                     SFX.bgm.pause()
                     SFX.bgm.currentTime = 0
                 }
                 break
-            case state.gameOver :
                 this.frame = 1
                 if(this.y + r  < gnd.y) {
                     this.y += this.speed
@@ -115,9 +115,9 @@ class Bird {
                 y = fb.y
                 h = fb.h
                 w = fb.w
-                if(this.x+bird.width/2 >= x) {
-                    if(this.x+bird.width/2 <= x + w) {
-                        if(this.y+bird.height >= y && this.y+bird.height <= y + h) {
+                if(this.x+r >= x) {
+                    if(this.x+r <= x + w) {
+                        if(this.y+r >= y && this.y+r <= y + h) {
                             SFX.bgm.pause()
                             SFX.bgm.currentTime = 0
                             SFX.hit.play()  

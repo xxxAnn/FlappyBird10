@@ -1,6 +1,9 @@
 let TEST = 50
 class PipeSet {
     constructor(scrn) {
+        this.reset(scrn)
+    }
+    reset(scrn) {
         this.bot = BOT
         this.top = TOP
         this.moved = true
@@ -12,6 +15,7 @@ class PipeSet {
         this.id = 0
         // --
         this.pipes = []
+        this.end = false
         this.w
         this.h
     }
@@ -25,7 +29,7 @@ class PipeSet {
     update(state, scrn, ui, bird) {
         if(state.curr!=state.Play) return
         
-        if(frms>this.FRMTHRESH.app) {
+        if(frms>this.FRMTHRESH.app && !this.end) {
             let g = Math.max(this.gap-(frms/35), this.MINGAP)
             this.pipes.push({x:parseFloat(scrn.width),y:-210*Math.min(Math.random()+1,1.8),gap:g})
             this.FRMTHRESH.app+=(1/(dx*BIRD_ANIMATION_SPEED))
@@ -39,6 +43,9 @@ class PipeSet {
             this.moved = true
         }
         
+        if (this.end && this.pipes.length==0) {
+            state.gameStage = 1
+        }
         
         if (frms>this.FRMTHRESH.accel) {
             dx+=0.1
@@ -49,6 +56,7 @@ class PipeSet {
             }
             if (dx>FIRSTEVENTTHRESHOLD && this.canToggleEvent.includes(1)) {
                 this.canToggleEvent = this.canToggleEvent.filter((x) => x!=1)
+                this.end = true
             }
         }
 
