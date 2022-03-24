@@ -29,11 +29,7 @@ class FireballSet {
         })
     }
     update(scrn, ui, bird, games, state) {
-<<<<<<< HEAD
         if (state.curr !== state.Play) return
-=======
-        if (state.curr != state.Play) return
->>>>>>> 8e1c4ed2acd871e8be6cecc38f38fa85e0131248
         if (games.pipe.pipes.length == 0 && !this.started) {
             dx = PIPE_DEFAULT_MOVESPEED
             this.FRMTHRESH.dx = PIPE_DEFAULT_MOVESPEED+5
