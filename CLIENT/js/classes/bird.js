@@ -54,6 +54,7 @@ class Bird {
                 
                 break
             case state.gameOver : 
+                this.movingToCenter.t = false
                 this.frame = 1
                 if(this.y + r  < gnd.y) {
                     this.y += this.speed
