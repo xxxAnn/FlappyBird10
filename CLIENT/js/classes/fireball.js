@@ -41,7 +41,7 @@ class FireballSet {
         }
 
         if (frms>this.FRMTHRESH.fb) {
-                this.newFireball(Math.floor(Math.random() * (scrn.width/3))+scrn.width/3, 10, TEST*RAD, FIREBALL_SIZE)
+                this.newFireball(/*Math.floor(Math.random() * (scrn.width/3))+scrn.width/3*/ scrn.width/2, 10, TEST*RAD, FIREBALL_SIZE)
                 this.FRMTHRESH.fb = frms+(1/FIREBALL_SPAWNRATE)
         }
         this.fireballs.forEach(fb => {

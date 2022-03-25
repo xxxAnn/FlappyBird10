@@ -96,7 +96,7 @@ function init() {
     scrn.addEventListener("click", jumpInputHandler)
     document.onkeydown = (e) => {
         if (e.key.toLowerCase() == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
-        if (e.key.toLocaleLowerCase() == 'p') {                
+        if (e.key.toLocaleLowerCase() == 'p') {
             if (state.curr == state.Play) {
                 PAUSED = !PAUSED
             }
@@ -106,6 +106,7 @@ function init() {
         if (state.curr != state.getReady) return
         else if (e.key.toLowerCase() == 'b') SFX.updateBGM(-1, scrn, sctx, state)
         else if (e.key.toLowerCase() == 'n') SFX.updateBGM(1, scrn, sctx, state)
+        else if (e.key.toLowerCase() == 'm') sett.openSettings(sctx, scrn)
     }
     SFX.playOnMainScreen()
 

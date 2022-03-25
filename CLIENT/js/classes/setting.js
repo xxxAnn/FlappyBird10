@@ -1,11 +1,3 @@
-function getMousePos(canvas, evt) {
-    var rect = canvas.getBoundingClientRect()
-    return {
-      x: evt.clientX - rect.left,
-      y: evt.clientY - rect.top
-    }
-}
-
 class Setting {
     constructor(scrn, state) {
         this.cog = COGSPRITE 
@@ -67,12 +59,7 @@ class Setting {
         sctx.restore()
     }
     handleMouseMove(pos, scrn) {
-        const buttonPos = {
-            x: this.x,
-            y: this.y,
-            w: this.w,
-            h: this.h,
-        }
+        const buttonPos = {x: this.x, y: this.y, w: this.w, h: this.h}
         return checkButtonHover(pos, buttonPos,scrn)
     }
     drawRotation(sctx) {
