@@ -72,6 +72,10 @@ function init() {
     
 
     document.onmousemove = (e) => {
+        if (!SFX.played) {
+            SFX.playOnMainScreen()
+            SFX.played = !SFX.played
+        }
         const rect = scrn.getBoundingClientRect()
         const hover = sett.handleMouseMove({x:e.x-rect.x, y:e.y-rect.y}, scrn)
         if (hover) {
@@ -98,10 +102,6 @@ function init() {
         else if (e.key.toLowerCase() == 'n') SFX.updateBGM(1, scrn, sctx, state)
         else if (e.key.toLowerCase() == 'm') sett.openSettings(sctx, scrn)
     }
-    document.onclick = () => {
-        SFX.playOnMainScreen()
-    }
-    
 
 
 
