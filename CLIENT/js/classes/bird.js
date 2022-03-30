@@ -16,6 +16,33 @@ class Bird {
         this.gravity = BIRD_DEFAULTS.gravity
         this.thrust = BIRD_DEFAULTS.thrust
         this.frame = BIRD_DEFAULTS.frame
+        this.dashing = {
+            t: false,
+            curr: 0,
+            length: DASHLENGTH,
+            dist: DASHDISTANCE,
+            orgpos: {
+                x: 3,
+                y: 4,
+                actfrm: 0,
+                rot: 0
+            },
+            dir: 1
+        }
+        this.dashing.t = false
+    }
+    dash(dir=1, sctx, dive=false) {
+        this.dashing.t = true
+        this.dashing.curr = 0
+        this.dashing.orgpos.x = this.x
+        this.dashing.orgpos.y = this.y
+        this.dashing.orgpos.actfrm = this.frame
+        this.dashing.orgpos.rot = this.rotatation
+        this.dashing.dir = dir
+        this.dashing.dive = dive
+        if ((this.x<0.1*sctx.canvas.clientWidth && dir == -1) || (this.x > 0.9*sctx.canvas.clientWidth && dir == 1)) {
+            this.dashing.t = false
+        }
     }
     draw(sctx) {
         let h = this.animations[this.frame].sprite.height
@@ -25,8 +52,19 @@ class Bird {
         sctx.rotate(this.rotatation*RAD)
         sctx.drawImage(this.animations[this.frame].sprite,-w/2,-h/2, w, h)
         sctx.restore()
+        if (this.dashing.t && this.dashing.curr < 0.9*this.dashing.length) {
+            let h = this.animations[this.dashing.orgpos.actfrm].sprite.height
+            let w = this.animations[this.dashing.orgpos.actfrm].sprite.width
+            sctx.save()
+            sctx.globalAlpha = 0.25
+            sctx.translate(this.dashing.orgpos.x,this.dashing.orgpos.y)
+            sctx.rotate(this.dashing.orgpos.rot*RAD)
+            sctx.drawImage(this.animations[this.dashing.orgpos.actfrm].sprite, -w/2, -h/2, w, h)
+            sctx.restore()
+            sctx.globalAlpha = 1
+        }
     }
-    update(state, SFX, UI, games, gnd, scrn) {
+    update(state, SFX, UI, games, gnd, scrn, sctx) {
         if (this.movingToCenter.t) {
             let tdd = scrn.width/2 - this.x
             let tmv = tdd/this.movingToCenter.ln
@@ -76,7 +114,23 @@ class Bird {
 
                 break
         }
-        this.frame = this.frame%this.animations.length       
+        this.frame = this.frame%this.animations.length     
+        if (this.dashing.t) {
+            if (!this.dashing.dive) {
+                this.x+=(this.dashing.dist/this.dashing.length)*this.dashing.dir
+            } else {
+                this.y+=(this.dashing.dist/this.dashing.length)*this.dashing.dir
+            }
+            this.dashing.curr+=1
+            this.rotatation = 0
+            if (this.dashing.length == this.dashing.curr) {
+                this.dashing.t = false
+            }
+            console.log(this.x, sctx.canvas.clientWidth)
+            if (this.x<0.1*sctx.canvas.clientWidth || this.x > 0.9*sctx.canvas.clientWidth) {
+                this.dashing.t = false
+            }
+        }  
     }
     flap(SFX) {
         if(this.y > 0) {
