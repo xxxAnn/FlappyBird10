@@ -29,7 +29,7 @@ class FireballSet {
         })
     }
     update(scrn, ui, bird, games, state) {
-        if (state.curr != state.Play) return
+        if (state.curr !== state.Play) return
         if (games.pipe.pipes.length == 0 && !this.started) {
             dx = PIPE_DEFAULT_MOVESPEED
             this.FRMTHRESH.dx = PIPE_DEFAULT_MOVESPEED+5
@@ -41,7 +41,7 @@ class FireballSet {
         }
 
         if (frms>this.FRMTHRESH.fb) {
-                this.newFireball(Math.floor(Math.random() * (scrn.width/3))+scrn.width/3, 10, TEST*RAD, FIREBALL_SIZE)
+                this.newFireball(/*Math.floor(Math.random() * (scrn.width/3))+scrn.width/3*/ scrn.width/2, 10, TEST*RAD, FIREBALL_SIZE)
                 this.FRMTHRESH.fb = frms+(1/FIREBALL_SPAWNRATE)
         }
         this.fireballs.forEach(fb => {

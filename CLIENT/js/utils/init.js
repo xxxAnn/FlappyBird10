@@ -35,21 +35,7 @@ function init() {
         }
         switch (state.curr) {
             case state.getReady :
-                if (sett.hovering === true || sett.wait === true) {
-                    // sett.PAGEON = !sett.PAGEON
-                    sett.PAGEON = !sett.PAGEON
-                    sett.wait = !sett.wait
-                } else {
-                    dx = PIPE_DEFAULT_MOVESPEED
-                    sett.PAGEON = false
-                    sett.wait = false
-                    state.curr = state.Play
-                    SFX.start.play()
-                    SFX.playing = true
-                    frms = 0
-                    SFX.bgm.currentTime = '0'
-                    SFX.bgm.play()
-                }
+                handleMainScreenPress(sett, SFX, state)
                 break
             case state.Play :
                 if (sett.hovering === true) {
@@ -59,6 +45,7 @@ function init() {
                     SFX.playing = !SFX.playing
                     return
                 }
+
                 bird.flap(SFX)
                 break
             case state.gameOver :
@@ -86,26 +73,39 @@ function init() {
 
     document.onmousemove = (e) => {
         const rect = scrn.getBoundingClientRect()
-        sett.hovering = sett.handleMouseMove({
-            x:e.x-rect.x,
-            y:e.y-rect.y,
-        }, scrn)
+        const hover = sett.handleMouseMove({x:e.x-rect.x, y:e.y-rect.y}, scrn)
+        if (hover) {
+            scrn.style.cursor = 'pointer'
+        } else [
+            scrn.style.cursor = 'default'
+        ]
     }
-
+    document.onclick = () => {
+        if (!SFX.played) {
+            SFX.playOnMainScreen()
+            SFX.played = !SFX.played
+        }
+    }
+    
     scrn.tabIndex = 1;
     scrn.addEventListener("click", jumpInputHandler)
     document.onkeydown = (e) => {
         if (e.key.toLowerCase() == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
-        if (e.key == "ArrowRight" && state.curr == state.Play) {
-            bird.dash(1, sctx)
+        
+        if (state.gameStage == games.fireball.id) {
+            if (e.key == "ArrowRight" && state.curr == state.Play) {
+                bird.dash(1, sctx)
+            }
+            if (e.key == "ArrowLeft" && state.curr == state.Play) {
+                bird.dash(-1, sctx)
+            }
+            if (e.key == "ArrowDown" && state.curr == state.Play) {
+                bird.dash(1, sctx, true)
+            }
         }
-        if (e.key == "ArrowLeft" && state.curr == state.Play) {
-            bird.dash(-1, sctx)
-        }
-        if (e.key == "ArrowDown" && state.curr == state.Play) {
-            bird.dash(1, sctx, true)
-        }
-        if (e.key.toLocaleLowerCase() == 'p') {                
+        
+
+        if (e.key.toLocaleLowerCase() == 'p') {
             if (state.curr == state.Play) {
                 PAUSED = !PAUSED
             }
@@ -115,8 +115,10 @@ function init() {
         if (state.curr != state.getReady) return
         else if (e.key.toLowerCase() == 'b') SFX.updateBGM(-1, scrn, sctx, state)
         else if (e.key.toLowerCase() == 'n') SFX.updateBGM(1, scrn, sctx, state)
+        else if (e.key.toLowerCase() == 'm') sett.openSettings(sctx, scrn)
     }
-    SFX.playOnMainScreen()
+
+
 
     handdleSizeChange(sizeRatio, bird, games, gnd, bg)
     gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett)
@@ -139,7 +141,7 @@ function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett) {
 }
 
 function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett) {
-    if (!PAUSED && state.curr !== state.getReady) {
+    if (!PAUSED) {
         switch (state.gameStage) {
             case games.pipe.id :
                 bird.update(state, sfx, ui, games, gnd, scrn, sctx)
@@ -186,4 +188,25 @@ function handdleSizeChange(sizeRatio, bird, games, gnd, bg) {
     games.pipe.sizeChange(sizeRatio)
     gnd.sizeChange(sizeRatio)
     bg.sizeChange(sizeRatio)
+}
+
+function handleMainScreenPress(sett, SFX, state) {
+    if (sett.hovering == sett.hoveringStates.gear) {
+        sett.PAGEON = !sett.PAGEON 
+    } 
+    else if (sett.hovering == sett.hoveringStates.menu && sett.PAGEON) {
+
+    }
+    else {
+        if (sett.PAGEON) {
+            return sett.PAGEON = false
+        }
+        dx = PIPE_DEFAULT_MOVESPEED
+        state.curr = state.Play
+        SFX.start.play()
+        SFX.playing = true
+        frms = 0
+        SFX.bgm.currentTime = '0'
+        SFX.bgm.play()
+    }
 }

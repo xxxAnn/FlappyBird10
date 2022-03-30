@@ -51,9 +51,11 @@ const PIPE_APPEARANCE_SPEED = 1/150 // (0-1), preferably <0.05, game starts brea
 const PIPE_DEFAULT_MOVESPEED = 2
 const PIPE_DEFAULT_GAP = 200
 const PIPE_MINIMUM_GAP = 20
+
 const FIREBALL_SPAWNRATE = 0.21
 const FIREBALL_SIZE = 75
 const FIREBALL_MOVEMENTSPEED = 3
+
 const PIPE_ACCELERATION_RATE = 0.1 // <0.01, really small or 0, 0 == no acceleration
 const PIPE_DEFAULT_THRESH = {
     app:0,
@@ -64,5 +66,7 @@ const PIPE_DEFAULT_THRESH = {
 
 const BGM_TIMEOUT = 1500 // ms
 
-const FIRSTEVENTTHRESHOLD = 1
+const FIRSTEVENTTHRESHOLD = 6
 const PIPE_DEFAULT_CAN_TOGGLE_EVENT = [1]
+
+const SOUND_VOLUME = 0.2
