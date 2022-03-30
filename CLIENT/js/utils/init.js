@@ -35,7 +35,6 @@ function init() {
         }
         switch (state.curr) {
             case state.getReady :
-                // TODO make case for hover states
                 handleMainScreenPress(sett, SFX, state)
                 break
             case state.Play :
@@ -46,6 +45,7 @@ function init() {
                     SFX.playing = !SFX.playing
                     return
                 }
+
                 bird.flap(SFX)
                 break
             case state.gameOver :
@@ -83,23 +83,26 @@ function init() {
         } else [
             scrn.style.cursor = 'default'
         ]
-        // TODO change hovering to read object
     }
 
     scrn.tabIndex = 1;
     scrn.addEventListener("click", jumpInputHandler)
     document.onkeydown = (e) => {
         if (e.key.toLowerCase() == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
-      
-        if (e.key == "ArrowRight" && state.curr == state.Play) {
-            bird.dash(1, sctx)
+        
+        if (state.gameStage == games.fireball.id) {
+            if (e.key == "ArrowRight" && state.curr == state.Play) {
+                bird.dash(1, sctx)
+            }
+            if (e.key == "ArrowLeft" && state.curr == state.Play) {
+                bird.dash(-1, sctx)
+            }
+            if (e.key == "ArrowDown" && state.curr == state.Play) {
+                bird.dash(1, sctx, true)
+            }
         }
-        if (e.key == "ArrowLeft" && state.curr == state.Play) {
-            bird.dash(-1, sctx)
-        }
-        if (e.key == "ArrowDown" && state.curr == state.Play) {
-            bird.dash(1, sctx, true)
-        }
+        
+
         if (e.key.toLocaleLowerCase() == 'p') {
             if (state.curr == state.Play) {
                 PAUSED = !PAUSED

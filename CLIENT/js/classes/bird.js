@@ -126,7 +126,6 @@ class Bird {
             if (this.dashing.length == this.dashing.curr) {
                 this.dashing.t = false
             }
-            console.log(this.x, sctx)
             if (this.x<0.1*sctx.canvas.clientWidth || this.x > 0.9*sctx.canvas.clientWidth) {
                 this.dashing.t = false
             }

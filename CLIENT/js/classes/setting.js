@@ -82,7 +82,7 @@ class Setting {
             this.hovering = this.hoveringStates.none
         }
         
-        return gearHover || menuHover
+        return gearHover
     }
     drawRotation(sctx) {
         const i = 0.5
