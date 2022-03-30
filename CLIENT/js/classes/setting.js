@@ -6,28 +6,37 @@ class Setting {
             w: 80,
             h: 80,
             y: 10,
-            x: scrn.width-(this.w+10),
         }
+        this.gearPos.x = scrn.width-(this.gearPos.w+10)
+
         this.turning = false
         this.PAGEON = false
+        // --------------
+        this.menuPos = {
+            w: scrn.width * 0.8,
+            radius: 10,
+        }
+        this.menuPos.h = this.menuPos.w,
+        this.menuPos.x = (scrn.width-this.menuPos.w)/2,
+        this.menuPos.y = (scrn.height-this.menuPos.h)/2,
+        // --------------
 
         this.mousePos = {x:0, y:0}
         this.hovering = 0
-        this.hoveringPos = {
+        this.hoveringStates = {
             none: 0,
             gear: 1,
             menu: 2,
-            menuOpened: 3,
         }
+        this.menuOpened = false
         this.animationLength = 45 // in frames
         this.animationFrms = 0
         this.rotation = 0
-        this.wait = false
     }
     draw(sctx, state) {
         if (state.curr == state.gameOver) return
         if (state.curr == state.Play) {
-            if (this.hovered === true && !this.turning) {
+            if (this.hovering == this.hoveringStates.gear) {
                 this.turning = true
                 let f = 0.9
                 this.h = this.h*f
@@ -49,52 +58,55 @@ class Setting {
         }
 
         sctx.save()
-        if (this.hovering === true && this.animationFrms < 125) { // rotation of 180° changeable
+        if (this.hovering == this.hoveringStates.gear && this.animationFrms < 125) { // rotation of 180° changeable
             this.drawRotation(sctx)
             this.rotation = this.animationFrms % 360
             this.animationFrms += 360/this.animationLength
             this.hovered = true
-        } else if (this.hovering === false) {
+        } else if (this.hovering != this.hoveringStates.gear) {
             this.drawRotation(sctx)
-            if (this.hovered === true && this.animationFrms >= 0) {
+            if (this.hovered && this.animationFrms >= 0) {
                 this.rotation = this.animationFrms % 360
                 this.animationFrms -= 360/this.animationLength
             }
+            // this.hovered = false
         } else {
             this.drawRotation(sctx)
         }
         sctx.restore()
     }
     handleMouseMove(pos, scrn) {
-        return checkButtonHover(pos, this.gearPos,scrn)
+        const gearHover = this.checkButtonHover(pos, this.gearPos, scrn, this.hoveringStates.gear)
+        const menuHover = this.checkButtonHover(pos, this.menuPos, scrn, this.hoveringStates.menu)
+        if (!(gearHover||menuHover)) {
+            this.hovering = this.hoveringStates.none
+        }
+        
+        return gearHover || menuHover
     }
     drawRotation(sctx) {
         const i = 0.5
-        sctx.translate(this.x+ this.w * i, this.y+this.h * i)
+        sctx.translate(this.gearPos.x+ this.gearPos.w * i, this.gearPos.y+this.gearPos.h * i)
         sctx.rotate(RAD * this.rotation)
         sctx.imageSmoothingEnabled = true;
-        sctx.drawImage(this.cog, -this.w/2, -this.h/2, this.w, this.h)
+        sctx.drawImage(this.cog, -this.gearPos.w/2, -this.gearPos.h/2, this.gearPos.w, this.gearPos.h)
         sctx.imageSmoothingEnabled = false;
         sctx.rotate(-RAD * this.rotation)
-        sctx.translate(-this.x-this.cog.width * i,-this.y -this.cog.height * i) 
+        sctx.translate(-this.gearPos.x-this.cog.width * i, -this.gearPos.y - this.cog.height * i) 
     }
     openSettings(sctx, scrn) {
         sctx.beginPath()
-        let w = scrn.width * 0.8
-        let h = w
-        sctx.roundRect((scrn.width-w)/2,(scrn.height-h)/2,w,h,[10])
+        sctx.roundRect(this.menuPos.x, this.menuPos.y, this.menuPos.w, this.menuPos.h, [this.menuPos.radius])
         sctx.fillStyle = "grey"
         sctx.fill()
     }
-}
+    checkButtonHover(mousePos, buttonPos, scrn, hoveringState) {
+        if (mousePos.x < buttonPos.x) return false
+        if (mousePos.x > buttonPos.x + buttonPos.w) return false
+        if (mousePos.y < buttonPos.y) return false
+        if (mousePos.y > buttonPos.y + buttonPos.h) return false
 
-function checkButtonHover(mousePos, buttonPos, scrn) {
-    scrn.style.cursor = 'default'
-    if (mousePos.x < buttonPos.x) return false
-    if (mousePos.x > buttonPos.x + buttonPos.w) return false
-    if (mousePos.y < buttonPos.y) return false 
-    if (mousePos.y > buttonPos.y + buttonPos.h) return false
-    
-    scrn.style.cursor = 'pointer'
-    return true
+        this.hovering = hoveringState
+        return true
+    }
 }

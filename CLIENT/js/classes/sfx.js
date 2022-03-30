@@ -21,6 +21,7 @@ class Sfx {
 
         this.bgm = new Audio()
         this.bgm.volume = this.VOLUME
+        this.played = false
         this.playing = true
         this.sources = [
             {title:"[ff2] rebel army theme", demotime: '128.2'},
