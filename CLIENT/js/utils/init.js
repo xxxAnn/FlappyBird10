@@ -90,6 +90,16 @@ function init() {
     scrn.addEventListener("click", jumpInputHandler)
     document.onkeydown = (e) => {
         if (e.key.toLowerCase() == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
+      
+        if (e.key == "ArrowRight" && state.curr == state.Play) {
+            bird.dash(1, sctx)
+        }
+        if (e.key == "ArrowLeft" && state.curr == state.Play) {
+            bird.dash(-1, sctx)
+        }
+        if (e.key == "ArrowDown" && state.curr == state.Play) {
+            bird.dash(1, sctx, true)
+        }
         if (e.key.toLocaleLowerCase() == 'p') {
             if (state.curr == state.Play) {
                 PAUSED = !PAUSED
@@ -129,9 +139,11 @@ function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett) {
     if (!PAUSED) {
         switch (state.gameStage) {
             case games.pipe.id :
+                bird.update(state, sfx, ui, games, gnd, scrn, sctx)
                 games.pipe.update(state, scrn, ui, bird)
                 break
             case games.fireball.id :
+                bird.update(state, sfx, ui, games, gnd, scrn, sctx)
                 games.fireball.update(scrn, ui, bird, games, state)
                 break
         }

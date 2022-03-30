@@ -1,4 +1,4 @@
-let TEST = 50
+let TEST = 100
 class PipeSet {
     constructor(scrn) {
         this.reset(scrn)

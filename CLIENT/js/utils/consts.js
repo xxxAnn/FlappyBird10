@@ -37,24 +37,30 @@ const BIRD_DEFAULTS = {
     rotatation: 0,
     x: 50,
     y: 200,
-    speed: 0,
+    speed: 3,
     gravity: .125,
-    thrust: 3.6,
+    dashcool: 50,
+    thrust: 4.6,
     frame: 0
 }
+
+const DASHLENGTH = 4
+const DASHDISTANCE = 75
 
 const PIPE_APPEARANCE_SPEED = 1/150 // (0-1), preferably <0.05, game starts breaking at ~0.03
 const PIPE_DEFAULT_MOVESPEED = 2
 const PIPE_DEFAULT_GAP = 200
 const PIPE_MINIMUM_GAP = 20
-const FIREBALL_SPAWNRATE = 0.07
-const FIREBALL_SIZE = 50
-const FIREBALL_MOVEMENTSPEED = 2
+
+const FIREBALL_SPAWNRATE = 0.21
+const FIREBALL_SIZE = 75
+const FIREBALL_MOVEMENTSPEED = 3
+
 const PIPE_ACCELERATION_RATE = 0.1 // <0.01, really small or 0, 0 == no acceleration
 const PIPE_DEFAULT_THRESH = {
     app:0,
     accel:0,
-    fb: 0,
+    fb: 0,    
     dx:PIPE_DEFAULT_MOVESPEED+5
 }
 
