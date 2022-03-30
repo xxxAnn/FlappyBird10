@@ -77,7 +77,7 @@ class Setting {
     }
     handleMouseMove(pos, scrn) {
         const gearHover = this.checkButtonHover(pos, this.gearPos, scrn, this.hoveringStates.gear)
-        const menuHover = this.checkButtonHover(pos, this.menuPos, scrn, this.hoveringStates.menu)
+        const menuHover = this.checkButtonHover(pos, this.menuPos, scrn, this.hoveringStates.menu) && this.PAGEON
         if (!(gearHover||menuHover)) {
             this.hovering = this.hoveringStates.none
         }
