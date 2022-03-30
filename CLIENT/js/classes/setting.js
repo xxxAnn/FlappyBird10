@@ -2,19 +2,26 @@ class Setting {
     constructor(scrn, state) {
         this.cog = COGSPRITE 
         this.pause = PAUSESPRITE
-        this.w = 80
-        this.h = 80
-        this.y = 20
-        this.x = scrn.width-(this.w+10)
+        this.gearPos = {
+            w: 80,
+            h: 80,
+            y: 10,
+            x: scrn.width-(this.w+10),
+        }
         this.turning = false
         this.PAGEON = false
 
         this.mousePos = {x:0, y:0}
-        this.hovering = false
+        this.hovering = 0
+        this.hoveringPos = {
+            none: 0,
+            gear: 1,
+            menu: 2,
+            menuOpened: 3,
+        }
         this.animationLength = 45 // in frames
         this.animationFrms = 0
         this.rotation = 0
-        this.hovered = false
         this.wait = false
     }
     draw(sctx, state) {
@@ -59,14 +66,15 @@ class Setting {
         sctx.restore()
     }
     handleMouseMove(pos, scrn) {
-        const buttonPos = {x: this.x, y: this.y, w: this.w, h: this.h}
-        return checkButtonHover(pos, buttonPos,scrn)
+        return checkButtonHover(pos, this.gearPos,scrn)
     }
     drawRotation(sctx) {
         const i = 0.5
         sctx.translate(this.x+ this.w * i, this.y+this.h * i)
         sctx.rotate(RAD * this.rotation)
+        sctx.imageSmoothingEnabled = true;
         sctx.drawImage(this.cog, -this.w/2, -this.h/2, this.w, this.h)
+        sctx.imageSmoothingEnabled = false;
         sctx.rotate(-RAD * this.rotation)
         sctx.translate(-this.x-this.cog.width * i,-this.y -this.cog.height * i) 
     }

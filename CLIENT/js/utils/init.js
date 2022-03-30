@@ -110,6 +110,8 @@ function init() {
     }
     SFX.playOnMainScreen()
 
+
+
     handdleSizeChange(sizeRatio, bird, games, gnd, bg)
     gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett)
 }
