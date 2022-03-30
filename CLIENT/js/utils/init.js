@@ -147,7 +147,6 @@ function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett) {
                 games.fireball.update(scrn, ui, bird, games, state)
                 break
         }
-        bird.update(state, sfx, ui, games, gnd, scrn)
         gnd.update(state)
         bg.update(state)
     }

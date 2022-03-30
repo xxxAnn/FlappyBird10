@@ -103,13 +103,13 @@ class Bird {
                     this.speed += this.gravity*2
                 }
                 else {
-                this.speed = 0
-                this.y=gnd.y-r
-                this.rotatation=90
-                if(!SFX.played) {
-                    SFX.die.play()
-                    SFX.played = true
-                }
+                    this.speed = 0
+                    this.y=gnd.y-r
+                    this.rotatation=90
+                    if(!SFX.played) {
+                        SFX.die.play()
+                        SFX.played = true
+                    }
                 }
 
                 break
@@ -126,7 +126,7 @@ class Bird {
             if (this.dashing.length == this.dashing.curr) {
                 this.dashing.t = false
             }
-            console.log(this.x, sctx.canvas.clientWidth)
+            console.log(this.x, sctx)
             if (this.x<0.1*sctx.canvas.clientWidth || this.x > 0.9*sctx.canvas.clientWidth) {
                 this.dashing.t = false
             }
