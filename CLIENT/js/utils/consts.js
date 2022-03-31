@@ -20,6 +20,7 @@ let COGSPRITE = imageWithSource("cog")
 let SOUNDSPRITE = imageWithSource("speaker")
 let FIREBALLSPRITE = imageWithSource("fireball")
 let PAUSESPRITE = imageWithSource("pause")
+let DASHSPRITE = imageWithSource("dash")
 let BIRDANIMS = [
   {sprite : imageWithSource("bird/b0")},
   {sprite : imageWithSource("bird/b1")},
