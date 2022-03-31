@@ -5,7 +5,7 @@ class Sfx {
         this.score = new Audio()
         this.hit = new Audio()
         this.die = new Audio()
-        this.BGMVOLUME = 1
+        this.BGMVOLUME = 0.75
         this.start.src = "sfx/start.wav"
         this.flap.src = "sfx/flap.wav"
         this.score.src = "sfx/score.wav"

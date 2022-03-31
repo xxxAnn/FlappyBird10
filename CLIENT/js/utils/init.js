@@ -70,6 +70,8 @@ function init() {
                 bird.movingToCenter.t = false
                 state.gameStage = 0
                 games.pipe.reset()
+                dx = 0
+                frms = 0
                 games.fireball.reset()
                 UI.score.curr = 0
                 SFX.played = false
@@ -103,7 +105,7 @@ function init() {
             bird.dash(-1, sctx)
         }
         if (e.key == "ArrowDown" && state.curr == state.Play) {
-            bird.dash(1, sctx, true)
+            //bird.dash(1, sctx, true)
         }
         if (e.key.toLocaleLowerCase() == 'p') {                
             if (state.curr == state.Play) {
@@ -179,6 +181,11 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
     ui.draw(state, sctx, scrn)
     if (sett.PAGEON===true) {
         sett.openSettings(sctx, scrn)
+    }
+    if (state.curr == state.Play) {
+        //sctx.beginPath()
+        //sctx.arc(sctxc.canvas.clientWidth/2)
+        // TODO WORK ON ICON FOR DASH
     }
 }
 function handdleSizeChange(sizeRatio, bird, games, gnd, bg) {
