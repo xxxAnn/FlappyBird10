@@ -131,13 +131,13 @@ class Bird {
                     this.speed += this.gravity*2
                 }
                 else {
-                this.speed = 0
-                this.y=gnd.y-r
-                this.rotatation=90
-                if(!SFX.played) {
-                    SFX.die.play()
-                    SFX.played = true
-                }
+                    this.speed = 0
+                    this.y=gnd.y-r
+                    this.rotatation=90
+                    if(!SFX.played) {
+                        SFX.die.play()
+                        SFX.played = true
+                    }
                 }
 
                 break

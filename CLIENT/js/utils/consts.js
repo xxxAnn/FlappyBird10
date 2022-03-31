@@ -58,6 +58,7 @@ const FIREBALL_SIZE = 75
 const MAX_FIREBALL_SPEED = 1.5
 const BALLSPREAD = 1.5e3
 const FIREBALL_MOVEMENTSPEED = 5
+
 const PIPE_ACCELERATION_RATE = 0.1 // <0.01, really small or 0, 0 == no acceleration
 const PIPE_DEFAULT_THRESH = {
     app:0,
@@ -68,5 +69,7 @@ const PIPE_DEFAULT_THRESH = {
 
 const BGM_TIMEOUT = 1500 // ms
 
-const FIRSTEVENTTHRESHOLD = 1
+const FIRSTEVENTTHRESHOLD = 6
 const PIPE_DEFAULT_CAN_TOGGLE_EVENT = [1]
+
+const SOUND_VOLUME = 0.2
