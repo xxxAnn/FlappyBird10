@@ -119,7 +119,14 @@ class Bird {
                     state.curr = state.gameOver
                     SFX.bgm.pause()
                     SFX.bgm.currentTime = 0
+                    if (this.y + r >= gnd.y) {
+                        if(!SFX.played) {
+                            SFX.die.play()
+                            SFX.played = true
+                        }
+                    }
                 }
+                
 
                 break
             case state.gameOver : 
@@ -134,10 +141,7 @@ class Bird {
                     this.speed = 0
                     this.y=gnd.y-r
                     this.rotatation=90
-                    if(!SFX.played) {
-                        SFX.die.play()
-                        SFX.played = true
-                    }
+                    
                 }
 
                 break
@@ -246,7 +250,7 @@ class Bird {
         const pipe = games.pipe
         x = pipe.pipes[0].x
         y = pipe.pipes[0].y
-        g = pipe.pipes[0].gap
+        g = pipe.pipes[0].g
 
         let roof = y + parseFloat(pipe.h)
         let floor = roof + g
