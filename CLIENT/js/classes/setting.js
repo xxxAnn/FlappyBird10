@@ -1,5 +1,6 @@
 class Setting {
     constructor(scrn, state) {
+
         this.cog = COGSPRITE 
         this.pause = PAUSESPRITE
         this.gearPos = {
@@ -11,15 +12,26 @@ class Setting {
 
         this.turning = false
         this.PAGEON = false
+
         // --------------
         this.menuPos = {
             w: scrn.width * 0.8,
+            h: 10,
             radius: 10,
+            current: 0,
         }
-        this.menuPos.h = this.menuPos.w,
-        this.menuPos.x = (scrn.width-this.menuPos.w)/2,
-        this.menuPos.y = (scrn.height-this.menuPos.h)/2,
+        this.menuPos.x = (scrn.width-this.menuPos.w)/2
+        this.menuPos.y = (scrn.height-this.menuPos.h)/2
         // --------------
+
+        // --------------
+        this.volSlider = {
+            y: this.menuPos.y+this.menuPos.h/2
+        }
+        // --------------
+        this.buttons = [
+            this.volSlider
+        ]
 
         this.mousePos = {x:0, y:0}
         this.hovering = 0
@@ -78,6 +90,7 @@ class Setting {
     handleMouseMove(pos, scrn) {
         const gearHover = this.checkButtonHover(pos, this.gearPos, scrn, this.hoveringStates.gear)
         const menuHover = this.checkButtonHover(pos, this.menuPos, scrn, this.hoveringStates.menu) && this.PAGEON
+
         if (!(gearHover||menuHover)) {
             this.hovering = this.hoveringStates.none
         }
@@ -99,6 +112,13 @@ class Setting {
         sctx.roundRect(this.menuPos.x, this.menuPos.y, this.menuPos.w, this.menuPos.h, [this.menuPos.radius])
         sctx.fillStyle = "grey"
         sctx.fill()
+        if (this.menuPos.current < 60) {
+            this.menuPos.h = easeInOut(this.menuPos.current, this.menuPos.h, this.menuPos.w-this.menuPos.h, 15)
+            this.menuPos.current++
+            this.menuPos.y = (scrn.height-this.menuPos.h)/2
+            return
+        }
+        this.drawButtons()
     }
     checkButtonHover(mousePos, buttonPos, scrn, hoveringState) {
         if (mousePos.x < buttonPos.x) return false
@@ -109,4 +129,13 @@ class Setting {
         this.hovering = hoveringState
         return true
     }
+    drawButtons() {
+
+    }
 }
+function easeInOut(t, b, c, d) {
+	t /= d/2;
+	if (t < 1) return c/2*t*t*t*t + b;
+	t -= 2;
+	return -c/2 * (t*t*t*t - 2) + b;
+};

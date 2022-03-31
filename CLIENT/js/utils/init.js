@@ -76,9 +76,9 @@ function init() {
         const hover = sett.handleMouseMove({x:e.x-rect.x, y:e.y-rect.y}, scrn)
         if (hover) {
             scrn.style.cursor = 'pointer'
-        } else [
+        } else {
             scrn.style.cursor = 'default'
-        ]
+        }
     }
     document.onclick = () => {
         if (!SFX.played) {
@@ -92,16 +92,14 @@ function init() {
     document.onkeydown = (e) => {
         if (e.key.toLowerCase() == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
         
-        if (state.gameStage == games.fireball.id) {
-            if (e.key == "ArrowRight" && state.curr == state.Play) {
-                bird.dash(1, sctx)
-            }
-            if (e.key == "ArrowLeft" && state.curr == state.Play) {
-                bird.dash(-1, sctx)
-            }
-            if (e.key == "ArrowDown" && state.curr == state.Play) {
-                bird.dash(1, sctx, true)
-            }
+        if (e.key == "ArrowRight" && state.curr == state.Play) {
+            bird.dash(1, sctx)
+        }
+        if (e.key == "ArrowLeft" && state.curr == state.Play) {
+            bird.dash(-1, sctx)
+        }
+        if (e.key == "ArrowDown" && state.curr == state.Play) {
+            bird.dash(1, sctx, true)
         }
         
 
@@ -115,7 +113,7 @@ function init() {
         if (state.curr != state.getReady) return
         else if (e.key.toLowerCase() == 'b') SFX.updateBGM(-1, scrn, sctx, state)
         else if (e.key.toLowerCase() == 'n') SFX.updateBGM(1, scrn, sctx, state)
-        else if (e.key.toLowerCase() == 'm') sett.openSettings(sctx, scrn)
+        else if (e.key.toLowerCase() == 'm') sett.PAGEON = !sett.PAGEON
     }
 
 
@@ -163,7 +161,7 @@ function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett) {
 
 function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
     sctx.fillStyle = "#30c0df"
-    sctx.fillRect(0,0,scrn.width,scrn.height)
+    sctx.clearRect(0,0,scrn.width,scrn.height)
     bg.draw(scrn, sctx)
     switch (state.gameStage) {
         case games.pipe.id :
@@ -181,6 +179,9 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
     ui.draw(state, sctx, scrn)
     if (sett.PAGEON===true) {
         sett.openSettings(sctx, scrn)
+    } else {
+        sett.menuPos.h = 0
+        sett.menuPos.current = 0
     }
 }
 function handdleSizeChange(sizeRatio, bird, games, gnd, bg) {
