@@ -35,7 +35,7 @@ function init() {
         }
         switch (state.curr) {
             case state.getReady :
-                handleMainScreenPress(sett, SFX, state)
+                handleMainScreenPress(sett, SFX, state, scrn)
                 break
             case state.Play :
                 if (sett.hovering === true) {
@@ -73,7 +73,14 @@ function init() {
 
     document.onmousemove = (e) => {
         const rect = scrn.getBoundingClientRect()
-        const hover = sett.handleMouseMove({x:e.x-rect.x, y:e.y-rect.y}, scrn)
+        const mousePos = {x:e.x-rect.x, y:e.y-rect.y}
+        const hover = sett.handleMouseMove(mousePos, scrn)
+        if (sett.moving == true) {
+            sett.changeVolume(sctx, mousePos, SFX)
+            scrn.style.cursor = 'grabbing'
+            return
+        }
+
         if (hover) {
             scrn.style.cursor = 'pointer'
         } else {
@@ -86,9 +93,13 @@ function init() {
             SFX.played = !SFX.played
         }
     }
+    document.onmouseup = () => {
+        sett.moving = false
+        scrn.style.cursor = 'auto'
+    }
     
     scrn.tabIndex = 1;
-    scrn.addEventListener("click", jumpInputHandler)
+    scrn.addEventListener("mousedown", jumpInputHandler)
     document.onkeydown = (e) => {
         if (e.key.toLowerCase() == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
         
@@ -165,11 +176,11 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
     bg.draw(scrn, sctx)
     switch (state.gameStage) {
         case games.pipe.id :
-             games.pipe.draw(sctx)
-             break
+            games.pipe.draw(sctx)
+            break
         case games.fireball.id :
-             games.fireball.draw(sctx, bird)
-             break
+            games.fireball.draw(sctx, bird)
+            break
     }
     sett.draw(sctx, state)
    
@@ -181,7 +192,7 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
         sett.openSettings(sctx, scrn)
     } else {
         sett.menuPos.h = 0
-        sett.menuPos.current = 0
+        sett.menuPos.current = MENU_OPEN_LENGTH
     }
 }
 function handdleSizeChange(sizeRatio, bird, games, gnd, bg) {
@@ -191,12 +202,15 @@ function handdleSizeChange(sizeRatio, bird, games, gnd, bg) {
     bg.sizeChange(sizeRatio)
 }
 
-function handleMainScreenPress(sett, SFX, state) {
+function handleMainScreenPress(sett, SFX, state, scrn) {
     if (sett.hovering == sett.hoveringStates.gear) {
         sett.PAGEON = !sett.PAGEON 
     } 
-    else if (sett.hovering == sett.hoveringStates.menu && sett.PAGEON) {
-
+    else if (sett.hovering != sett.hoveringStates.gear && sett.hovering != sett.hoveringStates.none && sett.PAGEON) {
+        if (sett.hovering == sett.hoveringStates.vol) {
+            sett.moving = true
+            scrn.style.cursor = 'grabbing'
+        }
     }
     else {
         if (sett.PAGEON) {
