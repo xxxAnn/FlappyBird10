@@ -198,12 +198,11 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
         sett.menuPos.current = MENU_OPEN_LENGTH
     }
     if (state.curr == state.Play) {
-        sctx.beginPath()
-        let r = 40
+        /*sctx.beginPath()
         sctx.fillStyle = "grey"
         sctx.arc(sctx.canvas.clientWidth/2, sctx.canvas.clientHeight-r-20, r, 0, 360*RAD, 1)
-        sctx.fill()
-        sctx.drawImage(DASHSPRITE, sctx.canvas.clientWidth/2-r/2, sctx.canvas.clientHeight-r-40, 50, 50)
+        sctx.fill()*/
+        sctx.drawImage(DASHSPRITE, sctx.canvas.clientWidth/2-50, sctx.canvas.clientHeight-140, 100, 100)
         // TODO WORK ON ICON FOR DASH
     }
 }
