@@ -20,6 +20,7 @@ let COGSPRITE = imageWithSource("cog")
 let SOUNDSPRITE = imageWithSource("speaker")
 let FIREBALLSPRITE = imageWithSource("fireball")
 let PAUSESPRITE = imageWithSource("pause")
+let DASHSPRITE = imageWithSource("dash")
 let BIRDANIMS = [
   {sprite : imageWithSource("bird/b0")},
   {sprite : imageWithSource("bird/b1")},
@@ -38,23 +39,26 @@ const BIRD_DEFAULTS = {
     x: 50,
     y: 200,
     speed: 3,
-    gravity: .125,
+    gravity: .525,
     dashcool: 50,
-    thrust: 4.6,
+    thrust: 8.6,
     frame: 0
 }
 
 const DASHLENGTH = 4
 const DASHDISTANCE = 75
+const MAXDASH = 1.5
+const DEFAULT_DASH_CD = 25
 
 const PIPE_APPEARANCE_SPEED = 1/150 // (0-1), preferably <0.05, game starts breaking at ~0.03
-const PIPE_DEFAULT_MOVESPEED = 2
+const PIPE_DEFAULT_MOVESPEED = 1.5
 const PIPE_DEFAULT_GAP = 200
 const PIPE_MINIMUM_GAP = 20
-
-const FIREBALL_SPAWNRATE = 0.21
+const FIREBALL_SPAWNRATE = 0.08
 const FIREBALL_SIZE = 75
-const FIREBALL_MOVEMENTSPEED = 3
+const MAX_FIREBALL_SPEED = 1.5
+const BALLSPREAD = 1.5e3
+const FIREBALL_MOVEMENTSPEED = 5
 
 const PIPE_ACCELERATION_RATE = 0.1 // <0.01, really small or 0, 0 == no acceleration
 const PIPE_DEFAULT_THRESH = {
@@ -66,7 +70,9 @@ const PIPE_DEFAULT_THRESH = {
 
 const BGM_TIMEOUT = 1500 // ms
 
-const FIRSTEVENTTHRESHOLD = 6
+const FIRSTEVENTTHRESHOLD = 1
 const PIPE_DEFAULT_CAN_TOGGLE_EVENT = [1]
 
 const SOUND_VOLUME = 0.2
+
+const MENU_OPEN_LENGTH = 20

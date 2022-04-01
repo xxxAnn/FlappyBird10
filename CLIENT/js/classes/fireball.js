@@ -18,6 +18,7 @@ class FireballSet {
         }
     }
     newFireball(x, y, rot, size=50) {
+        let k = BALLSPREAD
         this.fireballs.push({
             x: x,
             y: y,
@@ -25,14 +26,14 @@ class FireballSet {
             w: size,
             rot: rot,
             die: false,
-            rg: Math.floor(Math.random()*3-1.5)
+            rg: Math.floor((Math.random()*k)-(k/2)) // in grad
         })
     }
     update(scrn, ui, bird, games, state) {
         if (state.curr !== state.Play) return
         if (games.pipe.pipes.length == 0 && !this.started) {
             dx = PIPE_DEFAULT_MOVESPEED
-            this.FRMTHRESH.dx = PIPE_DEFAULT_MOVESPEED+5
+            this.FRMTHRESH.dx = PIPE_DEFAULT_MOVESPEED*10+5
             bird.goToCenter(250)
             ui.pushMessage("!!", 50, 0, 0, 80, "red", false)
             ui.pushMessage("WATCH OUT", 150, 120)
@@ -41,12 +42,17 @@ class FireballSet {
         }
 
         if (frms>this.FRMTHRESH.fb) {
-                this.newFireball(/*Math.floor(Math.random() * (scrn.width/3))+scrn.width/3*/ scrn.width/2, 10, TEST*RAD, FIREBALL_SIZE)
+                this.newFireball(Math.floor(Math.random() * (scrn.width/3))+scrn.width/3, 10, TEST*RAD, FIREBALL_SIZE)
                 this.FRMTHRESH.fb = frms+(1/FIREBALL_SPAWNRATE)
         }
+        if (frms>this.FRMTHRESH.dx) {
+            dx = Math.min(dx+PIPE_ACCELERATION_RATE, MAX_FIREBALL_SPEED)
+            this.FRMTHRESH.dx+=PIPE_DEFAULT_MOVESPEED*10
+        }
+
         this.fireballs.forEach(fb => {
             fb.y+=dx*FIREBALL_MOVEMENTSPEED
-            fb.x-=dx*fb.rg
+            fb.x-=dx*(fb.rg/100)
             if (fb.y>=scrn.height) {
                 fb.die = true
                 ui.curr+=1

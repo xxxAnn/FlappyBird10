@@ -16,6 +16,8 @@ class Bird {
         this.gravity = BIRD_DEFAULTS.gravity
         this.thrust = BIRD_DEFAULTS.thrust
         this.frame = BIRD_DEFAULTS.frame
+        this.immune = false
+        this.shadows = []
         this.dashing = {
             t: false,
             curr: 0,
@@ -27,11 +29,13 @@ class Bird {
                 actfrm: 0,
                 rot: 0
             },
-            dir: 1
+            dir: 1,
+            CD: DEFAULT_DASH_CD
         }
         this.dashing.t = false
     }
     dash(dir=1, sctx, dive=false) {
+        if (this.dashing.CD > 0) return
         this.dashing.t = true
         this.dashing.curr = 0
         this.dashing.orgpos.x = this.x
@@ -42,7 +46,30 @@ class Bird {
         this.dashing.dive = dive
         if ((this.x<0.1*sctx.canvas.clientWidth && dir == -1) || (this.x > 0.9*sctx.canvas.clientWidth && dir == 1)) {
             this.dashing.t = false
+        } else {
+            this.immune = true
         }
+    } 
+    drawShadows(sctx) {
+        this.shadows.forEach(shadow => {
+            let posx = shadow.x
+            let posy = shadow.y
+            let h = this.animations[this.dashing.orgpos.actfrm].sprite.height
+            let w = this.animations[this.dashing.orgpos.actfrm].sprite.width
+            sctx.save()
+            sctx.globalAlpha = 0.25
+            sctx.translate(posx,posy)
+            sctx.rotate(this.dashing.orgpos.rot*RAD)
+            sctx.drawImage(this.animations[this.dashing.orgpos.actfrm].sprite, -w/2, -h/2, w, h)
+            sctx.restore()
+            sctx.globalAlpha = 1
+        })
+    }
+    newShadow(x, y) {
+        this.shadows.push({
+            x: x,
+            y: y
+        })
     }
     draw(sctx) {
         let h = this.animations[this.frame].sprite.height
@@ -52,19 +79,18 @@ class Bird {
         sctx.rotate(this.rotatation*RAD)
         sctx.drawImage(this.animations[this.frame].sprite,-w/2,-h/2, w, h)
         sctx.restore()
+        this.drawShadows(sctx)
         if (this.dashing.t && this.dashing.curr < 0.9*this.dashing.length) {
-            let h = this.animations[this.dashing.orgpos.actfrm].sprite.height
-            let w = this.animations[this.dashing.orgpos.actfrm].sprite.width
-            sctx.save()
-            sctx.globalAlpha = 0.25
-            sctx.translate(this.dashing.orgpos.x,this.dashing.orgpos.y)
-            sctx.rotate(this.dashing.orgpos.rot*RAD)
-            sctx.drawImage(this.animations[this.dashing.orgpos.actfrm].sprite, -w/2, -h/2, w, h)
-            sctx.restore()
-            sctx.globalAlpha = 1
+            this.newShadow(this.x, this.y)
+            if (this.shadows.length > 15) {
+                this.shadows.shift()
+            }
+        } else { 
+            this.shadows.shift()
         }
     }
     update(state, SFX, UI, games, gnd, scrn, sctx) {
+        this.dashing.CD -= 1
         if (this.movingToCenter.t) {
             let tdd = scrn.width/2 - this.x
             let tmv = tdd/this.movingToCenter.ln
@@ -82,16 +108,25 @@ class Bird {
                 this.frame += (frms%10==0) ? 1 : 0
                 break
             case state.Play :
-                this.frame += (frms%10==0) ? 1 : 0
-                this.y += this.speed
-                this.setRotation()
-                this.speed += this.gravity
+                this.frame += (frms%(1/BIRD_ANIMATION_SPEED)==0) ? 1 : 0
+                if (!this.dashing.t) {
+                    this.y += this.speed
+                    this.setRotation()
+                    this.speed += this.gravity
+                }
                 if(this.y + r  >= gnd.y||this.collisioned(games, UI, SFX, state))
                 {
                     state.curr = state.gameOver
                     SFX.bgm.pause()
                     SFX.bgm.currentTime = 0
+                    if (this.y + r >= gnd.y) {
+                        if(!SFX.played) {
+                            SFX.die.play()
+                            SFX.played = true
+                        }
+                    }
                 }
+                
 
                 break
             case state.gameOver : 
@@ -106,10 +141,7 @@ class Bird {
                     this.speed = 0
                     this.y=gnd.y-r
                     this.rotatation=90
-                    if(!SFX.played) {
-                        SFX.die.play()
-                        SFX.played = true
-                    }
+                    
                 }
 
                 break
@@ -121,13 +153,24 @@ class Bird {
             } else {
                 this.y+=(this.dashing.dist/this.dashing.length)*this.dashing.dir
             }
+            if (this.dashing.curr >= this.dashing.length*0.05) {
+                this.immune = false
+            }
             this.dashing.curr+=1
             this.rotatation = 0
-            if (this.dashing.length == this.dashing.curr) {
-                this.dashing.t = false
+            if (this.dashing.curr >= this.dashing.length) {
+                if (!(pressedKeys["ArrowRight"] == true && this.dashing.dir == 1) && !(pressedKeys["ArrowLeft"] && this.dashing.dir == -1) ||  this.dashing.dive == true || this.dashing.curr>= this.dashing.length*MAXDASH) {
+                    this.dashing.t = false
+                    this.dashing.CD = DEFAULT_DASH_CD
+                    this.immune = false
+                } else {
+                    this.immune = false
+                }
+                
             }
             if (this.x<0.1*sctx.canvas.clientWidth || this.x > 0.9*sctx.canvas.clientWidth) {
                 this.dashing.t = false
+                this.dashing.CD = DEFAULT_DASH_CD
             }
         }  
     }
@@ -150,6 +193,7 @@ class Bird {
         this.movingToCenter.fr = ln
     }
     collisioned(games, UI, SFX, state) {
+        if (this.immune) return false
         let bird = this.animations[0].sprite
         let r = bird.height/4 +bird.width/4
         
@@ -206,7 +250,7 @@ class Bird {
         const pipe = games.pipe
         x = pipe.pipes[0].x
         y = pipe.pipes[0].y
-        g = pipe.pipes[0].gap
+        g = pipe.pipes[0].g
 
         let roof = y + parseFloat(pipe.h)
         let floor = roof + g
