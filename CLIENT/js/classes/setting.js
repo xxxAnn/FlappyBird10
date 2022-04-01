@@ -1,5 +1,5 @@
 class Setting {
-    constructor(scrn, state) {
+    constructor(scrn, state, sfx) {
         this.cog = COGSPRITE 
         this.pause = PAUSESPRITE
         this.gearPos = {
@@ -31,7 +31,7 @@ class Setting {
             bar_h: 5,
             radius: 10,
         }
-        this.volSlider.btn_x = this.volSlider.bar_x+SOUND_VOLUME*this.volSlider.bar_w
+        this.volSlider.btn_x = this.volSlider.bar_x+sfx.VOLUME*this.volSlider.bar_w
         this.moving = false
         // --------------
         
@@ -150,6 +150,7 @@ class Setting {
     changeVolume(mousePos, sfx) {
         this.volSlider.btn_x = Math.max(Math.min(mousePos.x, this.volSlider.bar_x+this.volSlider.bar_w), this.volSlider.bar_x)
         sfx.VOLUME = (this.volSlider.btn_x-this.volSlider.bar_x)/this.volSlider.bar_w
+        localStorage.setItem("FB10VOLUME", sfx.VOLUME)
 
         sfx.start.volume = sfx.VOLUME
         sfx.flap.volume = sfx.VOLUME

@@ -23,7 +23,7 @@ function init() {
     const bird = new Bird()
     const UI = new Ui()
     const sizeRatio = gnd.getSize(scrn)
-    const sett = new Setting(scrn, state)
+    const sett = new Setting(scrn, state, SFX)
     const games = {
         pipe: new PipeSet(scrn, sizeRatio),
         fireball: new FireballSet()

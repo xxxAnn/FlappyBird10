@@ -12,7 +12,10 @@ class Sfx {
         this.hit.src = "sfx/hit.wav"
         this.die.src = "sfx/die.wav"
 
-        this.VOLUME = SOUND_VOLUME
+        this.VOLUME = localStorage.getItem("FB10VOLUME")
+        if (this.VOLUME == null) {
+            this.VOLUME = SOUND_VOLUME
+        }
         this.start.volume = this.VOLUME
         this.flap.volume = this.VOLUME
         this.score.volume = this.VOLUME
