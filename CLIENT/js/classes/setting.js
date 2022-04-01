@@ -147,8 +147,16 @@ class Setting {
         sctx.arc(this.volSlider.btn_x, this.volSlider.bar_y+this.volSlider.bar_h/2, this.volSlider.radius, 0, 2*Math.PI, false)
         sctx.fill()
     }
-    changeVolume(sctx, mousePos, sfx) {
+    changeVolume(mousePos, sfx) {
         this.volSlider.btn_x = Math.max(Math.min(mousePos.x, this.volSlider.bar_x+this.volSlider.bar_w), this.volSlider.bar_x)
+        sfx.VOLUME = (this.volSlider.btn_x-this.volSlider.bar_x)/this.volSlider.bar_w
+
+        sfx.start.volume = sfx.VOLUME
+        sfx.flap.volume = sfx.VOLUME
+        sfx.score.volume = sfx.VOLUME
+        sfx.hit.volume = sfx.VOLUME
+        sfx.die.volume = sfx.VOLUME
+        sfx.bgm.volume = sfx.VOLUME
     }
 }
 

@@ -76,7 +76,7 @@ function init() {
         const mousePos = {x:e.x-rect.x, y:e.y-rect.y}
         const hover = sett.handleMouseMove(mousePos, scrn)
         if (sett.moving == true) {
-            sett.changeVolume(sctx, mousePos, SFX)
+            sett.changeVolume(mousePos, SFX)
             scrn.style.cursor = 'grabbing'
             return
         }
