@@ -20,6 +20,7 @@ let COGSPRITE = imageWithSource("cog")
 let SOUNDSPRITE = imageWithSource("speaker")
 let FIREBALLSPRITE = imageWithSource("fireball")
 let PAUSESPRITE = imageWithSource("pause")
+let DASHSPRITE = imageWithSource("dash")
 let BIRDANIMS = [
   {sprite : imageWithSource("bird/b0")},
   {sprite : imageWithSource("bird/b1")},
@@ -73,3 +74,5 @@ const FIRSTEVENTTHRESHOLD = 1
 const PIPE_DEFAULT_CAN_TOGGLE_EVENT = [1]
 
 const SOUND_VOLUME = 0.2
+
+const MENU_OPEN_LENGTH = 20

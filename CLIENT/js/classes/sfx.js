@@ -12,7 +12,7 @@ class Sfx {
         this.hit.src = "sfx/hit.wav"
         this.die.src = "sfx/die.wav"
 
-        this.VOLUME = 0.25
+        this.VOLUME = SOUND_VOLUME
         this.start.volume = this.VOLUME
         this.flap.volume = this.VOLUME
         this.score.volume = this.VOLUME
