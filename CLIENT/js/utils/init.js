@@ -222,12 +222,11 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
         sctx.drawImage(DASHSPRITE, 0, 0, s, s)
         if (!bird.dashing.t && !(0==Math.max(bird.dashing.CD, 0))) {
             sctx.beginPath()
-            sctx.moveTo(p, p)
-            sctx.lineTo(p, (p)+r)
-            sctx.arc(p, p, r, Math.PI/4, Math.PI/4+((Math.PI * 2) * (DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0))/DEFAULT_DASH_CD), true)
+            //sctx.lineTo(p, (p-r))
+            sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0))*1.2)/DEFAULT_DASH_CD))
             sctx.lineTo(p, p)
             sctx.closePath()
-            sctx.globalAlpha = 0.75
+            sctx.globalAlpha = 0.55
             sctx.fillStyle = "grey"
             sctx.fill()
         }
