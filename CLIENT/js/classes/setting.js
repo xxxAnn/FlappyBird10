@@ -11,22 +11,37 @@ class Setting {
 
         this.turning = false
         this.PAGEON = false
+
         // --------------
         this.menuPos = {
             w: scrn.width * 0.8,
+            h: 10,
+            radius: 10,
+            current: MENU_OPEN_LENGTH,
+        }
+        this.menuPos.x = (scrn.width-this.menuPos.w)/2
+        this.menuPos.y = (scrn.height-this.menuPos.h)/2
+        // --------------
+        this.buttons = [1,2]
+        // --------------
+        this.volSlider = {
+            bar_x: this.menuPos.x+this.menuPos.w*0.2,
+            bar_y: this.menuPos.y+(this.menuPos.w/this.buttons.length+2) + 2.5,
+            bar_w: this.menuPos.w*0.6,
+            bar_h: 5,
             radius: 10,
         }
-        this.menuPos.h = this.menuPos.w,
-        this.menuPos.x = (scrn.width-this.menuPos.w)/2,
-        this.menuPos.y = (scrn.height-this.menuPos.h)/2,
+        this.volSlider.btn_x = this.volSlider.bar_x+SOUND_VOLUME*this.volSlider.bar_w
+        this.moving = false
         // --------------
-
+        
         this.mousePos = {x:0, y:0}
         this.hovering = 0
         this.hoveringStates = {
             none: 0,
             gear: 1,
             menu: 2,
+            vol: 3,
         }
         this.menuOpened = false
         this.animationLength = 45 // in frames
@@ -76,13 +91,16 @@ class Setting {
         sctx.restore()
     }
     handleMouseMove(pos, scrn) {
-        const gearHover = this.checkButtonHover(pos, this.gearPos, scrn, this.hoveringStates.gear)
-        const menuHover = this.checkButtonHover(pos, this.menuPos, scrn, this.hoveringStates.menu) && this.PAGEON
-        if (!(gearHover||menuHover)) {
+        const gearHover = this.checkButtonHover(pos, this.gearPos, this.hoveringStates.gear)
+        const menuHover = this.checkButtonHover(pos, this.menuPos, this.hoveringStates.menu) && this.PAGEON
+        const posVol = {x: this.volSlider.btn_x-this.volSlider.radius, y: this.volSlider.bar_y+this.volSlider.bar_h/2-this.volSlider.radius, w:this.volSlider.radius*2, h:this.volSlider.radius*2}
+        const volumeHover = this.checkButtonHover(pos, posVol, this.hoveringStates.vol)
+
+        if (!(gearHover||menuHover||volumeHover)) {
             this.hovering = this.hoveringStates.none
         }
         
-        return gearHover
+        return gearHover||volumeHover
     }
     drawRotation(sctx) {
         const i = 0.5
@@ -99,8 +117,16 @@ class Setting {
         sctx.roundRect(this.menuPos.x, this.menuPos.y, this.menuPos.w, this.menuPos.h, [this.menuPos.radius])
         sctx.fillStyle = "grey"
         sctx.fill()
+        if (this.menuPos.current > 0) {
+            this.menuPos.h = easeInOut(this.menuPos.current/MENU_OPEN_LENGTH)*this.menuPos.w
+            this.menuPos.current--
+            
+            this.menuPos.y = (scrn.height-this.menuPos.h)/2
+            return
+        }
+        this.drawButtons(sctx)
     }
-    checkButtonHover(mousePos, buttonPos, scrn, hoveringState) {
+    checkButtonHover(mousePos, buttonPos, hoveringState) {
         if (mousePos.x < buttonPos.x) return false
         if (mousePos.x > buttonPos.x + buttonPos.w) return false
         if (mousePos.y < buttonPos.y) return false
@@ -109,4 +135,44 @@ class Setting {
         this.hovering = hoveringState
         return true
     }
+    drawButtons(sctx) {
+        this.volSlider.bar_y = this.menuPos.y+(this.menuPos.w/(this.buttons.length+2)) + 2.5
+        sctx.beginPath()
+        sctx.fillStyle = '#000'
+        sctx.lineWidth = "2"
+        sctx.font = "40px Squada One"
+        sctx.fillText('Volume', this.volSlider.bar_x, this.volSlider.bar_y-15)
+        sctx.roundRect(this.volSlider.bar_x, this.volSlider.bar_y, this.volSlider.bar_w, this.volSlider.bar_h, [10])
+        sctx.fill()
+        sctx.arc(this.volSlider.btn_x, this.volSlider.bar_y+this.volSlider.bar_h/2, this.volSlider.radius, 0, 2*Math.PI, false)
+        sctx.fill()
+    }
+    changeVolume(mousePos, sfx) {
+        this.volSlider.btn_x = Math.max(Math.min(mousePos.x, this.volSlider.bar_x+this.volSlider.bar_w), this.volSlider.bar_x)
+        sfx.VOLUME = (this.volSlider.btn_x-this.volSlider.bar_x)/this.volSlider.bar_w
+
+        sfx.start.volume = sfx.VOLUME
+        sfx.flap.volume = sfx.VOLUME
+        sfx.score.volume = sfx.VOLUME
+        sfx.hit.volume = sfx.VOLUME
+        sfx.die.volume = sfx.VOLUME
+        sfx.bgm.volume = sfx.VOLUME
+    }
 }
+
+function easeInOut(t) {
+    const x0 = 0
+    const y0 = 1
+    const x1 = 0.4
+    const y1 = 1
+    const x2 = 0.6
+    const y2 = 0
+    const x3 = 1
+    const y3 = 0
+    const i = {
+        x: (1-t)*((1-t)*((1-t)*x0+t*x1)+t*((1-t)*x1+t*x2))+t*((1-t)*((1-t)*x1+t*x2)+t*((1-t)*x2+t*x3)),
+        y: (1-t)*((1-t)*((1-t)*y0+t*y1)+t*((1-t)*y1+t*y2))+t*((1-t)*((1-t)*y1+t*y2)+t*((1-t)*y2+t*y3))
+    }
+    return i.y
+};
+

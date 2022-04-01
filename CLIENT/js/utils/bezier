@@ -1,0 +1,13 @@
+const i = {
+  x: (1-t)((1-t)((1-t)*x0+t*x1)+t*((1-t)*x1+t*x2))+t*((1-t)((1-t)*x1+t*x2)+t*((1-t)*x2+t*x3))
+  ,
+  y: (1-t)((1-t)((1-t)*y0+t*y1)+t*((1-t)*y1+t*y2))+t*((1-t)((1-t)*y1+t*y2)+t*((1-t)*y2+t*y3))
+}
+const x0 = 1
+const y0 = 1
+const x1 = 0.6
+const y1 = 0
+const x2 = 0.4
+const y2 = 1
+const x3 = 0
+const y3 = 0

@@ -36,7 +36,7 @@ function init() {
         }
         switch (state.curr) {
             case state.getReady :
-                handleMainScreenPress(sett, SFX, state)
+                handleMainScreenPress(sett, SFX, state, scrn)
                 break
             case state.Play :
                 if (sett.hovering === true) {
@@ -79,23 +79,35 @@ function init() {
 
     document.onmousemove = (e) => {
         const rect = scrn.getBoundingClientRect()
-        const hover = sett.handleMouseMove({x:e.x-rect.x, y:e.y-rect.y}, scrn)
+        const mousePos = {x:e.x-rect.x, y:e.y-rect.y}
+        const hover = sett.handleMouseMove(mousePos, scrn)
+        if (sett.moving == true) {
+            sett.changeVolume(mousePos, SFX)
+            scrn.style.cursor = 'grabbing'
+            return
+        }
+
         if (hover) {
             scrn.style.cursor = 'pointer'
-        } else [
+        } else {
             scrn.style.cursor = 'default'
-        ]
+        }
     }
     document.onclick = () => {
         if (!SFX.playing) {
             SFX.playOnMainScreen()
         }
     }
+    document.onmouseup = () => {
+        sett.moving = false
+        scrn.style.cursor = 'auto'
+    }
     
     scrn.tabIndex = 1;
-    scrn.addEventListener("click", jumpInputHandler)
+    scrn.addEventListener("mousedown", jumpInputHandler)
     document.onkeydown = (e) => {
         if (e.key.toLowerCase() == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
+
         if (e.key == "ArrowRight" && state.curr == state.Play) {
             bird.dash(1, sctx)
         }
@@ -115,7 +127,7 @@ function init() {
         if (state.curr != state.getReady) return
         else if (e.key.toLowerCase() == 'b') SFX.updateBGM(-1, scrn, sctx, state)
         else if (e.key.toLowerCase() == 'n') SFX.updateBGM(1, scrn, sctx, state)
-        else if (e.key.toLowerCase() == 'm') sett.openSettings(sctx, scrn)
+        else if (e.key.toLowerCase() == 'm') sett.PAGEON = !sett.PAGEON
     }
 
 
@@ -163,15 +175,15 @@ function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett) {
 
 function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
     sctx.fillStyle = "#30c0df"
-    sctx.fillRect(0,0,scrn.width,scrn.height)
+    sctx.clearRect(0,0,scrn.width,scrn.height)
     bg.draw(scrn, sctx)
     switch (state.gameStage) {
         case games.pipe.id :
-             games.pipe.draw(sctx)
-             break
+            games.pipe.draw(sctx)
+            break
         case games.fireball.id :
-             games.fireball.draw(sctx, bird)
-             break
+            games.fireball.draw(sctx, bird)
+            break
     }
     sett.draw(sctx, state)
    
@@ -181,6 +193,9 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
     ui.draw(state, sctx, scrn)
     if (sett.PAGEON===true) {
         sett.openSettings(sctx, scrn)
+    } else {
+        sett.menuPos.h = 0
+        sett.menuPos.current = MENU_OPEN_LENGTH
     }
     if (state.curr == state.Play) {
         sctx.beginPath()
@@ -199,12 +214,15 @@ function handleSizeChange(sizeRatio, bird, games, gnd, bg) {
     bg.sizeChange(sizeRatio)
 }
 
-function handleMainScreenPress(sett, SFX, state) {
+function handleMainScreenPress(sett, SFX, state, scrn) {
     if (sett.hovering == sett.hoveringStates.gear) {
         sett.PAGEON = !sett.PAGEON 
     } 
-    else if (sett.hovering == sett.hoveringStates.menu && sett.PAGEON) {
-
+    else if (sett.hovering != sett.hoveringStates.gear && sett.hovering != sett.hoveringStates.none && sett.PAGEON) {
+        if (sett.hovering == sett.hoveringStates.vol) {
+            sett.moving = true
+            scrn.style.cursor = 'grabbing'
+        }
     }
     else {
         if (sett.PAGEON) {
