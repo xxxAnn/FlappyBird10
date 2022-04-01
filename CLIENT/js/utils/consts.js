@@ -56,7 +56,7 @@ const PIPE_MINIMUM_GAP = 20
 const FIREBALL_SPAWNRATE = 0.08
 const FIREBALL_SIZE = 75
 const MAX_FIREBALL_SPEED = 1.5
-const BALLSPREAD = 1.5e3
+const BALLSPREAD = 2e3
 const FIREBALL_MOVEMENTSPEED = 5
 
 const PIPE_ACCELERATION_RATE = 0.1 // <0.01, really small or 0, 0 == no acceleration
