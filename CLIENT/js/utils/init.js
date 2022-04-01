@@ -19,14 +19,15 @@ function init() {
     const gnd = new GND()
     
     const bg = new Background(scrn)
-    const games = {
-        pipe: new PipeSet(scrn),
-        fireball: new FireballSet()
-    }
+
     const bird = new Bird()
     const UI = new Ui()
     const sizeRatio = gnd.getSize(scrn)
     const sett = new Setting(scrn, state)
+    const games = {
+        pipe: new PipeSet(scrn, sizeRatio),
+        fireball: new FireballSet()
+    }
 
     const jumpInputHandler = () => {
         if (PAUSED && sett.hovered == false) {
@@ -55,8 +56,12 @@ function init() {
                 bird.x = BIRD_DEFAULTS.x
                 bird.rotatation = 0
                 bird.movingToCenter.t = false
+                bird.reset()
+                SFX.played = false
                 state.gameStage = 0
-                games.pipe.reset()
+                games.pipe.reset(null, sizeRatio)
+                dx = 0
+                frms = 0
                 games.fireball.reset()
                 UI.score.curr = 0
                 SFX.played = false
@@ -66,6 +71,7 @@ function init() {
                     }
                 }, BGM_TIMEOUT)
                 bird.reset()
+                
                 break
         }
     }
@@ -88,9 +94,8 @@ function init() {
         }
     }
     document.onclick = () => {
-        if (!SFX.played) {
+        if (!SFX.playing) {
             SFX.playOnMainScreen()
-            SFX.played = !SFX.played
         }
     }
     document.onmouseup = () => {
@@ -102,7 +107,7 @@ function init() {
     scrn.addEventListener("mousedown", jumpInputHandler)
     document.onkeydown = (e) => {
         if (e.key.toLowerCase() == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
-        
+
         if (e.key == "ArrowRight" && state.curr == state.Play) {
             bird.dash(1, sctx)
         }
@@ -110,10 +115,8 @@ function init() {
             bird.dash(-1, sctx)
         }
         if (e.key == "ArrowDown" && state.curr == state.Play) {
-            bird.dash(1, sctx, true)
+            //bird.dash(1, sctx, true)
         }
-        
-
         if (e.key.toLocaleLowerCase() == 'p') {
             if (state.curr == state.Play) {
                 PAUSED = !PAUSED
@@ -129,7 +132,7 @@ function init() {
 
 
 
-    handdleSizeChange(sizeRatio, bird, games, gnd, bg)
+    handleSizeChange(sizeRatio, bird, games, gnd, bg)
     gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett)
 }
 
@@ -194,8 +197,17 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
         sett.menuPos.h = 0
         sett.menuPos.current = MENU_OPEN_LENGTH
     }
+    if (state.curr == state.Play) {
+        sctx.beginPath()
+        let r = 40
+        sctx.fillStyle = "grey"
+        sctx.arc(sctx.canvas.clientWidth/2, sctx.canvas.clientHeight-r-20, r, 0, 360*RAD, 1)
+        sctx.fill()
+        sctx.drawImage(DASHSPRITE, sctx.canvas.clientWidth/2-r/2, sctx.canvas.clientHeight-r-40, 50, 50)
+        // TODO WORK ON ICON FOR DASH
+    }
 }
-function handdleSizeChange(sizeRatio, bird, games, gnd, bg) {
+function handleSizeChange(sizeRatio, bird, games, gnd, bg) {
     bird.sizeChange(sizeRatio)
     games.pipe.sizeChange(sizeRatio)
     gnd.sizeChange(sizeRatio)
