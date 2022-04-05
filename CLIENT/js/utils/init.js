@@ -226,9 +226,16 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
             sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0))*1.2)/DEFAULT_DASH_CD))
             sctx.lineTo(p, p)
             sctx.closePath()
-            sctx.globalAlpha = 0.55
+            sctx.globalAlpha = 0.25
             sctx.fillStyle = "grey"
             sctx.fill()
+        } else {
+            sctx.beginPath()
+            sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2)))
+            sctx.closePath()
+            sctx.globalAlpha = 0.25
+            sctx.fillStyle = "grey"
+            sctx.fill() 
         }
 
         

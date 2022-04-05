@@ -251,17 +251,23 @@ class Bird {
         x = pipe.pipes[0].x
         y = pipe.pipes[0].y
         g = pipe.pipes[0].g
+        let t = pipe.pipes[0].top
+        let b = pipe.pipes[0].bot
 
         let roof = y + parseFloat(pipe.h)
         let floor = roof + g
         let w = parseFloat(pipe.w)
+        let d = false
         if(this.x + r>= x) {
             if(this.x + r < x + w) {
-                if(this.y - r <= roof || this.y + r>= floor) {
-                    SFX.bgm.pause()
-                    SFX.bgm.currentTime = 0
-                    SFX.hit.play()  
-                    return true
+                if(this.y - r <= roof) {
+                    if ((this.dashing.t && t != 0) || (!this.dashing.t && t == 0)) {
+                        d = true
+                    }
+                } else if (this.y + r>= floor) {
+                    if ((this.dashing.t && b != 0) || (!this.dashing.t && b == 0)) {
+                        d = true
+                    }
                 }
 
             }
@@ -271,7 +277,12 @@ class Bird {
                 pipe.moved = false
             }  
         }
-
+        if (d) {
+            SFX.bgm.pause()
+            SFX.bgm.currentTime = 0
+            SFX.hit.play()  
+            return true
+        }
     }
     sizeChange(sizeRatio) {
         this.h = this.animations[this.frame].sprite.height * sizeRatio

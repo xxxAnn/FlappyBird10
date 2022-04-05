@@ -20,7 +20,7 @@ let COGSPRITE = imageWithSource("cog")
 let SOUNDSPRITE = imageWithSource("speaker")
 let FIREBALLSPRITE = imageWithSource("fireball")
 let PAUSESPRITE = imageWithSource("pause")
-let DASHSPRITE = imageWithSource("dash")
+let DASHSPRITE = imageWithSource("wing")
 let BIRDANIMS = [
   {sprite : imageWithSource("bird/b0")},
   {sprite : imageWithSource("bird/b1")},
@@ -47,8 +47,8 @@ const BIRD_DEFAULTS = {
     frame: 0
 }
 
-const DASHLENGTH = 4
-const DASHDISTANCE = 75
+const DASHLENGTH = 5
+const DASHDISTANCE = 100
 const MAXDASH = 1.5
 const DEFAULT_DASH_CD = 25
 

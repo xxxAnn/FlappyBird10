@@ -37,10 +37,11 @@ class PipeSet {
         if(state.curr!=state.Play) return
         
         if(frms>this.FRMTHRESH.app && !this.end) {
-            let g = Math.max(this.gap-(frms/35), this.MINGAP)
+            let g = 0// Math.max(this.gap-(frms/35), this.MINGAP)
             this.pipes.push({x:parseFloat(scrn.width),
-                y:-260*Math.max(Math.random()+1.2,1.2),
-                g:g,bot:Math.round(Math.random()*2),
+                y:(-(Math.random())*150+scrn.height/2)-this.h,
+                g:g,
+                bot:Math.round(Math.random()),
                 top:Math.round(Math.random())})
             this.FRMTHRESH.app+=(1/(dx*BIRD_ANIMATION_SPEED))
         }
