@@ -78,3 +78,5 @@ const PIPE_DEFAULT_CAN_TOGGLE_EVENT = [1]
 const SOUND_VOLUME = 0.2
 
 const MENU_OPEN_LENGTH = 20
+
+let mousePos

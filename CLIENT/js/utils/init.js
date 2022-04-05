@@ -79,7 +79,7 @@ function init() {
 
     document.onmousemove = (e) => {
         const rect = scrn.getBoundingClientRect()
-        const mousePos = {x:e.x-rect.x, y:e.y-rect.y}
+        mousePos = {x:e.x-rect.x, y:e.y-rect.y}
         const hover = sett.handleMouseMove(mousePos, scrn)
         if (sett.moving == true) {
             sett.changeVolume(mousePos, SFX)
@@ -251,6 +251,8 @@ function handleMainScreenPress(sett, SFX, state, scrn) {
         if (sett.hovering == sett.hoveringStates.vol) {
             sett.moving = true
             scrn.style.cursor = 'grabbing'
+        } else if (sett.hovering == sett.hoveringStates.volBar) {
+            sett.changeVolume(mousePos, SFX)
         }
     }
     else {
