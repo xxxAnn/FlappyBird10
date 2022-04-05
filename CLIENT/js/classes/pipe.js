@@ -6,6 +6,8 @@ class PipeSet {
     reset(scrn, sizeRatio) {
         this.bot = BOT
         this.top = TOP
+        this.top2 = TOP2
+        this.bot2 = BOT2
         this.moved = true
         // should be relative to screen size
         this.gap = PIPE_DEFAULT_GAP*sizeRatio
@@ -25,8 +27,10 @@ class PipeSet {
     draw(sctx) {
        for (let i = 0; i<this.pipes.length; i++) {
            let p = this.pipes[i]
-           sctx.drawImage(this.top.sprite,p.x,p.y, this.w, this.h)
-           sctx.drawImage(this.bot.sprite,p.x,p.y+parseFloat(this.h)+p.g, this.w, this.h)
+           let tspr = (p.top == 0 ? this.top2 : this.top)
+           let bspr = (p.bot == 0 ? this.bot2 : this.bot)
+           sctx.drawImage(tspr.sprite,p.x,p.y, this.w, this.h)
+           sctx.drawImage(bspr.sprite,p.x,p.y+parseFloat(this.h)+p.g, this.w, this.h)
        }
     }
     update(state, scrn, ui, bird) {
@@ -34,7 +38,10 @@ class PipeSet {
         
         if(frms>this.FRMTHRESH.app && !this.end) {
             let g = Math.max(this.gap-(frms/35), this.MINGAP)
-            this.pipes.push({x:parseFloat(scrn.width),y:-210*Math.min(Math.random()+1,1.8),g:g})
+            this.pipes.push({x:parseFloat(scrn.width),
+                y:-260*Math.max(Math.random()+1.2,1.2),
+                g:g,bot:Math.round(Math.random()*2),
+                top:Math.round(Math.random())})
             this.FRMTHRESH.app+=(1/(dx*BIRD_ANIMATION_SPEED))
         }
         this.pipes.forEach(pipe=>{

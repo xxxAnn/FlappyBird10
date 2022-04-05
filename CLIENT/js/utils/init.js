@@ -23,7 +23,7 @@ function init() {
     const bird = new Bird()
     const UI = new Ui()
     const sizeRatio = gnd.getSize(scrn)
-    const sett = new Setting(scrn, state)
+    const sett = new Setting(scrn, state, SFX)
     const games = {
         pipe: new PipeSet(scrn, sizeRatio),
         fireball: new FireballSet()
@@ -198,13 +198,42 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
         sett.menuPos.current = MENU_OPEN_LENGTH
     }
     if (state.curr == state.Play) {
+        let r = 35
+        let p = 25
+        let s = 50
+        let ydelta = 115
+        sctx.save()
+
+        sctx.translate(sctx.canvas.clientWidth/2-25, sctx.canvas.clientHeight-ydelta)
         sctx.beginPath()
-        let r = 40
-        sctx.fillStyle = "grey"
-        sctx.arc(sctx.canvas.clientWidth/2, sctx.canvas.clientHeight-r-20, r, 0, 360*RAD, 1)
+        sctx.arc(p, p, r+5, 0, Math.PI * 2, true)
+        sctx.closePath()
+        sctx.fillStyle = "black"
         sctx.fill()
-        sctx.drawImage(DASHSPRITE, sctx.canvas.clientWidth/2-r/2, sctx.canvas.clientHeight-r-40, 50, 50)
-        // TODO WORK ON ICON FOR DASH
+
+        sctx.beginPath()
+        sctx.arc(p, p, r, 0, Math.PI * 2, true)
+        sctx.closePath()
+        sctx.fillStyle = "white"
+        sctx.fill()
+
+        
+        sctx.fill()
+        sctx.drawImage(DASHSPRITE, 0, 0, s, s)
+        if (!bird.dashing.t && !(0==Math.max(bird.dashing.CD, 0))) {
+            sctx.beginPath()
+            //sctx.lineTo(p, (p-r))
+            sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0))*1.2)/DEFAULT_DASH_CD))
+            sctx.lineTo(p, p)
+            sctx.closePath()
+            sctx.globalAlpha = 0.55
+            sctx.fillStyle = "grey"
+            sctx.fill()
+        }
+
+        
+        sctx.closePath()
+        sctx.restore()
     }
 }
 function handleSizeChange(sizeRatio, bird, games, gnd, bg) {
