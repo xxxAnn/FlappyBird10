@@ -27,8 +27,10 @@ let BIRDANIMS = [
   {sprite : imageWithSource("bird/b2")},
   {sprite : imageWithSource("bird/b0")},
 ]
-let TOP = {sprite : imageWithSource("toppipe")}
-let BOT = {sprite : imageWithSource("botpipe")}
+let TOP = {sprite : imageWithSource("toppipe_orange")}
+let BOT = {sprite : imageWithSource("botpipe_orange")}
+let TOP2 = {sprite : imageWithSource("toppipe_blue")}
+let BOT2 = {sprite : imageWithSource("botpipe_blue")}
 
 const BIRD_ANIMATION_SPEED = 0.0025 // (0 - 1)
 const BIRD_DOWN_ROTATION = -25  // (deg)
@@ -70,7 +72,7 @@ const PIPE_DEFAULT_THRESH = {
 
 const BGM_TIMEOUT = 1500 // ms
 
-const FIRSTEVENTTHRESHOLD = 1
+const FIRSTEVENTTHRESHOLD = 12
 const PIPE_DEFAULT_CAN_TOGGLE_EVENT = [1]
 
 const SOUND_VOLUME = 0.2
