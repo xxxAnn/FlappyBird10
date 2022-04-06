@@ -30,7 +30,7 @@ class Bird {
                 rot: 0
             },
             dir: 1,
-            CD: DEFAULT_DASH_CD
+            CD: 0
         }
         this.dashing.t = false
     }

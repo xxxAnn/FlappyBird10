@@ -50,7 +50,7 @@ const BIRD_DEFAULTS = {
 const DASHLENGTH = 5
 const DASHDISTANCE = 100
 const MAXDASH = 1.5
-const DEFAULT_DASH_CD = 15
+const DEFAULT_DASH_CD = 30
 
 const PIPE_APPEARANCE_SPEED = 1/150 // (0-1), preferably <0.05, game starts breaking at ~0.03
 const PIPE_DEFAULT_MOVESPEED = 1.5
@@ -80,3 +80,5 @@ const PIPE_DEFAULT_CAN_TOGGLE_EVENT = [1]
 const SOUND_VOLUME = 0.2
 
 const MENU_OPEN_LENGTH = 20
+
+let mousePos

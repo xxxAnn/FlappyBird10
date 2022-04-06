@@ -42,6 +42,7 @@ class Setting {
             gear: 1,
             menu: 2,
             vol: 3,
+            volBar: 4,
         }
         this.menuOpened = false
         this.animationLength = 45 // in frames
@@ -93,14 +94,18 @@ class Setting {
     handleMouseMove(pos, scrn) {
         const gearHover = this.checkButtonHover(pos, this.gearPos, this.hoveringStates.gear)
         const menuHover = this.checkButtonHover(pos, this.menuPos, this.hoveringStates.menu) && this.PAGEON
-        const posVol = {x: this.volSlider.btn_x-this.volSlider.radius, y: this.volSlider.bar_y+this.volSlider.bar_h/2-this.volSlider.radius, w:this.volSlider.radius*2, h:this.volSlider.radius*2}
-        const volumeHover = this.checkButtonHover(pos, posVol, this.hoveringStates.vol)
 
-        if (!(gearHover||menuHover||volumeHover)) {
+        const volBarPos = {x: this.volSlider.bar_x, y: this.volSlider.bar_y - this.volSlider.radius, w: this.volSlider.bar_w, h: this.volSlider.radius*2}
+        const volumeBar = this.checkButtonHover(pos, volBarPos, this.hoveringStates.volBar) && this.PAGEON
+
+        const posVol = {x: this.volSlider.btn_x-this.volSlider.radius, y: this.volSlider.bar_y+this.volSlider.bar_h/2-this.volSlider.radius, w:this.volSlider.radius*2, h:this.volSlider.radius*2}
+        const volumeHover = this.checkButtonHover(pos, posVol, this.hoveringStates.vol) && this.PAGEON
+
+        if (!(gearHover||menuHover||volumeHover||volumeBar)) {
             this.hovering = this.hoveringStates.none
         }
         
-        return gearHover||volumeHover
+        return gearHover||volumeHover||volumeBar
     }
     drawRotation(sctx) {
         const i = 0.5
