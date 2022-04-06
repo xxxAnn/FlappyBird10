@@ -117,7 +117,7 @@ class Setting {
         sctx.rotate(-RAD * this.rotation)
         sctx.translate(-this.gearPos.x-this.cog.width * i, -this.gearPos.y - this.cog.height * i) 
     }
-    openSettings(sctx, scrn) {
+    openSettings(sctx, scrn, sfx) {
         sctx.beginPath()
         sctx.roundRect(this.menuPos.x, this.menuPos.y, this.menuPos.w, this.menuPos.h, [this.menuPos.radius])
         sctx.fillStyle = "grey"
@@ -129,7 +129,7 @@ class Setting {
             this.menuPos.y = (scrn.height-this.menuPos.h)/2
             return
         }
-        this.drawButtons(sctx)
+        this.drawButtons(sctx, sfx)
     }
     checkButtonHover(mousePos, buttonPos, hoveringState) {
         if (mousePos.x < buttonPos.x) return false
@@ -140,13 +140,14 @@ class Setting {
         this.hovering = hoveringState
         return true
     }
-    drawButtons(sctx) {
+    drawButtons(sctx, sfx) {
         this.volSlider.bar_y = this.menuPos.y+(this.menuPos.w/(this.buttons.length+2)) + 2.5
         sctx.beginPath()
         sctx.fillStyle = '#000'
         sctx.lineWidth = "2"
         sctx.font = "40px Squada One"
-        sctx.fillText('Volume', this.volSlider.bar_x, this.volSlider.bar_y-15)
+
+        sctx.fillText(`Volume         ${(sfx.VOLUME*100).toFixed(0)}`, this.volSlider.bar_x, this.volSlider.bar_y-15)
         sctx.roundRect(this.volSlider.bar_x, this.volSlider.bar_y, this.volSlider.bar_w, this.volSlider.bar_h, [10])
         sctx.fill()
         sctx.arc(this.volSlider.btn_x, this.volSlider.bar_y+this.volSlider.bar_h/2, this.volSlider.radius, 0, 2*Math.PI, false)
