@@ -138,6 +138,7 @@ function init() {
 
 function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio) {
     update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett)
+    sctx.clearRect(0, 0, scrn.width, scrn.height)
     draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett)
     if (!PAUSED) {
         frms++
@@ -150,6 +151,7 @@ function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRa
     requestAnimationFrame(() => {
         gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio)
     })
+
 }
 
 function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett, sizeRatio) {
@@ -222,14 +224,14 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
         if (!bird.dashing.t && !(0==Math.max(bird.dashing.CD, 0))) {
             sctx.beginPath()
             sctx.lineTo(p, p)
-            sctx.lineWidth = 10
+            sctx.lineWidth = LINEWIDTH
             sctx.strokeStyle = 'black'
             sctx.fillStyle = 'hsl(0, 100%, 50%, 0.7)'
             sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
             sctx.fill()
             sctx.closePath()
             sctx.beginPath()
-            sctx.lineWidth = 10
+            sctx.lineWidth = LINEWIDTH
             sctx.strokeStyle = 'black'
             sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
             sctx.stroke()
@@ -239,7 +241,7 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
             // sctx.fill()
         } else {
             sctx.beginPath()
-            sctx.lineWidth = 10
+            sctx.lineWidth = LINEWIDTH
             sctx.strokeStyle = 'black'
             sctx.fillStyle = 'hsl(120, 100%, 50%, 0.7)'
             sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2)))
