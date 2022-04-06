@@ -82,7 +82,7 @@ function init() {
         mousePos = {x:e.x-rect.x, y:e.y-rect.y}
         const hover = sett.handleMouseMove(mousePos, scrn)
         if (sett.moving == true) {
-            sett.changeVolume(mousePos, SFX)
+            sett.changeVolume(mousePos, SFX, sctx, scrn)
             scrn.style.cursor = 'grabbing'
             return
         }
@@ -192,7 +192,7 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
     sfx.drawSong(scrn, sctx)
     ui.draw(state, sctx, scrn)
     if (sett.PAGEON===true) {
-        sett.openSettings(sctx, scrn)
+        sett.openSettings(sctx, scrn, sfx)
     } else {
         sett.menuPos.h = 0
         sett.menuPos.current = MENU_OPEN_LENGTH
@@ -273,6 +273,8 @@ function handleMainScreenPress(sett, SFX, state, scrn) {
             scrn.style.cursor = 'grabbing'
         } else if (sett.hovering == sett.hoveringStates.volBar) {
             sett.changeVolume(mousePos, SFX)
+            sett.moving = true
+            scrn.style.cursor = 'grabbing'
         }
     }
     else {
