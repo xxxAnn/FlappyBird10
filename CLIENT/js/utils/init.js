@@ -133,10 +133,10 @@ function init() {
 
 
     handleSizeChange(sizeRatio, bird, games, gnd, bg)
-    gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett)
+    gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett, sizeRatio)
 }
 
-function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett) {
+function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio) {
     update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett)
     draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett)
     if (!PAUSED) {
@@ -148,11 +148,11 @@ function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett) {
         }
     }
     requestAnimationFrame(() => {
-        gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett)
+        gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio)
     })
 }
 
-function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett) {
+function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett, sizeRatio) {
     if (!PAUSED) {
         switch (state.gameStage) {
             case games.pipe.id :
@@ -161,7 +161,7 @@ function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett) {
                 break
             case games.fireball.id :
                 bird.update(state, sfx, ui, games, gnd, scrn, sctx)
-                games.fireball.update(scrn, ui, bird, games, state)
+                games.fireball.update(scrn, ui, bird, games, state, sizeRatio)
                 break
         }
         gnd.update(state)

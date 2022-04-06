@@ -50,7 +50,7 @@ const BIRD_DEFAULTS = {
 const DASHLENGTH = 5
 const DASHDISTANCE = 100
 const MAXDASH = 1.5
-const DEFAULT_DASH_CD = 25
+const DEFAULT_DASH_CD = 15
 
 const PIPE_APPEARANCE_SPEED = 1/150 // (0-1), preferably <0.05, game starts breaking at ~0.03
 const PIPE_DEFAULT_MOVESPEED = 1.5
@@ -64,15 +64,17 @@ const FIREBALL_MOVEMENTSPEED = 5
 
 const PIPE_ACCELERATION_RATE = 0.1 // <0.01, really small or 0, 0 == no acceleration
 const PIPE_DEFAULT_THRESH = {
-    app:0,
-    accel:0,
+    app: 0,
+    accel: 0,
     fb: 0,    
-    dx:PIPE_DEFAULT_MOVESPEED+5
+    dx: PIPE_DEFAULT_MOVESPEED+5,
+    moveon: 0
 }
 
 const BGM_TIMEOUT = 1500 // ms
 
-const FIRSTEVENTTHRESHOLD = 12
+const FIRSTEVENTTHRESHOLD = 3
+const SECONDEVENTTHRESHOLD = 15
 const PIPE_DEFAULT_CAN_TOGGLE_EVENT = [1]
 
 const SOUND_VOLUME = 0.2
