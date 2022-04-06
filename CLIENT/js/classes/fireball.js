@@ -53,7 +53,7 @@ class FireballSet {
         if ((this.end>1) && this.fireballs.length == 0) {
             state.gameStage = 0
             games.pipe.reset(null, sizeRatio)
-            dx = PIPE_DEFAULT_MOVESPEED
+            dx = PIPE_DEFAULT_MOVESPEED*2
             frms = 0
             //frms = 0
         }
