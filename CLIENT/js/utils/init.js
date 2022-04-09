@@ -11,20 +11,23 @@ function init() {
     const scrn = document.createElement('canvas')
     body.prepend(scrn)
     const sctx = scrn.getContext("2d")
-    scrn.width = innerWidth * w_ratio
+    scrn.width = Math.max(innerWidth * w_ratio, 500)
     scrn.height = innerHeight * h_ratio
-    let currentSong = 0
     
     const state = new State()
     const SFX = new Sfx()
-    const gnd = new GND()   
+    const gnd = new GND()
     
     const bg = new Background(scrn)
-    const pipe = new PipeSet(scrn)
+
     const bird = new Bird()
     const UI = new Ui()
     const sizeRatio = gnd.getSize(scrn)
-    const sett = new Setting(scrn, state)
+    const sett = new Setting(scrn, state, SFX)
+    const games = {
+        pipe: new PipeSet(scrn, sizeRatio),
+        fireball: new FireballSet()
+    }
 
     const jumpInputHandler = () => {
         if (PAUSED && sett.hovered == false) {
@@ -33,27 +36,17 @@ function init() {
         }
         switch (state.curr) {
             case state.getReady :
-                if (sett.hovered === true) {
-                    sett.PAGEON = !sett.PAGEON
-                } else {
-                    dx = PIPE_DEFAULT_MOVESPEED
-                    sett.PAGEON = false
-                    state.curr = state.Play
-                    SFX.start.play()
-                    SFX.playing = true
-                    frms = 0
-                    SFX.bgm.currentTime = '0'
-                    SFX.bgm.play()
-                }
+                handleMainScreenPress(sett, SFX, state, scrn)
                 break
             case state.Play :
-                if (sett.hovered === true) {
+                if (sett.hovering === true) {
                     PAUSED = !PAUSED
                     console.log(PAUSED)
                     SFX.playing === true ? SFX.bgm.pause(): SFX.bgm.play()
                     SFX.playing = !SFX.playing
                     return
                 }
+
                 bird.flap(SFX)
                 break
             case state.gameOver :
@@ -61,13 +54,15 @@ function init() {
                 bird.speed = BIRD_DEFAULTS.speed
                 bird.y = BIRD_DEFAULTS.y
                 bird.x = BIRD_DEFAULTS.x
+                bird.rotatation = 0
                 bird.movingToCenter.t = false
-                pipe.FRMTHRESH.app = 0
-                pipe.FRMTHRESH.accel = 0
-                pipe.mode = 0
-                pipe.canToggleEvent = PIPE_DEFAULT_CAN_TOGGLE_EVENT
-                pipe.pipes=[]
-                pipe.fireballs = []
+                bird.reset()
+                SFX.played = false
+                state.gameStage = 0
+                games.pipe.reset(null, sizeRatio)
+                dx = 0
+                frms = 0
+                games.fireball.reset()
                 UI.score.curr = 0
                 SFX.played = false
                 setTimeout(() => {
@@ -75,24 +70,54 @@ function init() {
                         SFX.updateBGM(0, scrn, sctx, true)
                     }
                 }, BGM_TIMEOUT)
+                bird.reset()
+                
                 break
         }
     }
     
 
-    scrn.onmousemove = (e) => {
+    document.onmousemove = (e) => {
         const rect = scrn.getBoundingClientRect()
-        sett.hovered = sett.handleMouseMove({
-            x:e.x-rect.x,
-            y:e.y-rect.y,
-        }) == true ? true: false;
-    }
+        mousePos = {x:e.x-rect.x, y:e.y-rect.y}
+        const hover = sett.handleMouseMove(mousePos, scrn)
+        if (sett.moving == true) {
+            sett.changeVolume(mousePos, SFX, sctx, scrn)
+            scrn.style.cursor = 'grabbing'
+            return
+        }
 
+        if (hover) {
+            scrn.style.cursor = 'pointer'
+        } else {
+            scrn.style.cursor = 'default'
+        }
+    }
+    document.onclick = () => {
+        if (!SFX.playing) {
+            SFX.playOnMainScreen()
+        }
+    }
+    document.onmouseup = () => {
+        sett.moving = false
+        scrn.style.cursor = 'auto'
+    }
+    
     scrn.tabIndex = 1;
-    scrn.addEventListener("click", jumpInputHandler)
+    scrn.addEventListener("mousedown", jumpInputHandler)
     document.onkeydown = (e) => {
         if (e.key.toLowerCase() == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
-        if (e.key.toLocaleLowerCase() == 'p') {                
+
+        if (e.key == "ArrowRight" && state.curr == state.Play) {
+            bird.dash(1, sctx)
+        }
+        if (e.key == "ArrowLeft" && state.curr == state.Play) {
+            bird.dash(-1, sctx)
+        }
+        if (e.key == "ArrowDown" && state.curr == state.Play) {
+            //bird.dash(1, sctx, true)
+        }
+        if (e.key.toLocaleLowerCase() == 'p') {
             if (state.curr == state.Play) {
                 PAUSED = !PAUSED
             }
@@ -102,18 +127,19 @@ function init() {
         if (state.curr != state.getReady) return
         else if (e.key.toLowerCase() == 'b') SFX.updateBGM(-1, scrn, sctx, state)
         else if (e.key.toLowerCase() == 'n') SFX.updateBGM(1, scrn, sctx, state)
-        console.log(e.key)
-
+        else if (e.key.toLowerCase() == 'm') sett.PAGEON = !sett.PAGEON
     }
-    SFX.playOnMainScreen()
 
-    handdleSizeChange(sizeRatio, bird, pipe, gnd, bg)
-    gameLoop(bird, state, SFX, UI, pipe, gnd, sctx, scrn, bg, sett)
+
+
+    handleSizeChange(sizeRatio, bird, games, gnd, bg)
+    gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett, sizeRatio)
 }
 
-function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett) {
-    update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx, sett)
-    draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state, sett)
+function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio) {
+    update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett)
+    sctx.clearRect(0, 0, scrn.width, scrn.height)
+    draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett)
     if (!PAUSED) {
         frms++
     }
@@ -123,14 +149,23 @@ function gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett) {
         }
     }
     requestAnimationFrame(() => {
-        gameLoop(bird, state, sfx, ui, pipe, gnd, sctx, scrn, bg, sett)
+        gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio)
     })
+
 }
 
-function update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx, sett) {
+function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett, sizeRatio) {
     if (!PAUSED) {
-        bird.update(state, sfx, ui, pipe, gnd, scrn) 
-        pipe.update(state, scrn, ui, bird)
+        switch (state.gameStage) {
+            case games.pipe.id :
+                bird.update(state, sfx, ui, games, gnd, scrn, sctx)
+                games.pipe.update(state, scrn, ui, bird)
+                break
+            case games.fireball.id :
+                bird.update(state, sfx, ui, games, gnd, scrn, sctx)
+                games.fireball.update(scrn, ui, bird, games, state, sizeRatio)
+                break
+        }
         gnd.update(state)
         bg.update(state)
     }
@@ -139,30 +174,121 @@ function update(bird, state, sfx, ui, pipe, gnd, scrn, bg, sctx, sett) {
     ui.update(state)
     sfx.updateBGM(0, scrn, sctx)
 }
-function draw(scrn, sctx, sfx, bg, pipe, bird, gnd, ui, state, sett) {
-   sctx.fillStyle = "#30c0df"
-   sctx.fillRect(0,0,scrn.width,scrn.height)
-   bg.draw(scrn, sctx)
-   pipe.draw(sctx)
-   sett.draw(sctx, state)
-   sett.update(sctx, state)
+
+function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
+    sctx.fillStyle = "#30c0df"
+    sctx.clearRect(0,0,scrn.width,scrn.height)
+    bg.draw(scrn, sctx)
+    switch (state.gameStage) {
+        case games.pipe.id :
+            games.pipe.draw(sctx)
+            break
+        case games.fireball.id :
+            games.fireball.draw(sctx, bird)
+            break
+    }
+    sett.draw(sctx, state)
    
-   bird.draw(sctx)
-   gnd.draw(sctx, scrn)
-   sfx.drawSong(scrn, sctx)
-   ui.draw(state, sctx, scrn)
-   if (sett.PAGEON) {
-    sctx.beginPath()
-    let w = 400
-    let h = 400
-    sctx.roundRect((scrn.width-w)/2,scrn.height/3,w,h,[10])
-    sctx.fillStyle = "grey"
-    sctx.fill()
-   }
+    bird.draw(sctx)
+    gnd.draw(sctx, scrn)
+    sfx.drawSong(scrn, sctx)
+    ui.draw(state, sctx, scrn)
+    if (sett.PAGEON===true) {
+        sett.openSettings(sctx, scrn, sfx)
+    } else {
+        sett.menuPos.h = 0
+        sett.menuPos.current = MENU_OPEN_LENGTH
+    }
+    if (state.curr == state.Play) {
+        let r = 35
+        let p = 0
+        let s = 50
+        let ydelta = 115
+        sctx.save()
+
+        sctx.translate(sctx.canvas.clientWidth/2, sctx.canvas.clientHeight-ydelta)
+        // sctx.beginPath()
+        // sctx.arc(p, p, r+5, 0, Math.PI * 2, true)
+        // sctx.closePath()
+        // sctx.fillStyle = "black"
+        // sctx.fill()
+
+        // sctx.beginPath()
+        // sctx.arc(p, p, r, 0, Math.PI * 2, true)
+        // sctx.closePath()
+        // sctx.fillStyle = "white"
+        // sctx.fill()
+
+        
+        
+        if (!bird.dashing.t && !(0==Math.max(bird.dashing.CD, 0))) {
+            sctx.beginPath()
+            sctx.lineTo(p, p)
+            sctx.lineWidth = LINEWIDTH
+            sctx.strokeStyle = 'black'
+            sctx.fillStyle = 'hsl(0, 100%, 50%, 0.7)'
+            sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
+            sctx.fill()
+            sctx.closePath()
+            sctx.beginPath()
+            sctx.lineWidth = LINEWIDTH
+            sctx.strokeStyle = 'black'
+            sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
+            sctx.stroke()
+            sctx.closePath()
+            // sctx.globalAlpha = 0.25
+            // sctx.fillStyle = "grey"
+            // sctx.fill()
+        } else {
+            sctx.beginPath()
+            sctx.lineWidth = LINEWIDTH
+            sctx.strokeStyle = 'black'
+            sctx.fillStyle = 'hsl(120, 100%, 50%, 0.7)'
+            sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2)))
+            sctx.fill()
+            sctx.stroke()
+            sctx.closePath()
+            // sctx.globalAlpha = 0.25
+            // sctx.fillStyle = "grey"
+            // sctx.fill() 
+        }
+        sctx.drawImage(DASHSPRITE, -s/2, -s/2, s, s)
+        
+        sctx.closePath()
+        sctx.restore()
+    }
 }
-function handdleSizeChange(sizeRatio, bird, pipe, gnd, bg) {
-  bird.sizeChange(sizeRatio)
-  pipe.sizeChange(sizeRatio)
-  gnd.sizeChange(sizeRatio)
-  bg.sizeChange(sizeRatio)
+function handleSizeChange(sizeRatio, bird, games, gnd, bg) {
+    bird.sizeChange(sizeRatio)
+    games.pipe.sizeChange(sizeRatio)
+    gnd.sizeChange(sizeRatio)
+    bg.sizeChange(sizeRatio)
+}
+
+function handleMainScreenPress(sett, SFX, state, scrn) {
+    if (sett.hovering == sett.hoveringStates.gear) {
+        sett.PAGEON = !sett.PAGEON 
+    } 
+    else if (sett.hovering != sett.hoveringStates.gear && sett.hovering != sett.hoveringStates.none && sett.PAGEON) {
+        if (sett.hovering == sett.hoveringStates.vol) {
+            sett.moving = true
+            scrn.style.cursor = 'grabbing'
+        } else if (sett.hovering == sett.hoveringStates.volBar) {
+            sett.changeVolume(mousePos, SFX)
+            sett.moving = true
+            scrn.style.cursor = 'grabbing'
+        }
+    }
+    else {
+        if (sett.PAGEON) {
+            return sett.PAGEON = false
+        }
+        dx = PIPE_DEFAULT_MOVESPEED
+        state.curr = state.Play
+        SFX.start.play()
+        SFX.playing = true
+        frms = 0
+        SFX.bgm.currentTime = '0'
+        SFX.bgm.play()
+    }
 }

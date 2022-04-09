@@ -5,28 +5,40 @@ class Sfx {
         this.score = new Audio()
         this.hit = new Audio()
         this.die = new Audio()
-        this.BGMVOLUME = 1
+        this.BGMVOLUME = 0.75
         this.start.src = "sfx/start.wav"
         this.flap.src = "sfx/flap.wav"
         this.score.src = "sfx/score.wav"
         this.hit.src = "sfx/hit.wav"
         this.die.src = "sfx/die.wav"
 
+        this.VOLUME = localStorage.getItem("FB10VOLUME")
+        if (this.VOLUME == null) {
+            this.VOLUME = SOUND_VOLUME
+        }
+        this.start.volume = this.VOLUME
+        this.flap.volume = this.VOLUME
+        this.score.volume = this.VOLUME
+        this.hit.volume = this.VOLUME
+        this.die.volume = this.VOLUME
+
         this.bgm = new Audio()
-        this.bgm.volume = this.BGMVOLUME
+        this.bgm.volume = this.VOLUME
+        this.played = false
         this.playing = true
         this.sources = [
             {title:"[ff2] rebel army theme", demotime: '128.2'},
             {title:"wellerman", demotime: '32.1'},
             {title:"Bad apple", demotime: '55'},
             {title:"Battle against a true hero", demotime: '96.1'},
+            {title:"Bonetrousle", demotime: '109.6'}
         ];
         this.songIndex = localStorage.getItem("FB10SONGINDEX")
         if (this.songIndex == null) {
             this.songIndex = 0
         }
         this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav";
-        this.pos = 0;
+        this.pos = 200;
     }
     updateBGM(change, scrn, sctx, frs=false) {
         if (change !== 0) {
@@ -40,10 +52,10 @@ class Sfx {
             }
             localStorage.setItem("FB10SONGINDEX", this.songIndex)
             this.bgm = new Audio();
-            this.bgm.volume = this.BGMVOLUME
+            this.bgm.volume = this.VOLUME
             this.bgm.src = "sfx/bgm/" + this.sources[this.songIndex].title + ".wav"
             this.bgm.loop = true;
-            this.pos = 0
+            this.pos = 200
             setTimeout(() => {
                 if (this.playing === true) this.playOnMainScreen()
             }, 100)
