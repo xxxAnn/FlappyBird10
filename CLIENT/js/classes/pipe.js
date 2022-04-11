@@ -55,6 +55,7 @@ class PipeSet {
         }
         
         if (this.end && this.pipes.length==0) {
+            bird.movingToCenter.t = false
             state.gameStage = 1
         }
         
