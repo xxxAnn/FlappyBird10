@@ -64,19 +64,23 @@ const FIREBALL_MOVEMENTSPEED = 5
 
 const PIPE_ACCELERATION_RATE = 0.1 // <0.01, really small or 0, 0 == no acceleration
 const PIPE_DEFAULT_THRESH = {
-    app:0,
-    accel:0,
+    app: 0,
+    accel: 0,
     fb: 0,    
-    dx:PIPE_DEFAULT_MOVESPEED+5
+    dx: PIPE_DEFAULT_MOVESPEED+5,
+    moveon: 0
 }
 
 const BGM_TIMEOUT = 1500 // ms
 
-const FIRSTEVENTTHRESHOLD = 12
+const FIRSTEVENTTHRESHOLD = 8
+const SECONDEVENTTHRESHOLD = 80
 const PIPE_DEFAULT_CAN_TOGGLE_EVENT = [1]
 
 const SOUND_VOLUME = 0.2
 
 const MENU_OPEN_LENGTH = 20
+
+const LINEWIDTH = 3
 
 let mousePos

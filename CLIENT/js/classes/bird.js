@@ -261,11 +261,11 @@ class Bird {
         if(this.x + r>= x) {
             if(this.x + r < x + w) {
                 if(this.y - r <= roof) {
-                    if ((this.dashing.t && t != 0) || (!this.dashing.t && t == 0)) {
+                    if ((this.dashing.t && t == 0) || (!this.dashing.t && t != 0)) {
                         d = true
                     }
                 } else if (this.y + r>= floor) {
-                    if ((this.dashing.t && b != 0) || (!this.dashing.t && b == 0)) {
+                    if ((this.dashing.t && b == 0) || (!this.dashing.t && b != 0)) {
                         d = true
                     }
                 }
