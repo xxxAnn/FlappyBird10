@@ -134,10 +134,10 @@ class Setting {
             return
         }
         // else :
-        this.menuPos.h = easeInOut(this.menuPos.current/MENU_OPEN_LENGTH)*this.menuPos.w
+        this.menuPos.w = easeInOut(this.menuPos.current/MENU_OPEN_LENGTH)*this.menuPos.h
         this.menuPos.current++
         
-        this.menuPos.y = (scrn.height-this.menuPos.h)/2
+        this.menuPos.x = (scrn.width-this.menuPos.w)/2
         return 
     }
     checkButtonHover(mousePos, buttonPos, hoveringState) {

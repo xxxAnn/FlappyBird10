@@ -197,6 +197,10 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
     ui.draw(state, sctx, scrn)
     if (sett.menuPos.current !== MENU_OPEN_LENGTH || sett.PAGEON) {
         sett.openSettings(sctx, scrn, sfx)
+    } else if (sett.menuPos.w <= 0) {
+        sett.menuPos.w = scrn.width * 0.8
+        sett.menuPos.h = 0
+        sett.menuPos.x = (scrn.width-sett.menuPos.w)/2
     }
     if (state.curr == state.Play) {
         let r = 35
