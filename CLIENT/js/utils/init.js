@@ -78,6 +78,7 @@ function init() {
     
 
     document.onmousemove = (e) => {
+        if (state.curr !== state.getReady) return
         const rect = scrn.getBoundingClientRect()
         mousePos = {x:e.x-rect.x, y:e.y-rect.y}
         const hover = sett.handleMouseMove(mousePos, scrn)
