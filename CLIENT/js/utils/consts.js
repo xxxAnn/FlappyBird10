@@ -50,7 +50,7 @@ const BIRD_DEFAULTS = {
 const DASHLENGTH = 5
 const DASHDISTANCE = 100
 const MAXDASH = 1.5
-const DEFAULT_DASH_CD = 30
+const DEFAULT_DASH_CD = 20
 
 const PIPE_APPEARANCE_SPEED = 1/150 // (0-1), preferably <0.05, game starts breaking at ~0.03
 const PIPE_DEFAULT_MOVESPEED = 1.5
