@@ -81,6 +81,6 @@ const SOUND_VOLUME = 0.2
 
 const MENU_OPEN_LENGTH = 20
 
-const LINEWIDTH = 3
+const LINEWIDTH = 5
 
 let mousePos

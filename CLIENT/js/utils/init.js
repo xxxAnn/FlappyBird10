@@ -206,19 +206,6 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
         sctx.save()
 
         sctx.translate(sctx.canvas.clientWidth/2, sctx.canvas.clientHeight-ydelta)
-        // sctx.beginPath()
-        // sctx.arc(p, p, r+5, 0, Math.PI * 2, true)
-        // sctx.closePath()
-        // sctx.fillStyle = "black"
-        // sctx.fill()
-
-        // sctx.beginPath()
-        // sctx.arc(p, p, r, 0, Math.PI * 2, true)
-        // sctx.closePath()
-        // sctx.fillStyle = "white"
-        // sctx.fill()
-
-        
         
         if (!bird.dashing.t && !(0==Math.max(bird.dashing.CD, 0))) {
             sctx.beginPath()
@@ -235,9 +222,6 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
             sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
             sctx.stroke()
             sctx.closePath()
-            // sctx.globalAlpha = 0.25
-            // sctx.fillStyle = "grey"
-            // sctx.fill()
         } else {
             sctx.beginPath()
             sctx.lineWidth = LINEWIDTH
@@ -247,9 +231,6 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
             sctx.fill()
             sctx.stroke()
             sctx.closePath()
-            // sctx.globalAlpha = 0.25
-            // sctx.fillStyle = "grey"
-            // sctx.fill() 
         }
         sctx.drawImage(DASHSPRITE, -s/2, -s/2, s, s)
         
