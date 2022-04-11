@@ -43,20 +43,20 @@ class PipeSet {
                 g:g,
                 bot:Math.round(Math.random()),
                 top:Math.round(Math.random())})
-                this.FRMTHRESH.app+=(1/(dx*BIRD_ANIMATION_SPEED))
-                this.pipes.forEach(pipe=>{
-                    pipe.x -= dx
-                })
+            this.FRMTHRESH.app+=(1/(dx*BIRD_ANIMATION_SPEED))
+        }
+        this.pipes.forEach(pipe=>{
+            pipe.x -= dx
+        })
+
+        if(this.pipes.length&&this.pipes[0].x < -this.top.sprite.width) {
+            this.pipes.shift()
+            this.moved = true
+        }
         
-                if(this.pipes.length&&this.pipes[0].x < -this.top.sprite.width) {
-                    this.pipes.shift()
-                    this.moved = true
-                }
-                
-                if (this.end && this.pipes.length==0) {
-                    state.gameStage = 1
-                    bird.movingToCenter.t = false
-                }
+        if (this.end && this.pipes.length==0) {
+            bird.movingToCenter.t = false
+            state.gameStage = 1
         }
         
         if (frms>this.FRMTHRESH.accel) {
