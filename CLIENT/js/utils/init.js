@@ -90,7 +90,7 @@ function init() {
         if (hover) {
             scrn.style.cursor = 'pointer'
         } else {
-            scrn.style.cursor = 'default'
+            scrn.style.cursor = 'auto'
         }
     }
     document.onclick = () => {
@@ -99,6 +99,7 @@ function init() {
         }
     }
     document.onmouseup = () => {
+        if (!sett.moving) return
         sett.moving = false
         scrn.style.cursor = 'auto'
     }
@@ -193,11 +194,8 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
     gnd.draw(sctx, scrn)
     sfx.drawSong(scrn, sctx)
     ui.draw(state, sctx, scrn)
-    if (sett.PAGEON===true) {
+    if (sett.menuPos.current !== MENU_OPEN_LENGTH || sett.PAGEON) {
         sett.openSettings(sctx, scrn, sfx)
-    } else {
-        sett.menuPos.h = 0
-        sett.menuPos.current = MENU_OPEN_LENGTH
     }
     if (state.curr == state.Play) {
         let r = 35
