@@ -44,6 +44,7 @@ class Bird {
         this.dashing.orgpos.rot = this.rotatation
         this.dashing.dir = dir
         this.dashing.dive = dive
+        this.movingToCenter.t = false
         if ((this.x<0.1*sctx.canvas.clientWidth && dir == -1) || (this.x > 0.9*sctx.canvas.clientWidth && dir == 1)) {
             this.dashing.t = false
         } else {
