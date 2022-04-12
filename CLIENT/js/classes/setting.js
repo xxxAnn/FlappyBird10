@@ -115,21 +115,30 @@ class Setting {
         sctx.drawImage(this.cog, -this.gearPos.w/2, -this.gearPos.h/2, this.gearPos.w, this.gearPos.h)
         sctx.imageSmoothingEnabled = false;
         sctx.rotate(-RAD * this.rotation)
-        sctx.translate(-this.gearPos.x-this.cog.width * i, -this.gearPos.y - this.cog.height * i) 
+        sctx.translate(-this.gearPos.x-this.cog.width * i, -this.gearPos.y - this.cog.height * i)
     }
     openSettings(sctx, scrn, sfx) {
         sctx.beginPath()
         sctx.roundRect(this.menuPos.x, this.menuPos.y, this.menuPos.w, this.menuPos.h, [this.menuPos.radius])
         sctx.fillStyle = "grey"
         sctx.fill()
-        if (this.menuPos.current > 0) {
-            this.menuPos.h = easeInOut(this.menuPos.current/MENU_OPEN_LENGTH)*this.menuPos.w
-            this.menuPos.current--
-            
-            this.menuPos.y = (scrn.height-this.menuPos.h)/2
+        if (this.PAGEON) {
+            if (this.menuPos.current > 0) {
+                this.menuPos.h = easeInOut(this.menuPos.current/MENU_OPEN_LENGTH)*this.menuPos.w
+                this.menuPos.current--
+                
+                this.menuPos.y = (scrn.height-this.menuPos.h)/2
+                return
+            }
+            this.drawButtons(sctx, sfx)
             return
         }
-        this.drawButtons(sctx, sfx)
+        // else :
+        this.menuPos.w = easeInOut(this.menuPos.current/MENU_OPEN_LENGTH)*this.menuPos.h
+        this.menuPos.current++
+        
+        this.menuPos.x = (scrn.width-this.menuPos.w)/2
+        return 
     }
     checkButtonHover(mousePos, buttonPos, hoveringState) {
         if (mousePos.x < buttonPos.x) return false
@@ -168,18 +177,17 @@ class Setting {
 }
 
 function easeInOut(t) {
-    const x0 = 0
+    const x0 = 1
     const y0 = 1
-    const x1 = 0.4
-    const y1 = 1
-    const x2 = 0.6
-    const y2 = 0
-    const x3 = 1
+    const x1 = 1
+    const y1 = 0
+    const x2 = 0
+    const y2 = 1
+    const x3 = 0
     const y3 = 0
     const i = {
         x: (1-t)*((1-t)*((1-t)*x0+t*x1)+t*((1-t)*x1+t*x2))+t*((1-t)*((1-t)*x1+t*x2)+t*((1-t)*x2+t*x3)),
         y: (1-t)*((1-t)*((1-t)*y0+t*y1)+t*((1-t)*y1+t*y2))+t*((1-t)*((1-t)*y1+t*y2)+t*((1-t)*y2+t*y3))
     }
-    return i.y
+    return i.x
 };
-
