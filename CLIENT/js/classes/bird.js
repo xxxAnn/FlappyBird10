@@ -197,19 +197,6 @@ class Bird {
         if (this.immune) return false
         let bird = this.animations[0].sprite
         let r = bird.height/4 +bird.width/4
-        
-        // pipe.pipes.every((e,i) => {
-        //   if (e.x <= this.x+r && e.x+pipe.w >= this.x - r) {
-        //     x = e.x
-        //     y = e.y
-        //     return false
-        //   } else if (e.x >= this.x-r) {
-        //     x = e.x
-        //     y = e.y
-        //     return false
-        //   }
-        //   return true
-        // })
         var x, y, g
         if (state.gameStage == games.fireball.id) {
             var HIT = false
