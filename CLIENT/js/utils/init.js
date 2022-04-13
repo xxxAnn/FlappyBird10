@@ -81,7 +81,7 @@ function init() {
         if (state.curr !== state.getReady) return
         const rect = scrn.getBoundingClientRect()
         mousePos = {x:e.x-rect.x, y:e.y-rect.y}
-        const hover = sett.handleMouseMove(mousePos, scrn)
+        const hover = sett.handleMouseMove(mousePos)
         if (sett.moving == true) {
             sett.changeVolume(mousePos, SFX, sctx, scrn)
             scrn.style.cursor = 'grabbing'

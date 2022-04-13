@@ -93,15 +93,15 @@ class Setting {
         }
         sctx.restore()
     }
-    handleMouseMove(pos, scrn) {
-        const gearHover = this.checkButtonHover(pos, this.gearPos, this.hoveringStates.gear)
-        const menuHover = this.checkButtonHover(pos, this.menuPos, this.hoveringStates.menu) && this.PAGEON
+    handleMouseMove(pos) {
+        const gearHover = checkButtonHover(pos, this.gearPos, this.hoveringStates.gear, this)
+        const menuHover = checkButtonHover(pos, this.menuPos, this.hoveringStates.menu, this) && this.PAGEON
 
         const volBarPos = {x: this.volSlider.bar_x, y: this.volSlider.bar_y - this.volSlider.radius, w: this.volSlider.bar_w, h: this.volSlider.radius*2}
-        const volumeBar = this.checkButtonHover(pos, volBarPos, this.hoveringStates.volBar) && this.PAGEON
+        const volumeBar = checkButtonHover(pos, volBarPos, this.hoveringStates.volBar, this) && this.PAGEON
 
         const posVol = {x: this.volSlider.btn_x-this.volSlider.radius, y: this.volSlider.bar_y+this.volSlider.bar_h/2-this.volSlider.radius, w:this.volSlider.radius*2, h:this.volSlider.radius*2}
-        const volumeHover = this.checkButtonHover(pos, posVol, this.hoveringStates.vol) && this.PAGEON
+        const volumeHover = checkButtonHover(pos, posVol, this.hoveringStates.vol, this) && this.PAGEON
 
         if (!(gearHover||menuHover||volumeHover||volumeBar)) {
             this.hovering = this.hoveringStates.none
@@ -182,15 +182,7 @@ class Setting {
            this.menuClosing = false
         }
     }
-    checkButtonHover(mousePos, buttonPos, hoveringState) {
-        if (mousePos.x < buttonPos.x) return false
-        if (mousePos.x > buttonPos.x + buttonPos.w) return false
-        if (mousePos.y < buttonPos.y) return false
-        if (mousePos.y > buttonPos.y + buttonPos.h) return false
-
-        this.hovering = hoveringState
-        return true
-    }
+    
     drawButtons(sctx, sfx) {
         this.volSlider.bar_y = this.menuPos.y+(this.menuPos.w/(this.buttons.length+2)) + 2.5
         sctx.beginPath()
@@ -216,6 +208,16 @@ class Setting {
         sfx.die.volume = sfx.VOLUME
         sfx.bgm.volume = sfx.VOLUME
     }
+}
+
+function checkButtonHover(mousePos, buttonPos, hoveringState, sett) {
+    if (mousePos.x < buttonPos.x) return false
+    if (mousePos.x > buttonPos.x + buttonPos.w) return false
+    if (mousePos.y < buttonPos.y) return false
+    if (mousePos.y > buttonPos.y + buttonPos.h) return false
+
+    sett.hovering = hoveringState
+    return true
 }
 
 function easeInOut(t) {
