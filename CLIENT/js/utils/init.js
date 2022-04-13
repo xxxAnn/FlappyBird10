@@ -83,21 +83,20 @@ function init() {
         const rect = scrn.getBoundingClientRect()
         mousePos = {x:e.x-rect.x, y:e.y-rect.y}
         if (state.curr === state.getReady) {
-            const hover = sett.handleMouseMove(mousePos)
+            var hover = sett.handleMouseMove(mousePos)
             if (sett.moving == true) {
                 sett.changeVolume(mousePos, SFX, sctx, scrn)
                 scrn.style.cursor = 'grabbing'
                 return
             }
 
-            if (hover) {
-                scrn.style.cursor = 'pointer'
-            } else {
-                scrn.style.cursor = 'auto'
-            }
         } else if (state.curr === state.Play) {
-            arrows.handleMouseMove(mousePos)
-            console.log(arrows.hovering)
+            var hover = arrows.handleMouseMove(mousePos)
+        }
+        if (hover) {
+            scrn.style.cursor = 'pointer'
+        } else {
+            scrn.style.cursor = 'auto'
         }
     }
     document.onclick = () => {
@@ -155,7 +154,7 @@ function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRa
         }
     }
     requestAnimationFrame(() => {
-        gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio)
+        gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows)
     })
 
 }
@@ -211,10 +210,10 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows) {
         let r = 35
         let p = 0
         let s = 50
-        let ydelta = 115
+        let ydelta = 95
         sctx.save()
 
-        sctx.translate(sctx.canvas.clientWidth/2, sctx.canvas.clientHeight-ydelta)
+        sctx.translate(sctx.canvas.clientWidth/8, sctx.canvas.clientHeight-ydelta)
         
         if (!bird.dashing.t && !(0==Math.max(bird.dashing.CD, 0))) {
             sctx.beginPath()

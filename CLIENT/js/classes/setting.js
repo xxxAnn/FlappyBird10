@@ -169,10 +169,10 @@ class Setting {
             this.menuPos.current--
         } else {
             if (!this.closingVertical) {
-                this.menuPos.current = MENU_OPEN_LENGTH/2
+                this.menuPos.current = MENU_OPEN_LENGTH
                 this.closingVertical = true
             }
-            this.menuPos.h = easeInOut(this.menuPos.current/(MENU_OPEN_LENGTH/2))*scrn.width * 0.8
+            this.menuPos.h = easeInOut(this.menuPos.current/(MENU_OPEN_LENGTH))*scrn.width * 0.8
             this.menuPos.y = (scrn.height-this.menuPos.h)/2
             this.menuPos.current--
         }
