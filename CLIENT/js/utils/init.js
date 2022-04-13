@@ -11,7 +11,7 @@ function init() {
     const scrn = document.createElement('canvas')
     body.prepend(scrn)
     const sctx = scrn.getContext("2d")
-    scrn.width = Math.max(innerWidth * w_ratio, 500)
+    scrn.width = Math.max(innerWidth * w_ratio, Math.min(500, innerWidth))
     scrn.height = innerHeight * h_ratio
     
     const state = new State()
@@ -60,6 +60,7 @@ function init() {
                 bird.rotatation = 0
                 bird.movingToCenter.t = false
                 bird.reset()
+                arrows.buttons.forEach(b => b.active = false)
                 SFX.played = false
                 state.gameStage = 0
                 games.pipe.reset(null, sizeRatio)
