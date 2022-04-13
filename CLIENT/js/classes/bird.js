@@ -280,7 +280,7 @@ class Bird {
         this.animations.map(e => {
             e.sprite.height *= sizeRatio
             e.sprite.width *= sizeRatio
-            return e
+            return true
         })
     }
  }
