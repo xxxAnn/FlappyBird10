@@ -1,5 +1,5 @@
 class Info {
-    constructor(gearX, scrn) {
+    constructor(scrn) {
         this.sprite = INFOSPRITE
         this.iconPos = {
             w: 75,

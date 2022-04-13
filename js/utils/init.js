@@ -25,6 +25,7 @@ function init() {
     const UI = new Ui()
     const sizeRatio = gnd.getSize(scrn)
     const sett = new Setting(scrn, state, SFX)
+    const info = new Info(scrn)
     const arrows = new Arrows(scrn)
     const games = {
         pipe: new PipeSet(scrn, sizeRatio),
@@ -38,7 +39,7 @@ function init() {
         }
         switch (state.curr) {
             case state.getReady :
-                handleMainScreenPress(sett, SFX, state, scrn)
+                handleMainScreenPress(sett, SFX, state, scrn, info)
                 break
             case state.Play :
                 // if (sett.hovering === true) {
@@ -84,7 +85,7 @@ function init() {
         const rect = scrn.getBoundingClientRect()
         mousePos = {x:e.x-rect.x, y:e.y-rect.y}
         if (state.curr === state.getReady) {
-            var hover = sett.handleMouseMove(mousePos)
+            var hover = sett.handleMouseMove(mousePos) || info.handleMouseMove(mousePos)
             if (sett.moving == true) {
                 sett.changeVolume(mousePos, SFX, sctx, scrn)
                 scrn.style.cursor = 'grabbing'
@@ -154,13 +155,13 @@ function init() {
     }
 
     handleSizeChange(sizeRatio, bird, games, gnd, bg)
-    gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial)
+    gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial, info)
 }
 
-function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial) {
+function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial, info) {
     update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett, tutorial)
     sctx.clearRect(0, 0, scrn.width, scrn.height)
-    draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tutorial)
+    draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tutorial, info)
     if (!PAUSED) {
         frms++
     }
@@ -170,7 +171,7 @@ function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRa
         }
     }
     requestAnimationFrame(() => {
-        gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial)
+        gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial, info)
     })
 
 }
@@ -196,7 +197,7 @@ function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett, sizeRati
     sfx.updateBGM(0, scrn, sctx)
 }
 
-function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tutorial) {
+function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tutorial, info) {
     sctx.fillStyle = "#30c0df"
     sctx.clearRect(0,0,scrn.width,scrn.height)
     bg.draw(scrn, sctx)
@@ -208,7 +209,10 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tu
             games.fireball.draw(sctx, bird)
             break
     }
-    sett.draw(sctx, state)
+    if (state.curr == state.getReady) {
+        sett.draw(sctx)
+        info.draw(sctx)
+    }
    
     bird.draw(sctx)
     gnd.draw(sctx, scrn)
@@ -216,6 +220,8 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tu
     ui.draw(state, sctx, scrn)
     if (sett.menuPos.current !== 0 || sett.PAGEON) {
         sett.openSettings(sctx, scrn, sfx)
+    } else if (info.PAGEON) {
+        info.openInfo(sctx, scrn)
     } else {
         sett.menuPos.w = scrn.width * 0.8
         sett.menuPos.h = 0
@@ -269,10 +275,13 @@ function handleSizeChange(sizeRatio, bird, games, gnd, bg) {
     bg.sizeChange(sizeRatio)
 }
 
-function handleMainScreenPress(sett, SFX, state, scrn) {
+function handleMainScreenPress(sett, SFX, state, scrn, info) {
     if (sett.hovering == sett.hoveringStates.gear) {
         if (sett.menuClosing) return
         return sett.PAGEON = !sett.PAGEON
+    }
+    if (info.hovering == info.hoveringStates.icon) {
+        return info.PAGEON = !info.PAGEON
     }
     // else : 
     if (sett.hovering != sett.hoveringStates.gear && sett.hovering != sett.hoveringStates.none && sett.PAGEON) {
