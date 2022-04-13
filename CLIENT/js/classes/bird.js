@@ -117,6 +117,7 @@ class Bird {
                 }
                 if(this.y + r  >= gnd.y||this.collisioned(games, UI, SFX, state))
                 {
+                    break
                     state.curr = state.gameOver
                     SFX.bgm.pause()
                     SFX.bgm.currentTime = 0
@@ -280,7 +281,7 @@ class Bird {
         this.animations.map(e => {
             e.sprite.height *= sizeRatio
             e.sprite.width *= sizeRatio
-            return e
+            return true
         })
     }
  }

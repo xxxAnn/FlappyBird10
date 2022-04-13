@@ -24,6 +24,7 @@ function init() {
     const UI = new Ui()
     const sizeRatio = gnd.getSize(scrn)
     const sett = new Setting(scrn, state, SFX)
+    const arrows = new Arrows(scrn)
     const games = {
         pipe: new PipeSet(scrn, sizeRatio),
         fireball: new FireballSet()
@@ -78,20 +79,25 @@ function init() {
     
 
     document.onmousemove = (e) => {
-        if (state.curr !== state.getReady) return
+        if (state.curr === state.gameOver) return
         const rect = scrn.getBoundingClientRect()
         mousePos = {x:e.x-rect.x, y:e.y-rect.y}
-        const hover = sett.handleMouseMove(mousePos)
-        if (sett.moving == true) {
-            sett.changeVolume(mousePos, SFX, sctx, scrn)
-            scrn.style.cursor = 'grabbing'
-            return
-        }
+        if (state.curr === state.getReady) {
+            const hover = sett.handleMouseMove(mousePos)
+            if (sett.moving == true) {
+                sett.changeVolume(mousePos, SFX, sctx, scrn)
+                scrn.style.cursor = 'grabbing'
+                return
+            }
 
-        if (hover) {
-            scrn.style.cursor = 'pointer'
-        } else {
-            scrn.style.cursor = 'auto'
+            if (hover) {
+                scrn.style.cursor = 'pointer'
+            } else {
+                scrn.style.cursor = 'auto'
+            }
+        } else if (state.curr === state.Play) {
+            arrows.handleMouseMove(mousePos)
+            console.log(arrows.hovering)
         }
     }
     document.onclick = () => {
@@ -116,9 +122,9 @@ function init() {
         if (e.key == "ArrowLeft" && state.curr == state.Play) {
             bird.dash(-1, sctx)
         }
-        if (e.key == "ArrowDown" && state.curr == state.Play) {
-            //bird.dash(1, sctx, true)
-        }
+        // if (e.key == "ArrowDown" && state.curr == state.Play) {
+        //     bird.dash(1, sctx, true)
+        // }
         if (e.key.toLocaleLowerCase() == 'p') {
             if (state.curr == state.Play) {
                 PAUSED = !PAUSED
@@ -132,16 +138,14 @@ function init() {
         else if (e.key.toLowerCase() == 'm') sett.PAGEON = !sett.PAGEON
     }
 
-
-
     handleSizeChange(sizeRatio, bird, games, gnd, bg)
-    gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett, sizeRatio)
+    gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows)
 }
 
-function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio) {
+function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows) {
     update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett)
     sctx.clearRect(0, 0, scrn.width, scrn.height)
-    draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett)
+    draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows)
     if (!PAUSED) {
         frms++
     }
@@ -177,7 +181,7 @@ function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett, sizeRati
     sfx.updateBGM(0, scrn, sctx)
 }
 
-function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
+function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows) {
     sctx.fillStyle = "#30c0df"
     sctx.clearRect(0,0,scrn.width,scrn.height)
     bg.draw(scrn, sctx)
@@ -203,6 +207,7 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett) {
         sett.menuPos.x = (scrn.width-sett.menuPos.w)/2
     }
     if (state.curr == state.Play) {
+        arrows.draw(sctx)
         let r = 35
         let p = 0
         let s = 50
