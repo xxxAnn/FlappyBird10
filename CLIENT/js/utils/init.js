@@ -19,6 +19,7 @@ function init() {
     const gnd = new GND()
     
     const bg = new Background(scrn)
+    const tutorial = new Tutorial()
 
     const bird = new Bird()
     const UI = new Ui()
@@ -138,13 +139,13 @@ function init() {
     }
 
     handleSizeChange(sizeRatio, bird, games, gnd, bg)
-    gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows)
+    gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial)
 }
 
-function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows) {
-    update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett)
+function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial) {
+    update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett, tutorial)
     sctx.clearRect(0, 0, scrn.width, scrn.height)
-    draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows)
+    draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tutorial)
     if (!PAUSED) {
         frms++
     }
@@ -154,12 +155,12 @@ function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRa
         }
     }
     requestAnimationFrame(() => {
-        gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows)
+        gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial)
     })
 
 }
 
-function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett, sizeRatio) {
+function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett, sizeRatio, tutorial) {
     if (!PAUSED) {
         switch (state.gameStage) {
             case games.pipe.id :
@@ -180,7 +181,7 @@ function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett, sizeRati
     sfx.updateBGM(0, scrn, sctx)
 }
 
-function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows) {
+function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tutorial) {
     sctx.fillStyle = "#30c0df"
     sctx.clearRect(0,0,scrn.width,scrn.height)
     bg.draw(scrn, sctx)
