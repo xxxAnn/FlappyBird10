@@ -1,6 +1,7 @@
 let TEST = 100
 class PipeSet {
     constructor(scrn, sr) {
+        this.halfwidth = scrn.width/2
         this.reset(scrn, sr)
     }
     reset(scrn, sizeRatio) {
@@ -29,6 +30,7 @@ class PipeSet {
            let p = this.pipes[i]
            let tspr = (p.top == 0 ? this.top2 : this.top)
            let bspr = (p.bot == 0 ? this.bot2 : this.bot)
+           p.y += (p.x < this.halfwidth*4/3 ? -1 : 1) * Math.random()*3 *(p.d == 1 ? -1 : 1)
            sctx.drawImage(tspr.sprite,p.x,p.y, this.w, this.h)
            sctx.drawImage(bspr.sprite,p.x,p.y+parseFloat(this.h)+p.g, this.w, this.h)
        }
@@ -41,6 +43,7 @@ class PipeSet {
             this.pipes.push({x:parseFloat(scrn.width),
                 y:(-(Math.random())*150+scrn.height/2)-this.h,
                 g:g,
+                d: Math.round(Math.random()),
                 bot:Math.round(Math.random()),
                 top:Math.round(Math.random())})
             this.FRMTHRESH.app+=(1/(dx*BIRD_ANIMATION_SPEED))
