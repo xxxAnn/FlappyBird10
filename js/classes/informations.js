@@ -33,7 +33,7 @@ class Info {
         sctx.fill()
         if (this.hovering == this.hoveringStates.icon) {
             
-            this.currentColor = 158+(easeInOut(this.iconPos.current/this.iconPos.length)*(322-158))
+            this.currentColor = 158 + (easeInOut(this.iconPos.current/this.iconPos.length)*((322-158)-(175-280))) // remove 175-280
             if (this.iconPos.current < this.iconPos.length) {
                 this.iconPos.current++
             }
