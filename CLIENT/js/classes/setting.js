@@ -158,7 +158,6 @@ class Setting {
         }
         // else :
         if (!this.menuClosing) {
-            
             this.menuClosing = true
         }
         

@@ -40,15 +40,16 @@ function init() {
                 handleMainScreenPress(sett, SFX, state, scrn)
                 break
             case state.Play :
-                if (sett.hovering === true) {
-                    PAUSED = !PAUSED
-                    console.log(PAUSED)
-                    SFX.playing === true ? SFX.bgm.pause(): SFX.bgm.play()
-                    SFX.playing = !SFX.playing
-                    return
-                }
-
+                // if (sett.hovering === true) {
+                //     PAUSED = !PAUSED
+                //     console.log(PAUSED)
+                //     SFX.playing === true ? SFX.bgm.pause(): SFX.bgm.play()
+                //     SFX.playing = !SFX.playing
+                //     return
+                // }
+                if (arrows.handleClick(bird, sctx)) break
                 bird.flap(SFX)
+                arrows.up.active = true
                 break
             case state.gameOver :
                 state.curr = state.getReady
@@ -76,8 +77,6 @@ function init() {
                 break
         }
     }
-    
-
     document.onmousemove = (e) => {
         if (state.curr === state.gameOver) return
         const rect = scrn.getBoundingClientRect()
@@ -105,9 +104,22 @@ function init() {
         }
     }
     document.onmouseup = () => {
+        arrows.buttons.forEach(b => b.active = false)
         if (!sett.moving) return
         sett.moving = false
         scrn.style.cursor = 'auto'
+    }
+    document.onkeyup = (e) => {
+        if (e.key.toLowerCase() == 'w' || e.key == " " || e.key == 'ArrowUp') {
+            arrows.up.active = false
+        }
+
+        if (e.key == "ArrowRight" && state.curr == state.Play) {
+            arrows.right.active = false
+        }
+        if (e.key == "ArrowLeft" && state.curr == state.Play) {
+            arrows.left.active = false
+        }
     }
     
     scrn.tabIndex = 1;
@@ -117,9 +129,11 @@ function init() {
 
         if (e.key == "ArrowRight" && state.curr == state.Play) {
             bird.dash(1, sctx)
+            arrows.right.active = true
         }
         if (e.key == "ArrowLeft" && state.curr == state.Play) {
             bird.dash(-1, sctx)
+            arrows.left.active = true
         }
         // if (e.key == "ArrowDown" && state.curr == state.Play) {
         //     bird.dash(1, sctx, true)
