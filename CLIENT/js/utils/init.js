@@ -135,7 +135,7 @@ function init() {
         if (state.curr != state.getReady) return
         else if (e.key.toLowerCase() == 'b') SFX.updateBGM(-1, scrn, sctx, state)
         else if (e.key.toLowerCase() == 'n') SFX.updateBGM(1, scrn, sctx, state)
-        else if (e.key.toLowerCase() == 'm') sett.PAGEON = !sett.PAGEON
+        else if (e.key.toLowerCase() == 'm' && !sett.menuClosing) sett.PAGEON = !sett.PAGEON
     }
 
     handleSizeChange(sizeRatio, bird, games, gnd, bg)
@@ -199,7 +199,7 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows) {
     gnd.draw(sctx, scrn)
     sfx.drawSong(scrn, sctx)
     ui.draw(state, sctx, scrn)
-    if (sett.menuPos.current !== MENU_OPEN_LENGTH || sett.PAGEON) {
+    if (sett.menuPos.current !== 0 || sett.PAGEON) {
         sett.openSettings(sctx, scrn, sfx)
     } else {
         sett.menuPos.w = scrn.width * 0.8
@@ -256,9 +256,11 @@ function handleSizeChange(sizeRatio, bird, games, gnd, bg) {
 
 function handleMainScreenPress(sett, SFX, state, scrn) {
     if (sett.hovering == sett.hoveringStates.gear) {
-        sett.PAGEON = !sett.PAGEON 
-    } 
-    else if (sett.hovering != sett.hoveringStates.gear && sett.hovering != sett.hoveringStates.none && sett.PAGEON) {
+        if (sett.menuClosing) return
+        return sett.PAGEON = !sett.PAGEON
+    }
+    // else : 
+    if (sett.hovering != sett.hoveringStates.gear && sett.hovering != sett.hoveringStates.none && sett.PAGEON) {
         if (sett.hovering == sett.hoveringStates.vol) {
             sett.moving = true
             scrn.style.cursor = 'grabbing'
@@ -267,17 +269,19 @@ function handleMainScreenPress(sett, SFX, state, scrn) {
             sett.moving = true
             scrn.style.cursor = 'grabbing'
         }
+        return
     }
-    else {
-        if (sett.PAGEON) {
-            return sett.PAGEON = false
-        }
-        dx = PIPE_DEFAULT_MOVESPEED
-        state.curr = state.Play
-        SFX.start.play()
-        SFX.playing = true
-        frms = 0
-        SFX.bgm.currentTime = '0'
-        SFX.bgm.play()
+
+    // else:
+    if (sett.PAGEON) {
+        return sett.PAGEON = false
     }
+    dx = PIPE_DEFAULT_MOVESPEED
+    state.curr = state.Play
+    SFX.start.play()
+    SFX.playing = true
+    frms = 0
+    SFX.bgm.currentTime = '0'
+    SFX.bgm.play()
+
 }
