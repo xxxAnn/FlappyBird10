@@ -3,6 +3,11 @@
     outline: none;
 }
 
+body {
+    background-image: url("./img/pageBackground.jpg");
+    background-size: cover;
+}
+
 canvas {
     background-color:#30c0df;
 

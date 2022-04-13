@@ -17,6 +17,7 @@ function imageWithSource(s) {
 let BGSPRITE = imageWithSource("BG")
 let GNDSPRITE = imageWithSource("ground")
 let COGSPRITE = imageWithSource("cog")
+let INFOSPRITE = imageWithSource("info")
 let SOUNDSPRITE = imageWithSource("speaker")
 let FIREBALLSPRITE = imageWithSource("fireball")
 let PAUSESPRITE = imageWithSource("pause")

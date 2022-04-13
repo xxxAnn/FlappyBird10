@@ -46,35 +46,13 @@ class Setting {
             menu: 2,
             vol: 3,
             volBar: 4,
+            info: 5,
         }
         this.animationLength = 45 // in frames
         this.animationFrms = 0
         this.rotation = 0
     }
-    draw(sctx, state) {
-        if (state.curr == state.gameOver) return
-        if (state.curr == state.Play) {
-            if (this.hovering == this.hoveringStates.gear) {
-                this.turning = true
-                let f = 0.9
-                this.h = this.h*f
-                this.w = this.w*f
-                let org_x = this.x
-                let org_y = this.y
-                this.y += (this.h/f-this.h)/2
-                this.x += (this.w/f-this.w)/2
-                setTimeout(() => {
-                    this.turning = false
-                    this.h = this.h/f
-                    this.w = this.w/f
-                    this.x = org_x
-                    this.y = org_y
-                }, 250);
-            }
-            sctx.drawImage(this.pause, this.x, this.y, this.w, this.h)
-            return
-        }
-
+    draw(sctx) {
         sctx.save()
         if (this.hovering == this.hoveringStates.gear && this.animationFrms < 125) { // rotation of 180° changeable
             this.drawRotation(sctx)
@@ -95,6 +73,7 @@ class Setting {
     }
     handleMouseMove(pos) {
         const gearHover = checkButtonHover(pos, this.gearPos, this.hoveringStates.gear, this)
+        
         const menuHover = checkButtonHover(pos, this.menuPos, this.hoveringStates.menu, this) && this.PAGEON
 
         const volBarPos = {x: this.volSlider.bar_x, y: this.volSlider.bar_y - this.volSlider.radius, w: this.volSlider.bar_w, h: this.volSlider.radius*2}
@@ -122,8 +101,6 @@ class Setting {
         sctx.roundRect(this.menuPos.x, this.menuPos.y, this.menuPos.w, this.menuPos.h, [this.menuPos.radius])
         sctx.fillStyle = "grey"
         sctx.fill()
-        
-        // TODO remake the whole menu
 
         if (this.PAGEON) {
             // if (!this.menuOpening && this.menuPos.current > 0) {

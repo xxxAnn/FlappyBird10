@@ -1,5 +1,3 @@
-// this will be the class where we do the arrows
-
 class Arrows {
     constructor(scrn) {
         this.w = 75
