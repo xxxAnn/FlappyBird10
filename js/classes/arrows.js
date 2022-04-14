@@ -60,15 +60,16 @@ class Arrows {
         return hover > 0 ? true: false;
     }
     handleClick(bird, sctx) {
+        var side = false
         this.buttons.forEach(b => {
             if (this.hovering === b.id) {
                 b.active = true
                 if (b.id !== this.hoveringStates.up) {
                     bird.dash(-(b.id-2), sctx)
-                    return true
+                    side = true
                 }
             }
         })
-        return false
+        return side
     }
 }

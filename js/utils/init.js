@@ -12,7 +12,7 @@ function init() {
     body.prepend(scrn)
     const sctx = scrn.getContext("2d")
     scrn.width = Math.max(innerWidth * w_ratio, Math.min(500, innerWidth))
-    scrn.height = innerHeight * h_ratio
+    scrn.height = Math.max(innerHeight * h_ratio, Math.min(750, innerHeight))
     
     const state = new State()
     const SFX = new Sfx()
@@ -49,7 +49,9 @@ function init() {
                 //     SFX.playing = !SFX.playing
                 //     return
                 // }
-                if (arrows.handleClick(bird, sctx)) break
+                const click = arrows.handleClick(bird, sctx)
+                if (click == true) break
+
                 bird.flap(SFX)
                 arrows.up.active = true
                 break
@@ -232,37 +234,46 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tu
         let r = 35
         let p = 0
         let s = 50
+        let w = 100
         let ydelta = 95
         sctx.save()
 
-        sctx.translate(sctx.canvas.clientWidth/8, sctx.canvas.clientHeight-ydelta)
-        
+        // sctx.translate(sctx.canvas.clientWidth/8, sctx.canvas.clientHeight-ydelta)
+        sctx.drawImage(DASHSPRITE, sctx.canvas.clientWidth/8+w - s/2, sctx.canvas.clientHeight-ydelta-s/2, s, s)
+
         if (!bird.dashing.t && !(0==Math.max(bird.dashing.CD, 0))) {
             sctx.beginPath()
-            sctx.lineTo(p, p)
-            sctx.lineWidth = LINEWIDTH
-            sctx.strokeStyle = 'black'
+            // sctx.lineTo(p, p)
+            // sctx.lineWidth = LINEWIDTH
+            // sctx.strokeStyle = 'black'
             sctx.fillStyle = 'hsl(0, 100%, 50%, 0.7)'
-            sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
+            // sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
+            // sctx.fill()
+            // sctx.closePath()
+            // sctx.beginPath()
+            // sctx.lineWidth = LINEWIDTH
+            // sctx.strokeStyle = 'black'
+            // sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
+            // sctx.stroke()
+            
+
+            sctx.rect(sctx.canvas.clientWidth/16, sctx.canvas.clientHeight-ydelta, ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD,0))/DEFAULT_DASH_CD)*w, 20)
+            
             sctx.fill()
-            sctx.closePath()
-            sctx.beginPath()
-            sctx.lineWidth = LINEWIDTH
-            sctx.strokeStyle = 'black'
-            sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
-            sctx.stroke()
             sctx.closePath()
         } else {
             sctx.beginPath()
             sctx.lineWidth = LINEWIDTH
             sctx.strokeStyle = 'black'
             sctx.fillStyle = 'hsl(120, 100%, 50%, 0.7)'
-            sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2)))
+            // sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2)))
+            sctx.rect(sctx.canvas.clientWidth/16, sctx.canvas.clientHeight-ydelta, w, 20)
             sctx.fill()
-            sctx.stroke()
+            // sctx.stroke()
             sctx.closePath()
+            
         }
-        sctx.drawImage(DASHSPRITE, -s/2, -s/2, s, s)
+        
         
         sctx.closePath()
         sctx.restore()
@@ -299,6 +310,9 @@ function handleMainScreenPress(sett, SFX, state, scrn, info) {
     // else:
     if (sett.PAGEON) {
         return sett.PAGEON = false
+    }
+    if (info.PAGEON) {
+        return info.PAGEON = false
     }
     dx = PIPE_DEFAULT_MOVESPEED
     state.curr = state.Play
