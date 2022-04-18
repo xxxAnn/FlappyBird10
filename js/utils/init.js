@@ -238,44 +238,44 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tu
         let ydelta = 95
         sctx.save()
 
-        // sctx.translate(sctx.canvas.clientWidth/8, sctx.canvas.clientHeight-ydelta)
-        sctx.drawImage(DASHSPRITE, sctx.canvas.clientWidth/8+w - s/2, sctx.canvas.clientHeight-ydelta-s/2, s, s)
+        sctx.translate(sctx.canvas.clientWidth/8, sctx.canvas.clientHeight-ydelta)
+        // sctx.drawImage(DASHSPRITE, sctx.canvas.clientWidth/8+w - s/2, sctx.canvas.clientHeight-ydelta-s/2, s, s)
 
         if (!bird.dashing.t && !(0==Math.max(bird.dashing.CD, 0))) {
             sctx.beginPath()
-            // sctx.lineTo(p, p)
-            // sctx.lineWidth = LINEWIDTH
-            // sctx.strokeStyle = 'black'
+            sctx.lineWidth = LINEWIDTH
+            sctx.strokeStyle = 'black'
             sctx.fillStyle = 'hsl(0, 100%, 50%, 0.7)'
-            // sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
-            // sctx.fill()
-            // sctx.closePath()
-            // sctx.beginPath()
-            // sctx.lineWidth = LINEWIDTH
-            // sctx.strokeStyle = 'black'
-            // sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
-            // sctx.stroke()
+            sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
+            sctx.lineTo(p, p)
+            sctx.fill()
+            sctx.closePath()
+            sctx.beginPath()
+            sctx.lineWidth = LINEWIDTH
+            sctx.strokeStyle = 'black'
+            sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
+            sctx.stroke()
             
 
-            sctx.rect(sctx.canvas.clientWidth/16, sctx.canvas.clientHeight-ydelta, ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD,0))/DEFAULT_DASH_CD)*w, 20)
+            // sctx.rect(sctx.canvas.clientWidth/16, sctx.canvas.clientHeight-ydelta, ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD,0))/DEFAULT_DASH_CD)*w, 20)
             
-            sctx.fill()
+            // sctx.fill()
             sctx.closePath()
         } else {
             sctx.beginPath()
             sctx.lineWidth = LINEWIDTH
             sctx.strokeStyle = 'black'
             sctx.fillStyle = 'hsl(120, 100%, 50%, 0.7)'
-            // sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2)))
-            sctx.rect(sctx.canvas.clientWidth/16, sctx.canvas.clientHeight-ydelta, w, 20)
+            sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2)))
+            // sctx.rect(sctx.canvas.clientWidth/16, sctx.canvas.clientHeight-ydelta, w, 20)
             sctx.fill()
-            // sctx.stroke()
+            sctx.stroke()
             sctx.closePath()
             
         }
+        sctx.drawImage(DASHSPRITE, -s/2, -s/2, s, s)
+ 
         
-        
-        sctx.closePath()
         sctx.restore()
     }
 }
