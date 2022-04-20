@@ -52,29 +52,6 @@ class Setting {
         this.rotation = 0
     }
     draw(sctx, state) {
-        if (state.curr == state.gameOver) return
-        if (state.curr == state.Play) {
-            if (this.hovering == this.hoveringStates.gear) {
-                this.turning = true
-                let f = 0.9
-                this.h = this.h*f
-                this.w = this.w*f
-                let org_x = this.x
-                let org_y = this.y
-                this.y += (this.h/f-this.h)/2
-                this.x += (this.w/f-this.w)/2
-                setTimeout(() => {
-                    this.turning = false
-                    this.h = this.h/f
-                    this.w = this.w/f
-                    this.x = org_x
-                    this.y = org_y
-                }, 250);
-            }
-            sctx.drawImage(this.pause, this.x, this.y, this.w, this.h)
-            return
-        }
-
         sctx.save()
         if (this.hovering == this.hoveringStates.gear && this.animationFrms < 125) { // rotation of 180° changeable
             this.drawRotation(sctx)

@@ -34,6 +34,7 @@ let BOT2 = {sprite : imageWithSource("botpipe_blue")}
 let ARROW_RIGHT = imageWithSource("arrow-right")
 let ARROW_UP = imageWithSource("arrow-up")
 let ARROW_LEFT = imageWithSource("arrow-left")
+let INFOSPRITE = imageWithSource("info")
 
 const BIRD_ANIMATION_SPEED = 0.0025 // (0 - 1)
 const BIRD_DOWN_ROTATION = -25  // (deg)

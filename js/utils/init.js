@@ -12,7 +12,7 @@ function init() {
     body.prepend(scrn)
     const sctx = scrn.getContext("2d")
     scrn.width = Math.max(innerWidth * w_ratio, Math.min(500, innerWidth))
-    scrn.height = innerHeight * h_ratio
+    scrn.height = Math.max(innerHeight * h_ratio, Math.min(750, innerHeight))
     
     const state = new State()
     const SFX = new Sfx()
@@ -25,6 +25,7 @@ function init() {
     const UI = new Ui()
     const sizeRatio = gnd.getSize(scrn)
     const sett = new Setting(scrn, state, SFX)
+    const info = new Info(scrn)
     const arrows = new Arrows(scrn)
     const games = {
         pipe: new PipeSet(scrn, sizeRatio),
@@ -38,7 +39,7 @@ function init() {
         }
         switch (state.curr) {
             case state.getReady :
-                handleMainScreenPress(sett, SFX, state, scrn)
+                handleMainScreenPress(sett, SFX, state, scrn, info)
                 break
             case state.Play :
                 // if (sett.hovering === true) {
@@ -48,7 +49,9 @@ function init() {
                 //     SFX.playing = !SFX.playing
                 //     return
                 // }
-                if (arrows.handleClick(bird, sctx)) break
+                const click = arrows.handleClick(bird, sctx)
+                if (click == true) break
+
                 bird.flap(SFX)
                 arrows.up.active = true
                 break
@@ -84,7 +87,7 @@ function init() {
         const rect = scrn.getBoundingClientRect()
         mousePos = {x:e.x-rect.x, y:e.y-rect.y}
         if (state.curr === state.getReady) {
-            var hover = sett.handleMouseMove(mousePos)
+            var hover = sett.handleMouseMove(mousePos) || info.handleMouseMove(mousePos)
             if (sett.moving == true) {
                 sett.changeVolume(mousePos, SFX, sctx, scrn)
                 scrn.style.cursor = 'grabbing'
@@ -154,13 +157,13 @@ function init() {
     }
 
     handleSizeChange(sizeRatio, bird, games, gnd, bg)
-    gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial)
+    gameLoop(bird, state, SFX, UI, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial, info)
 }
 
-function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial) {
+function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial, info) {
     update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett, tutorial)
     sctx.clearRect(0, 0, scrn.width, scrn.height)
-    draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tutorial)
+    draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tutorial, info)
     if (!PAUSED) {
         frms++
     }
@@ -170,7 +173,7 @@ function gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRa
         }
     }
     requestAnimationFrame(() => {
-        gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial)
+        gameLoop(bird, state, sfx, ui, games, gnd, sctx, scrn, bg, sett, sizeRatio, arrows, tutorial, info)
     })
 
 }
@@ -196,7 +199,7 @@ function update(bird, state, sfx, ui, games, gnd, scrn, bg, sctx, sett, sizeRati
     sfx.updateBGM(0, scrn, sctx)
 }
 
-function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tutorial) {
+function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tutorial, info) {
     sctx.fillStyle = "#30c0df"
     sctx.clearRect(0,0,scrn.width,scrn.height)
     bg.draw(scrn, sctx)
@@ -208,7 +211,10 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tu
             games.fireball.draw(sctx, bird)
             break
     }
-    sett.draw(sctx, state)
+    if (state.curr == state.getReady) {
+        sett.draw(sctx)
+        info.draw(sctx)
+    }
    
     bird.draw(sctx)
     gnd.draw(sctx, scrn)
@@ -216,6 +222,8 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tu
     ui.draw(state, sctx, scrn)
     if (sett.menuPos.current !== 0 || sett.PAGEON) {
         sett.openSettings(sctx, scrn, sfx)
+    } else if (info.PAGEON) {
+        info.openInfo(sctx, scrn)
     } else {
         sett.menuPos.w = scrn.width * 0.8
         sett.menuPos.h = 0
@@ -226,18 +234,20 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tu
         let r = 35
         let p = 0
         let s = 50
+        let w = 100
         let ydelta = 95
         sctx.save()
 
         sctx.translate(sctx.canvas.clientWidth/8, sctx.canvas.clientHeight-ydelta)
-        
+        // sctx.drawImage(DASHSPRITE, sctx.canvas.clientWidth/8+w - s/2, sctx.canvas.clientHeight-ydelta-s/2, s, s)
+
         if (!bird.dashing.t && !(0==Math.max(bird.dashing.CD, 0))) {
             sctx.beginPath()
-            sctx.lineTo(p, p)
             sctx.lineWidth = LINEWIDTH
             sctx.strokeStyle = 'black'
             sctx.fillStyle = 'hsl(0, 100%, 50%, 0.7)'
             sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
+            sctx.lineTo(p, p)
             sctx.fill()
             sctx.closePath()
             sctx.beginPath()
@@ -245,6 +255,11 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tu
             sctx.strokeStyle = 'black'
             sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
             sctx.stroke()
+            
+
+            // sctx.rect(sctx.canvas.clientWidth/16, sctx.canvas.clientHeight-ydelta, ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD,0))/DEFAULT_DASH_CD)*w, 20)
+            
+            // sctx.fill()
             sctx.closePath()
         } else {
             sctx.beginPath()
@@ -252,13 +267,15 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tu
             sctx.strokeStyle = 'black'
             sctx.fillStyle = 'hsl(120, 100%, 50%, 0.7)'
             sctx.arc(p, p, r, -Math.PI/2, ((Math.PI * 2)))
+            // sctx.rect(sctx.canvas.clientWidth/16, sctx.canvas.clientHeight-ydelta, w, 20)
             sctx.fill()
             sctx.stroke()
             sctx.closePath()
+            
         }
         sctx.drawImage(DASHSPRITE, -s/2, -s/2, s, s)
+ 
         
-        sctx.closePath()
         sctx.restore()
     }
 }
@@ -269,10 +286,13 @@ function handleSizeChange(sizeRatio, bird, games, gnd, bg) {
     bg.sizeChange(sizeRatio)
 }
 
-function handleMainScreenPress(sett, SFX, state, scrn) {
+function handleMainScreenPress(sett, SFX, state, scrn, info) {
     if (sett.hovering == sett.hoveringStates.gear) {
         if (sett.menuClosing) return
         return sett.PAGEON = !sett.PAGEON
+    }
+    if (info.hovering == info.hoveringStates.icon) {
+        return info.PAGEON = !info.PAGEON
     }
     // else : 
     if (sett.hovering != sett.hoveringStates.gear && sett.hovering != sett.hoveringStates.none && sett.PAGEON) {
@@ -290,6 +310,9 @@ function handleMainScreenPress(sett, SFX, state, scrn) {
     // else:
     if (sett.PAGEON) {
         return sett.PAGEON = false
+    }
+    if (info.PAGEON) {
+        return info.PAGEON = false
     }
     dx = PIPE_DEFAULT_MOVESPEED
     state.curr = state.Play
