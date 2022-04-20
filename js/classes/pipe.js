@@ -25,12 +25,14 @@ class PipeSet {
         this.w
         this.h
     }
-    draw(sctx) {
+    draw(sctx, state) {
        for (let i = 0; i<this.pipes.length; i++) {
            let p = this.pipes[i]
            let tspr = (p.top == 0 ? this.top2 : this.top)
            let bspr = (p.bot == 0 ? this.bot2 : this.bot)
-           p.y += (p.x < this.halfwidth*4/3 ? -1 : 1) * Math.random()*3 *(p.d == 1 ? -1 : 1)
+           if (state.curr==state.Play) {
+             p.y += (p.x < this.halfwidth*4/3 ? -1 : 1) * Math.random()*3 *(p.d == 1 ? -1 : 1)
+           }
            sctx.drawImage(tspr.sprite,p.x,p.y, this.w, this.h)
            sctx.drawImage(bspr.sprite,p.x,p.y+parseFloat(this.h)+p.g, this.w, this.h)
        }
