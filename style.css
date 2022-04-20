@@ -1,0 +1,23 @@
+* {
+    margin: 0;
+    outline: none;
+}
+
+body {
+    background-image: url("./img/pageBackground.jpg");
+    background-size: cover;
+}
+
+canvas {
+    background-color:#30c0df;
+
+    display: block;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
