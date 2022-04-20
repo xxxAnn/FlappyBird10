@@ -205,7 +205,7 @@ function draw(scrn, sctx, sfx, bg, games, bird, gnd, ui, state, sett, arrows, tu
     bg.draw(scrn, sctx)
     switch (state.gameStage) {
         case games.pipe.id :
-            games.pipe.draw(sctx)
+            games.pipe.draw(sctx, state)
             break
         case games.fireball.id :
             games.fireball.draw(sctx, bird)
