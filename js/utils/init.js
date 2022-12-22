@@ -4,6 +4,15 @@ let dx = PIPE_DEFAULT_MOVESPEED
 let w_ratio = 1/3
 let h_ratio = 1
 let PAUSED = false
+// A variable for the state of the player dashing in the pipes stage of the game
+// t: Whether the player is currently dashing or not
+// curr: Amount of time the player has currently dashed
+// CD: Dash cooldown
+let isPipeDashing = {
+    t: false,
+    curr: 0,
+    CD: 0
+}
 const RAD = Math.PI/180
 
 function init() {
@@ -120,9 +129,17 @@ function init() {
         }
 
         if (e.key == "ArrowRight" && state.curr == state.Play) {
+            // Set whether the player is dashing to false and reset the current dash time. 
+            // A check of game stage is not needed since it would not break anything even in fireball mode. 
+            isPipeDashing.t = false
+            isPipeDashing.curr = 0
+
             arrows.right.active = false
         }
         if (e.key == "ArrowLeft" && state.curr == state.Play) {
+            isPipeDashing.t = false
+            isPipeDashing.curr = 0
+
             arrows.left.active = false
         }
     }
@@ -133,12 +150,20 @@ function init() {
         if (e.key.toLowerCase() == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
 
         if (e.key == "ArrowRight" && state.curr == state.Play) {
-            bird.dash(1, context)
-            arrows.right.active = true
+            // Check if game stage is pipe, and use the corresponding dash
+            if (state.gameStage == games.pipe.id) {
+                games.pipe.dash()
+            } else {
+                bird.dash(1, context)
+                arrows.right.active = true
+            }
         }
         if (e.key == "ArrowLeft" && state.curr == state.Play) {
-            bird.dash(-1, context)
-            arrows.left.active = true
+            // Dash normally if the game in not in the pipe stage. Dashing backwards is not needed at that stage.
+            if (state.gameStage != games.pipe.id) {
+                bird.dash(-1, context)
+                arrows.left.active = true
+            }
         }
         // if (e.key == "ArrowDown" && state.curr == state.Play) {
         //     bird.dash(1, context, true)
@@ -241,19 +266,22 @@ function draw(screen, context, sfx, bg, games, bird, gnd, ui, state, settings, a
         context.translate(context.canvas.clientWidth/8, context.canvas.clientHeight-ydelta)
         // context.drawImage(DASHSPRITE, context.canvas.clientWidth/8+w - s/2, context.canvas.clientHeight-ydelta-s/2, s, s)
 
-        if (!bird.dashing.t && !(0==Math.max(bird.dashing.CD, 0))) {
+        // If bird is not dashing/pipeDashing and their cooldown is less or equal to 0 
+        if ((!bird.dashing.t || !isPipeDashing.t) && (!(bird.dashing.CD <= 0) || !(isPipeDashing.CD <= 0))) {
             context.beginPath()
             context.lineWidth = LINEWIDTH
             context.strokeStyle = 'black'
             context.fillStyle = 'hsl(0, 100%, 50%, 0.7)'
-            context.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
+            // Draw an arc with either normal dash values for fireball stage or pipe dashing values for pipe stage
+            context.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max((state.gameStage == games.fireball.id ? bird.dashing.CD : isPipeDashing.CD), 0)))/DEFAULT_DASH_CD)-Math.PI/2)
             context.lineTo(p, p)
             context.fill()
             context.closePath()
             context.beginPath()
             context.lineWidth = LINEWIDTH
             context.strokeStyle = 'black'
-            context.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max(bird.dashing.CD, 0)))/DEFAULT_DASH_CD)-Math.PI/2)
+            // Draw an arc with either normal dash values for fireball stage or pipe dashing values for pipe stage
+            context.arc(p, p, r, -Math.PI/2, ((Math.PI * 2) * ((DEFAULT_DASH_CD-Math.max((state.gameStage == games.fireball.id ? bird.dashing.CD : isPipeDashing.CD), 0)))/DEFAULT_DASH_CD)-Math.PI/2)
             context.stroke()
             
 
