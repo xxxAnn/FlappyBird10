@@ -4,6 +4,7 @@ class Bird {
     }
     reset() {
         this.animations = BIRDANIMS
+        // Ah yes, rotatation
         this.rotatation = BIRD_DEFAULTS.rotatation
         this.x = BIRD_DEFAULTS.x
         this.y = BIRD_DEFAULTS.y
@@ -249,11 +250,13 @@ class Bird {
         if(this.x + r>= x) {
             if(this.x + r < x + w) {
                 if(this.y - r <= roof) {
-                    if ((this.dashing.t && t == 0) || (!this.dashing.t && t != 0)) {
+                    // If the pipe id is 0, it means that it's a blue pipe and will kill the player if he's dashing. 
+                    // Otherwise, kill the player if he's not dashing. 
+                    if ((isPipeDashing.t && t == 0) || (!isPipeDashing.t && t != 0)) {
                         d = true
                     }
                 } else if (this.y + r>= floor) {
-                    if ((this.dashing.t && b == 0) || (!this.dashing.t && b != 0)) {
+                    if ((isPipeDashing.t && b == 0) || (!isPipeDashing.t && b != 0)) {
                         d = true
                     }
                 }

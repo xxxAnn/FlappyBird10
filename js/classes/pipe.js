@@ -50,9 +50,29 @@ class PipeSet {
                 top:Math.round(Math.random())})
             this.FRMTHRESH.app+=(1/(dx*BIRD_ANIMATION_SPEED))
         }
-        this.pipes.forEach(pipe=>{
-            pipe.x -= dx
-        })
+
+        // Decrease dash cooldown by 0.5 since 1 is too fast
+        isPipeDashing.CD -= 0.5
+        // Increase current dash length by one
+        isPipeDashing.curr += 1
+        // Stop dashing if dash length is more than DASHDISTANCE and reset it to 0
+        if (isPipeDashing.curr > DASHDISTANCE) {
+            isPipeDashing.t = false
+            isPipeDashing.curr = 0
+        }
+
+        // Check for whether the pipe is dashing
+        if (isPipeDashing.t) {
+            // Move the pipes at the speed of dx multiplied by DASH_MULTIPLIER
+            this.pipes.forEach((pipe) => {
+                pipe.x -= dx * DASH_MULTIPLIER;
+            });
+        } else {
+            // Move pipes at normal speed if not dashing
+            this.pipes.forEach((pipe) => {
+                pipe.x -= dx;
+            });
+        }
 
         if(this.pipes.length&&this.pipes[0].x < -this.top.sprite.width) {
             this.pipes.shift()
@@ -88,4 +108,11 @@ class PipeSet {
         this.h = this.top.sprite.height
     }
 
+    dash() {
+        // Return early if the cooldown is more than 0
+        if (isPipeDashing.CD > 0) return
+        
+        isPipeDashing.t = true
+        isPipeDashing.CD = DEFAULT_DASH_CD
+    }
 }
