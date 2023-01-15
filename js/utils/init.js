@@ -128,15 +128,15 @@ function init() {
             arrows.up.active = false
         }
 
-        if (e.key == "ArrowRight" && state.curr == state.Play) {
+        if ((e.key == "ArrowRight" || e.key.toLowerCase() == 'd') && state.curr == state.Play) {
             // Set whether the player is dashing to false and reset the current dash time. 
             // A check of game stage is not needed since it would not break anything even in fireball mode. 
-            isPipeDashing.t = false
+            isPipeDashing.t = falsed
             isPipeDashing.curr = 0
 
             arrows.right.active = false
         }
-        if (e.key == "ArrowLeft" && state.curr == state.Play) {
+        if ((e.key == "ArrowLeft" || e.key.toLowerCase() == 'a') && state.curr == state.Play) {
             isPipeDashing.t = false
             isPipeDashing.curr = 0
 
@@ -149,7 +149,7 @@ function init() {
     document.onkeydown = (e) => {
         if (e.key.toLowerCase() == 'w' || e.key == " " || e.key == 'ArrowUp') jumpInputHandler()
 
-        if (e.key == "ArrowRight" && state.curr == state.Play) {
+        if ((e.key == "ArrowRight" || e.key.toLowerCase() == 'd') && state.curr == state.Play) {
             // Check if game stage is pipe, and use the corresponding dash
             if (state.gameStage == games.pipe.id) {
                 games.pipe.dash()
